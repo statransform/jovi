@@ -33,7 +33,7 @@ plotlyError(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "eff
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
 
-Finally, @fig-ordinal-interaction-1 presents our results when main effects are applied to both factors. None of the methods successfully maintains low error rates across all conditions. Intriguingly, we note that ART consistently performs worse than PAR. INT performs worse than ART and PAR in one specific case ($a_2, a_2 = 8$ in a scale with 11 equidistant levels), but overall, it exhibits a better behavior than all other methods. 
+Finally, @fig-ordinal-interaction-2 presents our results when main effects are applied to both factors. None of the methods successfully maintains low error rates across all conditions. Intriguingly, we note that ART consistently performs worse than PAR. INT performs worse than ART and PAR in one specific case ($a_2, a_2 = 8$ in a scale with 11 equidistant levels), but overall, it exhibits a better behavior than all other methods. 
 
 ::: {#fig-ordinal-interaction-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}

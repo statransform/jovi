@@ -14,7 +14,7 @@ library(tidyr)
 # https://www.biostars.org/p/80597/
 # use rankit version where c = 0.5, based on https://www.researchgate.net/publication/286889581_Impact_of_Rank-Based_Normalizing_Transformations_on_the_Accuracy_of_Test_Scores
 inverseNormalTransform = function(x){
-	qnorm((rank(x,na.last="keep") - 0.5)/sum(!is.na(x)))
+	qnorm((rank(x) - 0.5)/length(x))
 }
 
 # Transforms a set of values to ordinal based on the given thresholds

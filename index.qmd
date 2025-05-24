@@ -15,6 +15,7 @@ author:
       - name: Univ. Lille, CNRS, Inria, Centrale Lille, UMR 9189 CRIStAL
         country: France
 bibliography: bibliography.bib
+csl: canadian-journal-of-philosophy.csl
 
 tbl-cap-location: top
 ---

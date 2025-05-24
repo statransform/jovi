@@ -2,7 +2,7 @@
 # Inria & Université Paris-Saclay
 
 # Experiment evaluating the effect size estimates of PAR, ART, RNK, and INT.
-# See Fig. 30, Fig. 31
+# See Fig. 31, Fig. 32
 
 # You can edit the experimental parameters in the code to test different conditions.
 

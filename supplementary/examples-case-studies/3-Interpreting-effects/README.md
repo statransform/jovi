@@ -1,1 +1,1 @@
-The [example on removable interactions](https://statransform.github.io/jovi/supplementary/examples-case-studies/3-Interpreting-effects/removable_interactions.html) in Section 3 (Interpreting effects). 
+The [example on removable interactions](https://www.journalovi.org/2024-tsandilas-ranktransforms/supplementary/examples-case-studies/3-Interpreting-effects/removable_interactions.html) in Section 3 (Interpreting effects). 

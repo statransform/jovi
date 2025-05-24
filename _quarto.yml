@@ -1,12 +1,12 @@
 project:
-  title: "jovi-template-quarto"
+  title: "The illusory promise of the Aligned Rank Transform"
 
 format:
   html:
     toc: true
     fig-responsive: true
     embed-resources: false
-    theme: accessible.scss
+    theme: lumen
 
 number-sections: true
 number-depth: 2

@@ -8,7 +8,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-We detail here our analysis of the data of [Siestrup and Schubotz (2023)](https://doi.org/10.1162/jocn_a_02047) partly presented in our article as a case study. 
+We detail here our analysis of the data of [Siestrup and Schubotz (2023)](https://doi.org/10.1162/jocn_a_02047) partly presented in our article as a case study. This dataset is not publicly available, but the authors have included a data availability statement: *"The data sets generated for this study are available on request to the corresponding author."* While the authors gave us access to the data, we don't have permission to share them online.
 
 ### Context
 Siestrup and Schubotz (2023) investigated how different types of modifications in video sequences describing a story affect people’s episodic memory. During a first session (*encoding*), participants encoded episodes (filmed stories acted by manipulating PLAYMOBIL toys) by watching each video several times. On the day after the encoding, participants went through two experimental parts: 
@@ -33,6 +33,7 @@ We start by reading and reformatting the data:
 ```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 
+# We don't provide this file as we don't have the authors' permission to share it online.
 ratings <- read.csv("ratings.csv", sep=",", header = TRUE)
 
 df <- gather(ratings, modversion, rating, no_surface:yes_gist, factor_key=TRUE)
@@ -111,6 +112,7 @@ For this dataset, the average probabilty of a false alarm was approximately 15%.
 We start again by reading the data:
 
 ```{r, warning=FALSE, message=FALSE}
+# We don't provide this file as we don't have the authors' permission to share it online.
 alarm_rates <- read.csv("False_Alarm_Rate.csv", sep=",", header = TRUE)
 
 df <- gather(alarm_rates, modversion, arate, no_surface:yes_gist, factor_key=TRUE)
@@ -163,6 +165,7 @@ Another measure of memory performance that the authors studied using ART is the 
 We first read and plot the data:
 
 ```{r, warning=FALSE, message=FALSE}
+# We don't provide this file as we don't have the authors' permission to share it online.
 auc_data <- read.csv("AUC.csv", sep=",", header = TRUE)
 df <- gather(auc_data, modversion, auc, no_surface:yes_gist, factor_key=TRUE)
 df$modification <- ifelse(df$modversion %in% c('yes_surface', 'yes_gist'), 'yes', 'no')

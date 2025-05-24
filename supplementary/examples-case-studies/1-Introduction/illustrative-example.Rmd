@@ -33,7 +33,7 @@ library(tidyverse)
 
 We read our dataset and fix the type of the factors:
 ```{r, warning=FALSE}
-df <- read.csv("example-data-cut.csv", sep=",", header=TRUE, strip.white=TRUE)
+df <- read.csv("example-data.csv", sep=",", header=TRUE, strip.white=TRUE)
 
 df$Participant <- factor(df$Participant)
 df$Difficulty <- factor(df$Difficulty, ordered = TRUE) # We can consider it as ordinal
@@ -132,5 +132,3 @@ printContrasts(5, "No Transformation", ~Technique, mpar)
 ``` 
 
 We observe again a significant divergence between the results of ART and the results of the other methods. 
-
-

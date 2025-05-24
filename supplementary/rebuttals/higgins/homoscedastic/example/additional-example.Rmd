@@ -1,0 +1,138 @@
+---
+title: "Rebuttal - Complimentary example (homoscedastic log-normal data)"
+author: "Theophanis Tsandilas and Géry Casiez"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We detail the analysis for a complimentary example where data were drawn from homoscedastic log-normal populations. We present this example in our [first answer](https://github.com/journalovi/2024-tsandilas-ranktransforms/issues/2#issuecomment-2483020115) to the commentary of Prof. James Higgins.
+
+As in our original illustrative example, we use [data](example-data-2.csv) from a hypothetical experiment that evaluates the time performance of three user interface techniques (*A*, *B*, and *C*) that help users complete image editing tasks of four different difficulty levels: *Level1*, *Level2*, *Level3*, and *Level4*. 
+
+The experiment follows a fully balanced repeated-measures factorial design, where each participant ($N = 12$) performs 12 tasks in a unique order. The researcher measures the time that it takes participants to complete each task. 
+
+### Preliminary
+Let us first import all required libraries.  
+
+```{r, echo = TRUE, message = FALSE}
+library(lmerTest) # Lmer functions
+library(ARTool) # ARTool library
+library(effectsize) # To estimate effect sizes 
+
+# Additional libraries for plotting and reporting
+library(kableExtra) 
+library(gridExtra)
+library(ggplot2) 
+library(tidyverse)
+```
+
+### Reading the dataset
+
+We read our dataset and fix the type of the factors:
+```{r, warning=FALSE}
+df <- read.csv("example-data-2.csv", sep=",", header=TRUE, strip.white=TRUE)
+
+df$Participant <- factor(df$Participant)
+df$Difficulty <- factor(df$Difficulty, ordered = TRUE) # We can consider it as ordinal
+df$Technique <- factor(df$Technique)
+``` 
+
+We present our dataset with a table:
+```{r, warning=FALSE}
+kbl(df, booktabs = TRUE) %>% kable_styling(font_size=14) %>% kable_paper(position = "center") %>% scroll_box(height = "170px")
+``` 
+
+### Plotting the data
+
+We then plot our data to observe the main trends.
+
+```{r, warning=FALSE, fig.height=2.7, fig.width=8}
+cbPalette <- c("#999999", "#E69F00", "#F15854")
+
+p1 <- (df %>%  group_by(Participant,Technique) %>% 
+summarise(Time = median(Time), .groups="drop") %>%   
+        ggplot(aes(x = Technique, y = Time, fill = Technique)) + 
+        geom_boxplot(outlier.shape = NA) +
+        ylab("Median Time (min)") +
+        ylim(0, 8) + 
+        geom_jitter(shape=20, position=position_jitter(0.1)) +
+        theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=cbPalette)
+
+
+p2 <- (df %>%  group_by(Participant,Difficulty,Technique) %>% 
+           summarise(Time = median(Time), .groups="drop") %>%   
+        ggplot(aes(x = Difficulty, y = Time, fill = Technique)) + 
+        geom_boxplot(outlier.shape = NA) +
+        ylab("Median Time (min)") +
+        ylim(0, 10) +
+        geom_point(size = 0.7, position=position_jitterdodge(0.1)) +
+        theme_bw() + theme(legend.position = "none")) +
+        scale_fill_manual(values=cbPalette)
+
+grid.arrange(p1, p2, nrow = 1, widths = c(1.5, 2.5))
+```
+
+### Statistical analysis
+
+We conduct an analysis with five different methods: PAR, LOG, RNK, ART, and INT.
+```{r, warning=FALSE}
+# Implementation of the Inverse Normal Transform
+int = function(x){
+   qnorm((rank(x) - 0.5)/length(x))
+}
+
+mpar <- lmer(Time ~ Difficulty*Technique + (1|Participant), data=df) # Parametric - no transformation
+mlog <- lmer(log(Time) ~ Difficulty*Technique + (1|Participant), data=df) # Parametric - Log-transformation
+mart <- art(Time ~ Difficulty*Technique + (1|Participant), data=df) # ARTool
+mrnk <- lmer(rank(Time) ~ Difficulty*Technique + (1|Participant), data=df) # Rank transformation 
+mint <- lmer(int(Time) ~ Difficulty*Technique + (1|Participant), data=df) # Inverse Transform transformation
+
+model1 <- glmer(Time ~ Difficulty*Technique + (1|Participant), family = gaussian(link = "log"), data = df)
+model2 <- glmer(log(Time) ~ Difficulty*Technique + (1|Participant), family = gaussian(link = "identity"), data = df)
+
+``` 
+
+### Main and interaction effects
+We finally report the results of our analysis:
+```{r, warning=FALSE}
+# Function for printing the results for each method
+printAnalysis <- function(num, method, model) {
+  cat(num, ". Analysis using ", method, "\n\n", sep="")
+
+  print(anova(model))
+  print(eta_squared(model))
+  print(cohens_f(model))
+}
+
+printAnalysis(1, "Logarithmic Transformation", mlog)
+printAnalysis(2, "ART", mart)
+printAnalysis(3, "Rank Transformation", mrnk)
+printAnalysis(4, "Inverse Normal Transformation", mint)
+printAnalysis(5, "No Transformation", mpar)
+``` 
+
+### Contrasts
+Finally, we conduct an analysis of pairwise differences between the three techniques *A*, *B*, and *C*, using a Bonferroni correction. For ART, we use the ```art.con``` function.
+
+```{r, warning=FALSE}
+library("emmeans")
+
+# Function for printing the results for each method
+printContrasts <- function(num, method, expr, model) {
+  cat(num, ". Contrasts using ", method, "\n\n", sep="")
+
+  if(method == "ART") art.con(model, expr, adjust = "bonferroni")
+  else contrast(emmeans(model, expr), method="pairwise", adjust = "bonferroni")
+}
+
+printContrasts(1, "Logarithmic Transformation", ~Technique, mlog)
+printContrasts(2, "ART", ~Technique, mart)
+printContrasts(3, "Rank Transformation", ~Technique, mrnk)
+printContrasts(4, "Inverse Normal Transformation", ~Technique, mint)
+printContrasts(5, "No Transformation", ~Technique, mpar)
+``` 
+
+We observe again a significant divergence between the results of ART and the results of the other methods. 

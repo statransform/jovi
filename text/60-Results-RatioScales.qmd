@@ -58,7 +58,7 @@ plotlyError(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "eff
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
 
-Finally, @fig-ratio-interaction-1 presents our results when the main effects on the two factors increase in parallel. Error rates become exceptionally high in some cases, growing up to $100\%$. 
+Finally, @fig-ratio-interaction-2 presents our results when the main effects on the two factors increase in parallel. Error rates become exceptionally high in some cases, growing up to $100\%$. 
 
 ::: {#fig-ratio-interaction-2}
 ```{r, echo=FALSE, message=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}

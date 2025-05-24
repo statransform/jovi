@@ -1,3 +1,7 @@
+# This code was downloaded from http://www.uni-koeln.de/~luepsen/R/
+# As we only call the method with pseudo = F, the pseudorank library is not loaded.
+# Note that this library was removed from CRAN but can be obtained from the archive: https://cran.r-project.org/web/packages/pseudorank/index.html
+
 np.anova <- function(formel,data,method=0,compact=T,pseudo=F)
 {                        # data  :  dataframe 
                          # formel:  anova-Modell
@@ -10,7 +14,7 @@ np.anova <- function(formel,data,method=0,compact=T,pseudo=F)
                          #          F: seperate tables for each error term (repeated measures only)
                          # pseudo   T: use pseudoranks instead of ordinary ranks (for unequal ni)
 
-if (pseudo) library(pseudorank)
+if (pseudo) library(pseudorank) # See: https://cran.r-project.org/web/packages/pseudorank/index.html
                                                # check formula
 if (mode(formel)!="call") stop("invalid formula")
 if (class(data[,as.character(formel)[2]])=="factor") stop("invalid type of dependent variable")

@@ -81,7 +81,7 @@ $${#eq-cohensf}
 As we explained earlier, interaction effects are deformed when we transform the latent variable $Y$ to obtain the observed responses. Such transformations also affect the Type I error rates and power that we observe. Here, we are interested in evaluating these measures with respect to the effects we apply to the latent variable $Y$. We make this distinction whenever it is relevant in our analysis.  
 
 ### Hardware platform and iterations
-Our experimental R code is available in our supplementary material. We ran our experiments seperately in a cluster of 8 machines Dell R640 Intel Xeon Silver 4112 2.6GHz with 4 cores and 64 GB memory. Our R code was parallelized to use all four cores of each machine. Some experiments took a few hours to complete, while others took several days. 
+Our experimental R code is available in our supplementary material. We ran our experiments separately in a cluster of 8 machines Dell R640 Intel Xeon Silver 4112 2.6GHz with 4 cores and 64 GB memory. Our R code was parallelized to use all four cores of each machine. Some experiments took a few hours to complete, while others took several days. 
 
 To estimate the power and Type I error rates of the four methods with enough precision, we ran $5000$ iterations for each population configuration and each sample size. 
 
