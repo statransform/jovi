@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>higgins-4</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="higgins-4_files/libs/clipboard/clipboard.min.js"></script>
+<script src="higgins-4_files/libs/quarto-html/quarto.js"></script>
+<script src="higgins-4_files/libs/quarto-html/popper.min.js"></script>
+<script src="higgins-4_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="higgins-4_files/libs/quarto-html/anchor.min.js"></script>
+<link href="higgins-4_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="higgins-4_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="higgins-4_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="higgins-4_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="higgins-4_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#reactions-to-higgins-response-to-the-challenge" id="toc-reactions-to-higgins-response-to-the-challenge" class="nav-link active" data-scroll-target="#reactions-to-higgins-response-to-the-challenge"><span class="header-section-number">1</span> Reactions to Higgins’ response to the challenge</a>
+  <ul class="collapse">
+  <li><a href="#prof.-higgins-data-analysis" id="toc-prof.-higgins-data-analysis" class="nav-link" data-scroll-target="#prof.-higgins-data-analysis">Prof.&nbsp;Higgins’ data analysis</a></li>
+  <li><a href="#on-the-use-of-log-as-baseline-for-log-normal-data" id="toc-on-the-use-of-log-as-baseline-for-log-normal-data" class="nav-link" data-scroll-target="#on-the-use-of-log-as-baseline-for-log-normal-data">On the use of LOG as baseline for log-normal data</a></li>
+  <li><a href="#on-the-presence-of-a-non-null-interaction" id="toc-on-the-presence-of-a-non-null-interaction" class="nav-link" data-scroll-target="#on-the-presence-of-a-non-null-interaction">On the presence of a non-null interaction</a></li>
+  <li><a href="#other-comments" id="toc-other-comments" class="nav-link" data-scroll-target="#other-comments">Other comments</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="reactions-to-higgins-response-to-the-challenge" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Reactions to Higgins’ response to the challenge</h1>
+<p>We explain the pitfalls in Prof.&nbsp;Higgins reasoning and clarify that his claim - that we have not evaluated RNK and INT in the presence of interaction effects - is false.</p>
+<section id="prof.-higgins-data-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="prof.-higgins-data-analysis">Prof.&nbsp;Higgins’ data analysis</h3>
+<p>Our reviewer chose not to analyze the two datasets we provided (n=1000), instead focusing on the dataset from the article’s example in Figure 1 (n=12). Is this because smaller datasets are easier to manipulate to creatively distort statistical results?</p>
+<p>Prof.&nbsp;Higgins essentially makes the following claim (with our own words): <em>If ART provides strong evidence for an effect but no other statistical methods do, one can selectively remove observations from the data so that other methods also detect an effect.</em> We agree that it is always possible to artificially create an effect - even when no effect exists in the original population - by selectively removing observations.</p>
+<p>However, let’s examine our reviewer’s analysis in greater detail. Prof.&nbsp;Higgins argues that six “extreme observations” under Level 4 influence the results of PAR. These are our reactions.</p>
+<p><strong>A first reaction:</strong> Why are these observations considered extreme or outliers? These six cases make up 16.7% of the total 36 observations under Level 4!</p>
+<p>Moreover, Prof.&nbsp;Higgins selectively removes these observations in a way that exaggerates the random trend, creating an artificial effect in a specific direction. Specifically, he removes smaller values for Techniques A and B and larger values for Technique C. However, a closer examination reveals that the two largest values of Technique C that he removes are actually lower - not merely comparable - than the largest values of Techniques A and B. Similarly, the four smallest values of Techniques A and B are larger than the smallest value of Technique C.</p>
+<p>We remind him that observations for all three techniques were drawn from <strong>completely identical distributions.</strong> Why does our reviewer refuse to accept this? Does he believe that an effect must exist simply because ART detects one?</p>
+<p><strong>A second reaction:</strong> In addition to the issue discussed above, Prof.&nbsp;Higgins makes another unfounded claim: <em>“The ranking in ART has the desirable property of down-weighting extreme observations, so p-values are not as negatively affected by a few extreme observations.”</em></p>
+<p>Interestingly, he hides (why?) the fact that ART’s <em>p</em>-values also change drastically (orders of magnitude) after these data are removed:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: right;">ART (original data)</th>
+<th style="text-align: right;">ART (6 values removed)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Technique</td>
+<td style="text-align: right;">.00061</td>
+<td style="text-align: right;">.0000073</td>
+</tr>
+<tr class="even">
+<td>Difficulty <span class="math inline">\(\times\)</span> Technique</td>
+<td style="text-align: right;">.0017</td>
+<td style="text-align: right;">.0000024</td>
+</tr>
+</tbody>
+</table>
+<p><strong>A third reaction:</strong> Prof.&nbsp;Higgins has avoided analyzing the challenge dataset we provided (where n=1000). Why? Can he explain how he would identify and remove the “outliers” in this dataset?</p>
+<p>But since comparing <em>p</em>-values on a single dataset may not be as convincing, we randomly generate 100 datasets for n=12, and 100 additional datasets for n=1000. All these datasets were drawn from log-normal distributions, with a large effect on one factor, no effect on the other factor, and no interaction effect.</p>
+<p>The following plots compare the <em>p</em>-values we obtain with PAR and ART for the factor with no effect:</p>
+<p><img src="par-vs-art.png" class="img-fluid"></p>
+<p>These results are <strong>deeply embarrassing for ART.</strong> Can Prof.&nbsp;Higgins explain these systematic discrepancies? Aren’t these failures clear examples of Type I errors? The <em>p</em>-values obtained with ART are highly erratic, with some reaching extremely low levels: 11% of ART’s <em>p</em>-values for n = 1000 are below .00001!</p>
+<p>Do such results demonstrate ART’s robustness in the presence of outliers? Don’t they instead demonstrate the exact opposite - a complete breakdown of ART under heavy-tailed distributions?</p>
+<p><strong>A fourth reaction:</strong> Our follow-up exercise highlights another scenario of ART’s clear failure, this time with discrete ordinal data, where effects are null across all factors. However, despite our repeated requests for his position on this critical issue, Prof.&nbsp;Higgins continues to ignore us. Why?</p>
+</section>
+<section id="on-the-use-of-log-as-baseline-for-log-normal-data" class="level3">
+<h3 class="anchored" data-anchor-id="on-the-use-of-log-as-baseline-for-log-normal-data">On the use of LOG as baseline for log-normal data</h3>
+<p>Prof.&nbsp;Higgins continues to argue that we should not compare the results of ART or PAR to those obtained using LOG (for log-normal distributions), RNK, or INT. He even goes so far as to claim that the running example in Elkin et al.&nbsp;(2021), which also uses LOG as a baseline, is flawed. This reasoning leads to the conclusion that without a baseline, reliable comparisons to evaluate ART are impossible. Magic!</p>
+<p>Let’s be very clear:</p>
+<ol type="1">
+<li><p>If the model’s interaction term <span class="math inline">\(a_{12}\)</span> is zero, then conclusions about main effects should NOT change regardless of the scale used. (Of course, we refer to scales under strictly monotonic transformations, such as the logarithmic transformation and its inverse function.)</p></li>
+<li><p>If either <span class="math inline">\(a_1\)</span> or <span class="math inline">\(a_2\)</span> is zero, then conclusions about the interaction effect should NOT change regardless of the scale used.</p></li>
+</ol>
+<p>We have extensively explained why these statements are true, yet Prof.&nbsp;Higgins completely disregards our responses and avoids addressing our questions. Can he provide answers to Questions 1, 2, 3, and 4 from our <a href="https://github.com/journalovi/2024-tsandilas-ranktransforms/issues/2#issuecomment-2564006376">previous post</a>?</p>
+<p><strong>Conclusion:</strong> If we are in one of the two situations described above and the data are log-normal, LOG is undoubtedly the best baseline for all methods. This is because LOG is expected to provide the best Type I error control and the greatest statistical power across all alpha levels. Therefore, comparing the <span class="math inline">\(p\)</span>-values of PAR, RNK, INT, or ART to those of LOG in these cases makes perfect sense, regardless of Prof.&nbsp;Higgins’ claims.</p>
+<p><strong>Note:</strong> Prof.&nbsp;Higgins’ suggestion to use ART on transformed data (e.g., after applying LOG or RNK and INT) appears to be an artificial invention that can only confuse readers (is this its purpose?). We have not found a single instance of authors using it in that manner. Our reviewer seems to acknowledge its lack of practical utility, stating: <em>“my comments are not about whether ART is or is not a useful methodology…”</em> This obscure statement is particularly perplexing. Notice that Mansouri and Chang (1995), as well as other authors, directly compare ART with RNK in their experiments.</p>
+</section>
+<section id="on-the-presence-of-a-non-null-interaction" class="level3">
+<h3 class="anchored" data-anchor-id="on-the-presence-of-a-non-null-interaction">On the presence of a non-null interaction</h3>
+<p>Prof.&nbsp;Higgins adds .13 to observations with <code>Difficulty = Level4</code> and <code>Technique = A</code> to simulate an interaction effect. We did the same by adding the following R code prior to the analyses:</p>
+<p><code>df$Time &lt;- ifelse(df$Difficulty == "Level4" &amp; df$Technique == "A", df$Time + .13, df$Time)</code></p>
+<p>These are the <em>p</em>-values we obtain:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: left;">LOG</th>
+<th style="text-align: left;">RNK</th>
+<th style="text-align: left;">INT</th>
+<th style="text-align: left;">ART</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Technique</td>
+<td style="text-align: left;">.16</td>
+<td style="text-align: left;">.36</td>
+<td style="text-align: left;">.16</td>
+<td style="text-align: left;">.00069</td>
+</tr>
+<tr class="even">
+<td>Difficulty <span class="math inline">\(\times\)</span> Technique</td>
+<td style="text-align: left;">.084</td>
+<td style="text-align: left;">.21</td>
+<td style="text-align: left;">.20</td>
+<td style="text-align: left;">.0017</td>
+</tr>
+</tbody>
+</table>
+<p>This is very different from what Prof.&nbsp;Higgins reports. This does not imply that there are no differences between the results of LOG and RNK (or INT) — of course, there are! However, these differences need to be evaluated over a larger number of samples.</p>
+<p>The following two plots compare the outputs of PAR, ART, RNK, and INT for the interaction effect with those of the baseline (LOG). We generate 100 datasets (using the same design as Fig. 1 with <span class="math inline">\(n=12\)</span>), where <span class="math inline">\(a_1=4\)</span>, <span class="math inline">\(a_2=0\)</span>, and <span class="math inline">\(a_{12}\)</span> is randomly drawn from the range <span class="math inline">\([-2, 2]\)</span>. Anticipating potential reactions from Prof.&nbsp;Higgins, we emphasize that this comparison is entirely valid because <span class="math inline">\(a_2=0\)</span> (see above).</p>
+<p><img src="interaction-comparison.png" class="img-fluid"></p>
+<p>ART’s <em>p</em>-values are highly inconsistent and, in many cases, extremely small. RNK and PAR generally tend to underestimate effects, resulting in larger p-values than LOG (with a few exceptions), while INT appears to provide the best control.</p>
+<p>Prof.&nbsp;Higgins claims that we have not evaluated RNK and INT in the presence of interactions. This is incorrect:</p>
+<ol type="1">
+<li><p><strong>Power detecting interactions, when both <span class="math inline">\(a_1\)</span> and <span class="math inline">\(a_2\)</span> are zero.</strong> Please, check <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#fig-power-interaction">Figure 28</a>.</p></li>
+<li><p><strong>Power detecting interactions, as <span class="math inline">\(a_2\)</span> increases while <span class="math inline">\(a_1 = 0\)</span>.</strong> Please, check <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/appendix.html#fig-vdWaerden-power-interactionB">Figure 40 in our Appendix</a>, where we compare RNK and INT against the methods recommended by Lüpsen (2018; 2023). We show the issues of these latter methods (see results for between- and mixed-subject designs) and demonstrate INT’s superiority across all scenarios. We observe that RNK’s power in detecting interactions also drops as the main effect increases, and our recommendations consider these issues. (<em>Note: Including ART in this comparison would make little sense, given its high Type I error rate for these scenarios.</em>)</p></li>
+<li><p><strong>Type I error rate of main effects in the presence of interactions.</strong> Please, check <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/appendix.html#interactions">Appendix - Section 2</a>. In this specific case, we acknowledge that interpreting the null hypothesis becomes more challenging because main effects are influenced by the presence of interaction when scales change. Our experiments evaluate the methods with respect to the model parameters (which we believe is the most meaningful approach), but we will revise this section to clarify the interpretation issues. However, we invite our reviewer to carefully read our nuanced conclusions in this section regarding RNK and INT: <em>“The performance of INT and RNK can also be affected by the presence of interaction effects, especially when the interaction effect is combined with a main effect, and distributions are either binomial or ordinal. More generally, main effects should be interpreted with caution when strong interactions exist.”</em></p></li>
+</ol>
+</section>
+<section id="other-comments" class="level3">
+<h3 class="anchored" data-anchor-id="other-comments">Other comments</h3>
+<p>Prof.&nbsp;Higgins provides a lecture on the history of ANOVA but misleads readers in the process. He writes:</p>
+<p><em>“Thus, the notion that ART has limited applicability because it is based on this model [ANOVA], as asserted by the authors in one of their responses, is not born out in practice. In view of the authors’ criticism of ART as having limited applicability, it is ironic …”</em></p>
+<p>We <strong>never argued</strong> that <em>“ART has limited applicability because it is based on ANOVA.”</em> Instead we stated - and empirically demonstrated - that its applicability is limited because it relies on a set of “alignment” calculations (see <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#fig-ART-explained">Figure 2</a>) that only work under very specific conditions. ART is a Frankenstein method. As far as we know, these alignment calculations have no connection to Fischer’s work, and we are not aware of any theoretical justification for their use with generalized linear models and discrete data.</p>
+<p>Regarding INT, we have conducted a large number of experiments and, despite INT’s limitations (which we clearly identify and caution researchers about), all other so-called “nonparametric” methods for multifactorial designs found in the literature - including ART, ATS, and Lüpsen’s generalization of non-parametric tests - were shown to perform worse than INT.</p>
+<p>We also encourage our reviewer to review our recommendations on the use of nonparametric methods. We explicitly state that such methods should only be used as “last-resort” solutions. In contrast, ART should never be used, as it can very easily lead to fundamentally flawed conclusions. The ARTool has been polluting HCI empirical research for many years, and this may not change if ART’s authors continue to obscure its problems. In some domains such as VR/AR, reviewers frequently request authors to replace their analyses with nonparametric analyses using ART — <strong>this practice must stop!</strong></p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

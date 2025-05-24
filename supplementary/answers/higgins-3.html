@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>higgins-3</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="higgins-3_files/libs/clipboard/clipboard.min.js"></script>
+<script src="higgins-3_files/libs/quarto-html/quarto.js"></script>
+<script src="higgins-3_files/libs/quarto-html/popper.min.js"></script>
+<script src="higgins-3_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="higgins-3_files/libs/quarto-html/anchor.min.js"></script>
+<link href="higgins-3_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="higgins-3_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="higgins-3_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="higgins-3_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="higgins-3_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#answer-to-the-new-response-of-prof.-james-higgins" id="toc-answer-to-the-new-response-of-prof.-james-higgins" class="nav-link active" data-scroll-target="#answer-to-the-new-response-of-prof.-james-higgins"><span class="header-section-number">1</span> Answer to the new response of Prof.&nbsp;James Higgins</a>
+  <ul class="collapse">
+  <li><a href="#claim-1-interaction-effects-under-transformation" id="toc-claim-1-interaction-effects-under-transformation" class="nav-link" data-scroll-target="#claim-1-interaction-effects-under-transformation">CLAIM 1 (Interaction effects under transformation)</a></li>
+  <li><a href="#claim-2-main-effects-under-transformation" id="toc-claim-2-main-effects-under-transformation" class="nav-link" data-scroll-target="#claim-2-main-effects-under-transformation">CLAIM 2 (Main effects under transformation)</a></li>
+  <li><a href="#claim-3-arts-no-inflation-of-type-i-error-rates" id="toc-claim-3-arts-no-inflation-of-type-i-error-rates" class="nav-link" data-scroll-target="#claim-3-arts-no-inflation-of-type-i-error-rates">CLAIM 3 (ART’s no inflation of Type I error rates)</a></li>
+  <li><a href="#claim-4-incorrect-comparison-between-methods" id="toc-claim-4-incorrect-comparison-between-methods" class="nav-link" data-scroll-target="#claim-4-incorrect-comparison-between-methods">CLAIM 4 (Incorrect comparison between methods)</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="answer-to-the-new-response-of-prof.-james-higgins" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Answer to the new response of Prof.&nbsp;James Higgins</h1>
+<p>Prof.&nbsp;Higgins admits that we are <em>“speaking past each other,”</em> but this is largely because our reviewer disregards our responses and fails to address our points. We enumerate the key claims he has made throughout his commentaries and summarize our replies. We pose precise questions in the hope that more neutral reviewers will evaluate our work fairly and, most importantly, that our community will quickly abandon the ART method.</p>
+<section id="claim-1-interaction-effects-under-transformation" class="level3">
+<h3 class="anchored" data-anchor-id="claim-1-interaction-effects-under-transformation">CLAIM 1 (Interaction effects under transformation)</h3>
+<p>In his initial commentary, Prof.&nbsp;Higgins argues that we <em>“misunderstood what interaction is fundamentally about.”</em> Specifically, he claims that the difference in interaction detection between ART and other transformation methods arises because <em>“there can be interaction in the original data but no interaction in the transformed data, or vice versa.”</em></p>
+<p>We respond that this is not the case in our example in Fig. 1, nor in our main experiments, where the effect is applied solely to the first factor. This indicates that ART’s rejection of the null hypothesis for interaction in these cases constitutes a Type I error, regardless of whether the null hypothesis for interaction is defined with respect to the original data or the transformed data.</p>
+<p><strong>Question 1:</strong> Does Prof.&nbsp;Higgins still assert that an interaction effect can appear in monotonically transformed data when there is no interaction in the original data and no effect on the second factor? If so, could he explain how this is possible?</p>
+</section>
+<section id="claim-2-main-effects-under-transformation" class="level3">
+<h3 class="anchored" data-anchor-id="claim-2-main-effects-under-transformation">CLAIM 2 (Main effects under transformation)</h3>
+<p>In his second commentary, Prof.&nbsp;Higgins argues: <em>“The authors seem to think that a test for a1 determines whether or not the main effect of factor 1 is significant and a test for a2 determines whether or not the main effect of factor 2 is significant. This can’t be true because these would be single degrees-of-freedom tests, which would be incorrect for any setup with more than 2 levels.</em>”</p>
+<p>We respond that this claim is incorrect. When <span class="math inline">\(a_2\)</span> and <span class="math inline">\(a_{12}\)</span> are both zero, it is impossible to apply a monotonic transformation that produces a main effect on the second factor. We have also demonstrated this graphically using our simulation method, which shows that the transformed population distributions from which we draw samples are identical across the levels of the second factor.</p>
+<p><strong>Question 2:</strong> Does Prof.&nbsp;Higgins still believe that it is possible to apply a monotonic transformation and produce a main effect on the second factor when <span class="math inline">\(a_2\)</span> and <span class="math inline">\(a_{12}\)</span> are both zero? If so, could he explain how this is possible?</p>
+</section>
+<section id="claim-3-arts-no-inflation-of-type-i-error-rates" class="level3">
+<h3 class="anchored" data-anchor-id="claim-3-arts-no-inflation-of-type-i-error-rates">CLAIM 3 (ART’s no inflation of Type I error rates)</h3>
+<p>In his final commentary, Prof.&nbsp;Higgins argues that <em>“[the main issue] is whether the authors have shown that ART unacceptably inflates the Type I error rates. They have not.”</em></p>
+<p>This claim is surprising and overlooks our responses. ART’s inflation of Type I error rates is not a matter of comparison with other methods. We explicitly set a null hypothesis and an <span class="math inline">\(\alpha\)</span> level, then demonstrate that ART rejects the null hypothesis at a rate far exceeding this level.</p>
+<p>Moreover, the population distributions from which we draw samples do not merely have equal means across the second factor. They are identical. Yet, ART identifies them as different at a rate significantly higher than the nominal <span class="math inline">\(\alpha\)</span> level.</p>
+<p><strong>Question 3:</strong> Suppose we draw samples from the following population distributions, using the exact same distributions for all levels of <span class="math inline">\(x_2\)</span> (this is what our simulations simply do). If ART, or any other method, results in <span class="math inline">\(p &lt; \alpha\)</span> for the main effect of <span class="math inline">\(x_2\)</span> (or its interaction with <span class="math inline">\(x_1\)</span>), does Prof.&nbsp;Higgins believe that this a not a Type I error?</p>
+<p><img src="distributions.png" class="img-fluid"></p>
+<p><strong>Question 4:</strong> In our previous response, we used the data from our illustrative example to conduct an experiment in which observations were randomly assigned to each level of Technique. We demonstrated that ART detects an effect of Technique at a rate of 39%, which is significantly higher than the nominal rate of 5%. Does Prof.&nbsp;Higgins believe that this simple experiment fails to demonstrate that ART inflates Type I error rates? Does he consider this behavior normal?</p>
+</section>
+<section id="claim-4-incorrect-comparison-between-methods" class="level3">
+<h3 class="anchored" data-anchor-id="claim-4-incorrect-comparison-between-methods">CLAIM 4 (Incorrect comparison between methods)</h3>
+<p>Prof.&nbsp;Higgins claims: <em>“To compare the p-values of ART to those of the other methods, ART must be applied to the same data used to obtain the p-values of the other methods: original data for ART vs.&nbsp;PAR, logarithmic data for ART vs.&nbsp;LOG, unaligned rank data for ART vs.&nbsp;RNK, and inverse-normal transformed ranks for ART vs.&nbsp;INT.”</em></p>
+<p>We are unclear on what Prof.&nbsp;Higgins is suggesting. Yes, if we make the distributions normal or first take ranks, ART will behave well. However this is not how ART is intended to function. We have not encountered any paper that applies ART to log-transformed or rank-transformed data.</p>
+<p>We refer again Prof.&nbsp;Higgins to his own paper with Elkin et al.&nbsp;(2021):</p>
+<p><em>“Since we know the data in our running example is drawn from a lognormal distribution, we fit a linear mixed model (LMM) to log-transformed data as a baseline, and fit an ART model to the original (not log-transformed) data.”</em> (Page 757)</p>
+<p><strong>Questions 5 (again):</strong> We used the very same approach of Elkin et al.&nbsp;(2021) to illustrate ART’s defects but identified instead a new set of more serious problems. Why is our interpretation “wrong” while theirs is correct?</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

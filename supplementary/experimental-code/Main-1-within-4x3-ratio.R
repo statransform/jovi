@@ -105,7 +105,7 @@ effects <- matrix(c(0, 0, 0,
 Ns <- c(20) 
 
 # 5000 iterations
-R <- 5000
+R <- 1000
 
 filename = "1_test_4x3_Ratio"
 

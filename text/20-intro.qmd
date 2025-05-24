@@ -35,7 +35,7 @@ p1 <- (df %>%  group_by(Participant,Technique) %>% summarise(Time = median(Time)
         ylab("Median Time (min)") +
         ylim(0, 3) + 
         geom_jitter(shape=20, position=position_jitter(0.1)) +
-        theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=cbPalette)
+        theme_bw() + theme(legend.position = "none") + scale_fill_manual(values=cbPalette))
 
 
 p2 <- (df %>%  group_by(Participant,Difficulty,Technique) %>% summarise(Time = median(Time), .groups="drop") %>%   
@@ -45,9 +45,9 @@ p2 <- (df %>%  group_by(Participant,Difficulty,Technique) %>% summarise(Time = m
         ylim(0, 6) +
         #geom_jitter(shape=20, position=position_jitter(0.1)) +
         geom_point(size = 0.7, position=position_jitterdodge(0.1)) +
-        theme_bw() + theme(legend.position = "none")) +
+        theme_bw() + theme(legend.position = "none") +
         #scale_fill_brewer()
-        scale_fill_manual(values=cbPalette)
+        scale_fill_manual(values=cbPalette))
 
 grid.arrange(p1, p2, nrow = 1, widths = c(1.5, 2.5))
 ```

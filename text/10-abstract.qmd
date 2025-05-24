@@ -22,7 +22,7 @@ In addition, our results show that testing interactions in the presence of multi
 We conclude that ART is a flawed statistical method and should be abandoned. We recommend prioritizing parametric methods, including linear models and their generalizations. While we propose the inverse normal transformation as a generic nonparametric alternative, we caution researchers about risks and limitations of rank transformation methods.
 
 ###### Materials
-We provide [supplementary materials](https://github.com/statransform/jovi/tree/main/supplementary) with experimental code, raw experimental results, and detailed analyses of examples and case studies presented throughout the article. Source files of our article, appendix, and supplementary materials can also be found on OSF at [https://osf.io/hs7j8](https://osf.io/hs7j8). 
+We provide [supplementary materials](https://github.com/journalovi/2024-tsandilas-ranktransforms/tree/main/supplementary) with experimental code, raw experimental results, and detailed analyses of examples and case studies presented throughout the article. Source files of our article, appendix, and supplementary materials can also be found on OSF at [https://osf.io/hs7j8](https://osf.io/hs7j8). 
 :::
 
 ::: {.callout-note appearance="simple" icon=false collapse=true}
@@ -30,7 +30,7 @@ We provide [supplementary materials](https://github.com/statransform/jovi/tree/m
 
 ###### Research materials
 
-We provide [supplementary materials](https://github.com/statransform/jovi/tree/main/supplementary) with experimental code, raw experimental results, and detailed analyses of examples and case studies presented throughout the article. Source files of our article, appendix, and supplementary materials can also be found on OSF at [https://osf.io/hs7j8](https://osf.io/hs7j8). 
+We provide [supplementary materials](https://github.com/journalovi/2024-tsandilas-ranktransforms/tree/main/supplementary) with experimental code, raw experimental results, and detailed analyses of examples and case studies presented throughout the article. Source files of our article, appendix, and supplementary materials can also be found on OSF at [https://osf.io/hs7j8](https://osf.io/hs7j8). 
 
 ###### Authorship
 
