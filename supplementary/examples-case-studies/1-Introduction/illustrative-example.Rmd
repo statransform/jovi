@@ -12,7 +12,7 @@ We detail our analysis for the illustrative example presented in the Introductio
 
 We use [data](example-data.csv) from a hypothetical experiment that evaluates the time performance of three user interface techniques (*A*, *B*, and *C*) that help users complete image editing tasks of four different difficulty levels: *Level1*, *Level2*, *Level3*, and *Level4*. 
 
-The experiment follows a fully balanced repeated-measures factorial design, where each participant ($N = 12$) performs 12 tasks in a unique order. The researcher measures the time that it takes participants to complete each task. 
+The experiment follows a fully balanced repeated-measures factorial design, where each participant ($N = 12$) performs 12 tasks in a unique order. The researchers measure the time that it takes participants to complete each task, but participants also evaluate the perceived efficiency, using an ordinal scale with five levels.
 
 ### Preliminary
 Let us first import all required libraries.  
@@ -38,6 +38,8 @@ df <- read.csv("example-data.csv", sep=",", header=TRUE, strip.white=TRUE)
 df$Participant <- factor(df$Participant)
 df$Difficulty <- factor(df$Difficulty, ordered = TRUE) # We can consider it as ordinal
 df$Technique <- factor(df$Technique)
+
+df$Perceived_Efficiency <- ordered(df$Perceived_Efficiency, levels = c("inefficient", "somewhat inefficient", "neutral", "somewhat efficient", "efficient"))
 ``` 
 
 We present our dataset with a table:
@@ -52,6 +54,7 @@ We then plot our data to observe the main trends.
 ```{r, warning=FALSE, fig.height=2.7, fig.width=8}
 cbPalette <- c("#999999", "#E69F00", "#F15854")
 
+# Plots for the time measure 
 p1 <- (df %>%  group_by(Participant,Technique) %>% 
 summarise(Time = median(Time), .groups="drop") %>%   
         ggplot(aes(x = Technique, y = Time, fill = Technique)) + 
@@ -73,11 +76,34 @@ p2 <- (df %>%  group_by(Participant,Difficulty,Technique) %>%
         scale_fill_manual(values=cbPalette)
 
 grid.arrange(p1, p2, nrow = 1, widths = c(1.5, 2.5))
+
+# Plots for the perceived efficiency measure
+dd1 <- df %>%  group_by(Participant,Technique) %>% summarise(Perceived_Efficiency = mean(as.integer(Perceived_Efficiency)), .groups="drop")
+
+p3 <- (dd1 %>%   
+        ggplot(aes(x = Technique, y = Perceived_Efficiency, fill = Technique)) + 
+        geom_boxplot(outlier.shape = NA) +
+        ylab("Perceived Efficiency (means)") +
+        scale_y_continuous(breaks = 1:5, limits = c(1,5), labels=levels(df$Perceived_Efficiency)) +
+        geom_jitter(shape=1, position=position_jitter(0.2,0), size = 2) +
+        theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=cbPalette) +  
+        theme(axis.text.y=element_text(angle=50, hjust=0.7))
+
+dd2 <- df %>%  group_by(Participant,Difficulty) %>% summarise(Perceived_Efficiency = mean(as.integer(Perceived_Efficiency)), .groups="drop")
+diffPalette <- c("#f9f9fd", "#e2e6fa", "#bacafb", "#99b9f9")
+p4 <- (dd2 %>%   
+        ggplot(aes(x = Difficulty, y = Perceived_Efficiency, fill = Difficulty)) + 
+        geom_boxplot(outlier.shape = NA) + ylim(1,5)+
+        geom_jitter(shape=1, position=position_jitter(0.2,0), size = 2) +
+        theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=diffPalette) +  
+        theme(axis.title.y=element_blank(), axis.text.y=element_blank())
+
+grid.arrange(p3, p4, nrow = 1, widths = c(3, 3))
 ```
 
-### Statistical analysis
+### Statistical analysis of time performance
 
-We conduct an analysis with five different methods: PAR, LOG, RNK, ART, and INT.
+For task-completion times, we conduct an analysis with five different methods: PAR, LOG, RNK, ART, and INT.
 ```{r, warning=FALSE}
 # Implementation of the Inverse Normal Transform
 int = function(x){
@@ -91,8 +117,8 @@ mrnk <- lmer(rank(Time) ~ Difficulty*Technique + (1|Participant), data=df) # Ran
 mint <- lmer(int(Time) ~ Difficulty*Technique + (1|Participant), data=df) # Inverse Transform transformation
 ``` 
 
-### Main and interaction effects
-We finally report the results of our analysis:
+#### Main and interaction effects
+We report the results of our analysis.
 ```{r, warning=FALSE}
 # Function for printing the results for each method
 printAnalysis <- function(num, method, model) {
@@ -110,7 +136,9 @@ printAnalysis(4, "Inverse Normal Transformation", mint)
 printAnalysis(5, "No Transformation", mpar)
 ``` 
 
-### Contrasts
+We observe that only ART shows statistical evidence for a main effect of Technique, as well as an interaction effect.
+
+#### Contrasts
 Finally, we conduct an analysis of pairwise differences between the three techniques *A*, *B*, and *C*, using a Bonferroni correction. For ART, we use the ```art.con``` function.
 
 ```{r, warning=FALSE}
@@ -132,3 +160,25 @@ printContrasts(5, "No Transformation", ~Technique, mpar)
 ``` 
 
 We observe again a significant divergence between the results of ART and the results of the other methods. 
+
+### Statistical analysis of perceived efficiency
+We conduct an analysis with PAR, RNK, ART, and INT.
+```{r, warning=FALSE}
+df$Perceived_Efficiency <- as.integer(df$Perceived_Efficiency)
+
+mpar <- lmer(Perceived_Efficiency ~ Difficulty*Technique + (1|Participant), data=df) # Parametric - no transformation
+mart <- art(Perceived_Efficiency ~ Difficulty*Technique + (1|Participant), data=df) # ARTool
+mrnk <- lmer(rank(Perceived_Efficiency) ~ Difficulty*Technique + (1|Participant), data=df) # Rank transformation 
+mint <- lmer(int(Perceived_Efficiency) ~ Difficulty*Technique + (1|Participant), data=df) # Inverse Transform transformation
+``` 
+
+We report the results of our analysis.
+```{r, warning=FALSE}
+printAnalysis(2, "ART", mart)
+printAnalysis(3, "Rank Transformation", mrnk)
+printAnalysis(4, "Inverse Normal Transformation", mint)
+printAnalysis(5, "No Transformation", mpar)
+``` 
+
+ART is the only method to detect an main effect for both Difficulty ($p=.0011$, partial $\eta^2 = .12$, $95\%$ CI $[.03, 1.0]$) and Technique ($p=.00016$, partial $\eta^2 = .13$, $95\%$ CI $[.05, 1.0]$). Its *p-*values are substantially lower than the *p-*values of the other methods, and its effect size estimates are surprisingly large.
+

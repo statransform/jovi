@@ -1,0 +1,123 @@
+---
+title: "The illusory promise of the Aligned Rank Transform"
+subtitle: "A systematic study of rank transformations"
+author: 
+  - name: Theophanis Tsandilas
+    orcid: 0000-0002-0158-228X
+    email: theophanis.tsandilas@inria.fr
+    affiliations:
+      - name: Université Paris-Saclay, CNRS, Inria, LISN
+        country: France
+  - name: Géry Casiez
+    orcid: 0000-0003-1905-815X
+    email: gery.casiezuniv-lille.fr
+    affiliations:
+      - name: Univ. Lille, CNRS, Inria, Centrale Lille, UMR 9189 CRIStAL
+        country: France
+bibliography: bibliography.bib
+csl: canadian-journal-of-philosophy.csl
+
+tbl-cap-location: top
+---
+
+::: {.callout-important appearance="simple"}
+## Under Review {.unnumbered}
+This paper is [under review](https://www.journalovi.org/under-review.html) on the experimental track of
+the [Journal of Visualization and Interaction](https://www.journalovi.org/). See the 
+[reviewing process](https://github.com/journalovi/2024-tsandilas-ranktransforms/issues).
+:::
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Useful libraries
+library(crosstalk)
+library(kableExtra)
+library(gridExtra)
+library(lmerTest)
+library(tidyverse)
+library(plotly)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Source code for reading data from experimental results and for plotting
+source("dataReaders.R")
+source("plotting.R")
+source("effects_plot.R")
+source("interactions_plot.R")
+```
+
+```{=html}
+<style>
+.math.inline .MathJax  {
+  font-size: 105% !important;
+}
+</style>
+```
+
+::: {.callout-note appearance="simple" icon=false collapse=false}
+
+
+{{< include text/10-abstract.qmd >}}
+
+
+::: {#tbl-example}
+```{r, echo=FALSE, warning=FALSE}
+df <- read.csv("example-data.csv", sep=",", header=TRUE, strip.white=TRUE)
+kbl(df) %>% kable_paper(position = "center") %>% scroll_box(width = "740px", height = "170px")
+``` 
+
+::: {#fig-example}
+```{r, echo=FALSE, warning=FALSE, fig.height=2.7, fig.width=8}
+cbPalette <- c("#999999", "#E69F00", "#F15854")
+
+p1 <- (df %>%  group_by(Participant,Technique) %>% summarise(Time = median(Time), .groups="drop") %>%   
+        ggplot(aes(x = Technique, y = Time, fill = Technique)) + 
+        geom_boxplot(outlier.shape = NA) +
+        ylab("Median Time (min)") +
+        ylim(0, 3) + 
+        geom_jitter(shape=20, position=position_jitter(0.1, 0)) +
+        theme_bw() + theme(legend.position = "none") + scale_fill_manual(values=cbPalette))
+
+
+p2 <- (df %>%  group_by(Participant,Difficulty,Technique) %>% summarise(Time = median(Time), .groups="drop") %>%   
+        ggplot(aes(x = Difficulty, y = Time, fill = Technique)) + 
+        geom_boxplot(outlier.shape = NA) +
+        ylab("Median Time (min)") +
+        ylim(0, 6) +
+        #geom_jitter(shape=20, position=position_jitter(0.1)) +
+        geom_point(size = 0.7, position=position_jitterdodge(0.1)) +
+        theme_bw() + theme(legend.position = "none") +
+        #scale_fill_brewer()
+        scale_fill_manual(values=cbPalette))
+
+grid.arrange(p1, p2, nrow = 1, widths = c(1.5, 2.5))
+```
+Boxplots summarizing time performance results for our illustrative example. Dots represent the median time for each individual participant. 
+:::
+
+
+::: {#fig-example-ordinal}
+```{r, echo=FALSE, warning=FALSE, fig.height=3, fig.width=9}
+df$Perceived_Efficiency <- ordered(df$Perceived_Efficiency, levels = c("inefficient", "somewhat inefficient", "neutral", "somewhat efficient", "efficient"))
+
+p3 <- (df %>%  group_by(Participant,Technique) %>% summarise(Perceived_Efficiency = mean(as.integer(Perceived_Efficiency)), .groups="drop") %>%   
+        ggplot(aes(x = Technique, y = Perceived_Efficiency, fill = Technique)) + 
+        geom_boxplot(outlier.shape = NA) +
+        ylab("Perceived Efficiency") +
+        scale_y_continuous(breaks = 1:5, limits = c(1,5), labels=levels(df$Perceived_Efficiency)) +
+        geom_jitter(shape=1, position=position_jitter(0.2,0), size = 2) +
+        theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=cbPalette) +  
+        theme(axis.text.y=element_text(angle=50, hjust=0.7))
+
+#diffPalette <- c("#f9f9f9", "#e2e2e2", "#b9b9b9", "#999999")
+diffPalette <- c("#f9f9fd", "#e2e6fa", "#bacafb", "#99b9f9")
+p4 <- (df %>%  group_by(Participant,Difficulty) %>% summarise(Perceived_Efficiency = mean(as.integer(Perceived_Efficiency)), .groups="drop") %>%   
+        ggplot(aes(x = Difficulty, y = Perceived_Efficiency, fill = Difficulty)) + 
+        geom_boxplot(outlier.shape = NA) + ylim(1,5)+
+        geom_jitter(shape=1, position=position_jitter(0.2,0), size = 2) +
+        theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=diffPalette) +  
+        theme(axis.title.y=element_blank(), axis.text.y=element_blank())
+
+grid.arrange(p3, p4, nrow = 1, widths = c(3, 3))
+```
+Boxplots summarizing the results on efficiency as perceived by participants. Circles represent the mean rating of each individual participant. 
+:::

@@ -10,17 +10,21 @@ Our findings corroborate Lüpsen's alarming conclusions. We provide overwhelming
 ### Illustrative example 
 We will begin with an illustrative example to demonstrate how the aligned rank transform can lead to an increase in false positives and a significant inflation of observed effects. This example will also serve as a brief introduction to the key concepts and methods employed throughout the paper.
 
-Suppose an HCI researcher conducts an experiment to compare the performance of three user interface techniques (A, B, and C) that help users complete image editing tasks of four different difficulty levels. The experiment follows a fully balanced $4 \times 3$ repeated-measures factorial design, where each participant (N = 12) performs 12 tasks in a unique order. The researcher measures the time that it takes participants to complete each task. The following table presents the experimental results: 
+Suppose a team of HCI researchers conduct an experiment to compare the performance of three user interface techniques (A, B, and C) that help users complete image editing tasks of four different difficulty levels. The experiment follows a fully balanced $4 \times 3$ repeated-measures factorial design, where each participant (N = 12) performs 12 tasks in a unique order. The researchers measure the time that it takes participants to complete each task. In addition, the participants rate their perceived efficiency completing each task, using an ordinal scale with five levels: (1) *inefficient*, (2) *somewhat inefficient*, (3) *neutral*, (4) *somewhat efficient*, and (5) *efficient*.
+
+The following table presents the experimental results: 
 
 ::: {#tbl-example}
 ```{r, echo=FALSE, warning=FALSE}
-df <- read.csv("example_data.csv", sep=",", header=TRUE, strip.white=TRUE)
+df <- read.csv("example-data.csv", sep=",", header=TRUE, strip.white=TRUE)
 kbl(df) %>% kable_paper(position = "center") %>% scroll_box(width = "740px", height = "170px")
 ``` 
-Example dataset: Time (in minutes) spent by 12 participants for four difficulty levels and three user interface techniques. Scroll down to see the full results.
+Example dataset: Time (in minutes) spent by 12 participants and their perceived efficiency (ordinal scale) for four difficulty levels and three user interface techniques. Scroll down for full results.
 :::
 
-The experiment is hypothetical but has similarities with real-world experiments, e.g., see the experiments of @Fruchard:2023. Time performances have been randomly sampled from a population in which: (1) *Difficulty* has a large main effect; (2) *Technique* has no main effect; and (3) there is no interaction effect between the two factors. To generate time values, we drew samples from a log-normal distribution. The log-normal distribution is often a good fit for real-world measurements that are bounded by zero and have low means but large variance [@Limbert:2001]. Task-completion times are good examples of such measurements [@Sauro:2010]. 
+The experiment is hypothetical but has similarities with real-world experiments, e.g., see the experiments of @Fruchard:2023. 
+
+**Time performance.** Time measurements have been randomly sampled from a population in which: (1) *Difficulty* has a large main effect; (2) *Technique* has no main effect; and (3) there is no interaction effect between the two factors. To generate time values, we drew samples from a log-normal distribution. The log-normal distribution is often a good fit for real-world measurements that are bounded by zero and have low means but large variance [@Limbert:2001]. Task-completion times are good examples of such measurements [@Sauro:2010]. 
 
 @fig-example presents two boxplots that visually summarize the main effects observed through the experiment. We plot medians to account for the fact that distributions are skewed. We observe that differences in the overall time performance of the three techniques are not visually clear, although the overall median time is somewhat higher for Technique B. In contrast, time performance clearly deteriorates as task difficulty increases. 
 We also observe that for the most difficult tasks (Level 4), the median time for Technique C is lower than the median time for Techniques A and B, so we may suspect that *Difficulty* interacts with *Technique*. However, since the spread of observed values is extremely large and the number of data points is small, such differences could result from random noise. 
@@ -34,7 +38,7 @@ p1 <- (df %>%  group_by(Participant,Technique) %>% summarise(Time = median(Time)
         geom_boxplot(outlier.shape = NA) +
         ylab("Median Time (min)") +
         ylim(0, 3) + 
-        geom_jitter(shape=20, position=position_jitter(0.1)) +
+        geom_jitter(shape=20, position=position_jitter(0.1, 0)) +
         theme_bw() + theme(legend.position = "none") + scale_fill_manual(values=cbPalette))
 
 
@@ -51,7 +55,7 @@ p2 <- (df %>%  group_by(Participant,Difficulty,Technique) %>% summarise(Time = m
 
 grid.arrange(p1, p2, nrow = 1, widths = c(1.5, 2.5))
 ```
-Boxplots summarizing the results of our illustrative example. Dots represent the median time performance of each individual participant. 
+Boxplots summarizing time performance results for our illustrative example. Dots represent the median time for each individual participant. 
 :::
 
 We opt for a multiverse analysis [@Dragicevic:2019] to analyze the data, where we conduct a repeated-measures ANOVA with four different data-transformation methods:
@@ -90,10 +94,59 @@ We also examine effect size measures, which are commonly reported in scientific 
 | Difficulty $\times$ Technique | $.10\ [.00, 1.0]$ | $.08\ [.00, 1.0]$  | $.16\ [.04, 1.0]$| $.06\ [.00, 1.0]$| $.06\ [.00, 1.0]$ |
 : partial $\eta^2$ and its 95\% confidence interval {.sm}
 
-We observe that ART exaggerates both the effect of *Technique* and its interaction with *Difficulty*. 
+We observe that ART exaggerates both the effect of *Technique* and its interaction with *Difficulty*. This example demonstrates a more general problem with ART’s alignment mechanism under long-tailed distributions. ART tends to confound effects: a strong effect on a single factor often leads the method to detect spurious effects on other factors or to identify non-existent interactions.
+
+**Perceived efficiency.**  The perceived efficiency ratings were randomly sampled from a population with no main effect on any of the two factors and no interaction effect. @fig-example-ordinal shows that participants' ratings are concentrated at the higher end of the scale but with no clear trends. 
+
+::: {#fig-example-ordinal}
+```{r, echo=FALSE, warning=FALSE, fig.height=2.7, fig.width=8}
+df$Perceived_Efficiency <- ordered(df$Perceived_Efficiency, levels = c("inefficient", "somewhat inefficient", "neutral", "somewhat efficient", "efficient"))
+
+p3 <- (df %>%  group_by(Participant,Technique) %>% summarise(Perceived_Efficiency = mean(as.integer(Perceived_Efficiency)), .groups="drop") %>%   
+        ggplot(aes(x = Technique, y = Perceived_Efficiency, fill = Technique)) + 
+        geom_boxplot(outlier.shape = NA) +
+        ylab("Perceived Efficiency") +
+        scale_y_continuous(breaks = 1:5, limits = c(1,5), labels=levels(df$Perceived_Efficiency)) +
+        geom_jitter(shape=1, position=position_jitter(0.2,0), size = 2) +
+        theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=cbPalette) +  
+        theme(axis.text.y=element_text(angle=50, hjust=0.7))
+
+#diffPalette <- c("#f9f9f9", "#e2e2e2", "#b9b9b9", "#999999")
+diffPalette <- c("#f9f9fd", "#e2e6fa", "#bacafb", "#99b9f9")
+p4 <- (df %>%  group_by(Participant,Difficulty) %>% summarise(Perceived_Efficiency = mean(as.integer(Perceived_Efficiency)), .groups="drop") %>%   
+        ggplot(aes(x = Difficulty, y = Perceived_Efficiency, fill = Difficulty)) + 
+        geom_boxplot(outlier.shape = NA) + ylim(1,5)+
+        geom_jitter(shape=1, position=position_jitter(0.2,0), size = 2) +
+        theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=diffPalette) +  
+        theme(axis.title.y=element_blank(), axis.text.y=element_blank())
+
+grid.arrange(p3, p4, nrow = 1, widths = c(3, 3))
+```
+Boxplots summarizing the results on efficiency as perceived by participants. Circles represent the mean rating of each individual participant. 
+:::
+
+For our analysis, we compare the results of PAR, ART, RNK, and INT, since LOG is not relevant for this type of data. We also report the results of the Friedman test [@Friedman] for each factor, where we first aggregate the data by taking the mean over the other factor. Results are as follows:  
+
+|        | PAR  | ART | RNK | INT | Friedman Test |
+|--------|------|-----|-----|-----|-----|
+| Difficulty  | $.93$ | $.0011$  |  $.86$ | $.88$ | $.83$ |
+| Technique   | $.18$ | $.00016$  | $.32$ | $.23$ | $.24$ |
+| Difficulty $\times$ Technique | $.27$ | $.10$ | $.33$ | $.34$ | |
+: *p*-values for main and interaction effects {.sm}
+
+ART's *p*-values for the two main effects are surprisingly low, while no other methods shows any substantial evidence for such effects. We also presents the methods' effect size estimates: 
+
+|        | PAR  | ART | RNK | INT |
+|--------|------|-----|-----|-----|
+| Difficulty  | $.004\ [.00, 1.0]$  | $.12\ [.03, 1.0]$  |  $.006\ [.00, 1.0]$ | $.005\ [.00, 1.0]$ |
+| Technique   | $.03\ [.00, 1.0]$ | $.13\ [.05, 1.0]$  | $.02\ [.00, 1.0]$ | $.02\ [.00, 1.0]$ |
+| Difficulty $\times$ Technique | $.06\ [.00, 1.0]$ | $.04\ [.00, 1.0]$  | $.05\ [.00, 1.0]$| $.05\ [.00, 1.0]$|
+: partial $\eta^2$ and its 95\% confidence interval {.sm}
+
+The discrepancies between ART's estimates for the two main effects and those of the other methods are large. As we demonstrate in this paper, such discrepancies stem from ART's inability to handle discrete distributions. The issue becomes more pronounced with larger sample sizes. @luepsen:2017 previously warned researchers about this problem, but his warnings have largely been ignored.
 
 ### Overview
-The above example does not capture a rare phenomenon. We will show that ART's error inflation is systematic for a range of distributions that deviate from normality, both continuous and discrete. We will explain how the problem emerges. We will also see that ART often performs worse than simpler methods that ART is widely considered to repair or improve, such as the pure rank transformation or no transformation at all. 
+The above example does not reflect a rare phenomenon. We will show that ART's error inflation is systematic for a range of distributions that deviate from normality, both continuous and discrete.
 
 The paper is structured as follows. [Section 2](#background) introduces nonparametric tests and rank transformations, and explains how ART is constructed. It also provides a summary of previous experimental results regarding the robustness of ART and other related rank-based procedures, along with a survey of recent studies using ART. [Section 3](#interpretation) investigates issues regarding effect interpretation and introduce our distribution simulation approach. [Section 4](#methodology) outlines our experimental methodology, while [Section 5](#findings) presents our findings. [Section 6](#casestudies) revisits results of previous studies employing ART and  illustrates how its application can lead to erroneous conclusions. [Section 7](#recommendations) offers recommendations for researchers. Finally, [Section 8](#conclusions) concludes the paper.
 
