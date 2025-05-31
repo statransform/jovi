@@ -1,0 +1,12 @@
+## Re-examining ART's assumptions {#assumptions}
+Although ART is commonly thought as a nonparametric method, its construction relies on the assumption of a linear model with very specific characteristics. For a two-way experimental design, @higgins:1990 assume the following model for responses: 
+
+$Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha \beta)_{ij} + \epsilon_{ijk}$
+
+where $\mu$ is the grand mean, $\alpha_i$ is the main effect of the first factor for level $i$, $\beta_j$ is the main effect of the second factor for level $j$, and $(\alpha \beta)_{ij}$ is the interaction effect. The term $\epsilon_{ijk}$ is the experimental error effect (where $k = 1, ..., n$ is the subject number) and is assumed to have a zero mean and a common standard deviation. @Mansouri:1995 provide a proof of the limiting distributional properties of ART for interactions, where they assume the same model structure, as well as continuous distributions.  
+
+
+
+
+
+

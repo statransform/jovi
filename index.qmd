@@ -56,11 +56,13 @@ source("interactions_plot.R")
 ::: {.callout-note appearance="simple" icon=false collapse=false}
 
 
-{{< include text/10-abstract.qmd >}}
+{{< include text/abstract.qmd >}}
 
-{{< include text/20-intro.qmd >}}
+{{< include text/10-intro.qmd >}}
 
-{{< include text/30-background.qmd >}}
+{{< include text/20-background.qmd >}}
+
+{{< include text/30-assumptions.qmd >}}
 
 {{< include text/40-interpretingEffects.qmd >}}
 
