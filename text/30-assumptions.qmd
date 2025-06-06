@@ -1,12 +1,239 @@
-## Re-examining ART's assumptions {#assumptions}
-Although ART is commonly thought as a nonparametric method, its construction relies on the assumption of a linear model with very specific characteristics. For a two-way experimental design, @higgins:1990 assume the following model for responses: 
+## Revisiting ART's distributional assumptions {#assumptions}
+Although ART is often regarded as a nonparametric method, its alignment mechanism relies on a set of strict assumptions.
+For a two-way experimental design with independent observation, @higgins:1990 assume the following model for responses: 
 
-$Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha \beta)_{ij} + \epsilon_{ijk}$
+$$ 
+Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha \beta)_{ij} + \epsilon_{ijk}
+$${#eq-higgins-model}
 
-where $\mu$ is the grand mean, $\alpha_i$ is the main effect of the first factor for level $i$, $\beta_j$ is the main effect of the second factor for level $j$, and $(\alpha \beta)_{ij}$ is the interaction effect. The term $\epsilon_{ijk}$ is the experimental error effect (where $k = 1, ..., n$ is the subject number) and is assumed to have a zero mean and a common standard deviation. @Mansouri:1995 provide a proof of the limiting distributional properties of ART for interactions, where they assume the same model structure, as well as continuous distributions.  
+where $\mu$ is the grand mean, $\alpha_i$ is the main effect of the first factor for level $i$, $\beta_j$ is the main effect of the second factor for level $j$, $(\alpha \beta)_{ij}$ is the interaction effect, and $\epsilon_{ijk}$ is the residual error term, assumed to have a common variance. The index $k = 1, ..., n$ denotes the subject number. 
 
+This formulation makes several key assumptions: 
 
+1. A linear relationship between effects and responses;
+2. A common variance among all experimental conditions; and 
+3. Continuous responses.  
 
+The proof by @Mansouri:1995 assessing the limiting distributional properties of ART for interaction effects is based on these same assumptions. 
 
+It is worth noting that ANOVA relies on similar assumptions, with the added requirement that errors be normally distributed. One might therefore argue that ART imposes fewer assumptions than ANOVA. Additionally, since ART is rank-based, it may appear reasonable to expect some degree of robustness to violations of the linear model.
 
+Unfortunately, this line of reasoning is not correct. ART's assumptions pertain specifically to its alignment mechanism, which is unique to this method. The rank transformation is applied only after alignment, and the authors of ART have not provided any theoretical or empirical justification for their alignment method under non-linear models, non-equal variances, or discrete data. We explain the severity of these assumptions in more detail. 
 
+<!--
+Thus, the critical question we must address is: how does ART perform when its core assumptions are violated?
+-->
+
+### Violations of the linearity assumption
+Suppose we studied image-editing tasks (as in our illustrative example), measuring the time participants needed to complete them for two difficulty levels: *easy* and *hard*. If we assume that observed times follow log-normal distributions, the model of @higgins:1990 will generate distributions as the ones in @fig-higgins-model. We observe that the distribution for the hard task is simply shifted to the right, while their shape conveniently remains identical. @Mansouri:1995 have shown that at least for interaction effects, ART remains robust under such distributions. However, how realistic are they?
+
+::: {#fig-higgins-model}
+```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 9, warning=FALSE}
+library(plotly)
+
+palette <- c("#E69F00", "#009E73")
+
+logsd <- 0.5
+logm <- -0.3
+
+xs <- seq(0, 10, length.out = 1000)
+y1s <- dlnorm(xs, logm, logsd)
+y2s <- dlnorm(xs - 0.5, logm, logsd)
+
+med1 <- exp(logm)
+med2 <- exp(logm) + 0.5
+
+annot1 <- paste("Log-normal: meanlog = ", logm, ", sdlog = ", logsd)
+annot2 <- paste("Log-normal: meanlog = ", logm, ", sdlog = ", logsd)
+
+fig <- plot_ly() %>%  
+      add_lines(x = xs, y = y1s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot1, hoverinfo = 'text', line=list(color=palette[1])) %>%
+      add_lines(x = xs, y = y2s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot2, hoverinfo = 'text', line=list(color=palette[2])) %>%      
+      add_annotations(x = med1-0.06, y = max(y1s), text = "easy", xref = "x", yref = "y", showarrow = F, font = list(color = palette[1]), xanchor = 'left') %>% 
+      add_annotations(x = med2-0.06, y = max(y2s), text = "hard", xref = "x", yref = "y", showarrow = F, font = list(color = palette[2]), xanchor = 'left') %>%   
+      layout(
+        showlegend = FALSE,
+        xaxis = list(title = "Time (min)", range = c(0, 4.5), showgrid = F, showticks = T, ticks="outside", zeroline = F), 
+        yaxis = list(showgrid = F, showticklabels = F, showline = F, range=c(0, max(y1s) + .05), fixedrange=T)
+      ) %>% 
+	      config(displayModeBar = TRUE, scrollZoom = FALSE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale", "hoverclosest", 'hoverCompare'))  %>% layout(dragmode='pan')
+
+fig
+
+```
+The model of @higgins:1990 assumes that distributions have an identical shape across all conditions. Here, the log-normal distribution of the time measure is simply shifted to the right as the task difficulty increases. 
+:::
+
+Heavy-tailed distributions, such as the log-normal distribution here, commonly arise in nature when measurements cannot be negative or fall below a certain threshold (Limpert et al., 2001), e.g., the minimum time needed to react to a visual stimulus. In most experimental research, however, this threshold does not shift across conditions while preserving the distribution’s shape. Instead, distributions are more likely to resemble the ones in @fig-realistic-model. 
+
+::: {#fig-realistic-model}
+```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 9, warning=FALSE}
+library(plotly)
+
+palette <- c("#E69F00", "#009E73")
+
+logsd <- 0.5
+logm1 <- -0.3
+logm2 <- 0.3
+
+xs <- seq(0, 10, length.out = 1000)
+y1s <- dlnorm(xs, logm1, logsd)
+y2s <- dlnorm(xs, logm2, logsd)
+
+med1 <- exp(logm1)
+med2 <- exp(logm2)
+
+annot1 <- paste("Log-normal: meanlog = ", logm1, ", sdlog = ", logsd)
+annot2 <- paste("Log-normal: meanlog = ", logm2, ", sdlog = ", logsd)
+
+fig <- plot_ly() %>%  
+      add_lines(x = xs, y = y1s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot1, hoverinfo = 'text', line=list(color=palette[1])) %>%
+      add_lines(x = xs, y = y2s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot2, hoverinfo = 'text', line=list(color=palette[2])) %>%      
+      add_annotations(x = med1, y = max(y1s), text = "easy", xref = "x", yref = "y", showarrow = F, font = list(color = palette[1]), xanchor = 'left') %>% 
+      add_annotations(x = med2, y = max(y2s), text = "hard", xref = "x", yref = "y", showarrow = F, font = list(color = palette[2]), xanchor = 'left') %>%   
+      layout(
+        showlegend = FALSE,
+        xaxis = list(title = "Time (min)", range = c(0, 4.5), showgrid = F, showticks = T, ticks="outside", zeroline = F), 
+        yaxis = list(showgrid = F, showticklabels = F, showline = F, range=c(0, max(y1s) + .05), fixedrange=T)
+      ) %>% 
+	      config(displayModeBar = TRUE, scrollZoom = FALSE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale", "hoverclosest", 'hoverCompare'))  %>% layout(dragmode='pan')
+
+fig
+
+```
+Log-normal distributions produced using a generalized linear model. As the mean of the distributions increases, their overall shape changes. 
+:::
+
+In these distributions, the mean for had tasks also increases, but this increase is not reflected as a simple global shift in the distribution. Instead, the overall shape of the distribution changes. The model for these distributions is structured as follows:
+
+$$ 
+log(Y_{ijk} - \theta) = \mu + \alpha_i + \beta_j + (\alpha \beta)_{ij} + \epsilon_{ijk}
+$${#eq-generalized-model}
+
+where $\epsilon_{ijk}$ is normally distributed, and $\theta$ represents a threshold below which response values cannot occur. Unfortunately, ART's alignment mechanism is not designed to handle such distributions. The alignment calculations shown in @fig-ART-explained include various mean terms that are sensitive to distribution differences across the levels of factors, and --- as our results show --- they confounds effects. 
+
+We acknowledge that @elkin:2021 diverged from the modeling approach described by @higgins:1990 and @Mansouri:1995 and used generalized linear models as in @eq-generalized-model to evaluate ART. However, their experiments failed to observe that ART confounds effect, simply because they assessed Type I error rates only under scenarios where main effects for all factors were null. 
+
+### Heteroscedasticity issues
+@myers2012 explain that *"if the underlying distribution of the response variable is not normal, but is a continuous, skewed distribution, such as the lognormal, gamma, or Weibull distribution, we often find that the constant variance assumption is violated,* and in such cases, *"the variance is a function of the mean"* (Pages 54-55). This pattern frequently occurs in studies measuring task-completion times, whether the task is visual, motor, or cognitive. As tasks become more difficult and prolonged, variance tends to increase. Similarly, slower participants generally exhibit greater variance across tasks compared to faster, more practiced users. 
+This suggests that ART's assumption of constant variance in skewed distributions is unrealistic.
+
+@Wagenmakers:2007 conducted an analysis of nine independent experiments to empircally investigate this pattern in response time distributions. They confirmed that standard deviations were proportional to the mean. The model we presented earlier (see @eq-generalized-model) is in line with these observations. Even when the standard deviation of the error term $\epsilon_{ijk}$ is constant, the standard deviation of observed log-normal distributions increases linearly with their mean. @fig-example (right) shows this pattern in our illustrative example, where the standard deviation of time responses increases proportionally with task difficulty. 
+
+However, a question remains: Is ART’s failure in handling such models due solely to heteroscedasticity issues? For example, consider the two time distributions in @fig-homoscedastic-model, which --- despite having different shapes --- share the same standard deviation. Would ART perform correctly in this case? While we do not directly address this question in the main paper, we include additional results in the [appendix](appendix.html) showing that as long as distribution shapes differ across levels, ART tends to confound effects. Heteroscedasticity may exacerbate the problem, but it is not its sole cause.
+
+::: {#fig-homoscedastic-model}
+```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 9, warning=FALSE}
+library(plotly)
+
+palette <- c("#E69F00", "#009E73")
+
+sdlog <- function(mean, sd) {
+	sqrt(log(1 + sd^2/mean^2))	
+}
+
+meanlog <- function(mean, sd) {
+	log(mean^2/sqrt(sd^2 + mean^2))
+}
+
+xs <- seq(0, 10, length.out = 1000)
+
+logm1 <- meanlog(0.8, 0.4)
+logm2 <- meanlog(1.4, 0.4)
+
+logsd1 <- sdlog(0.8, 0.4)
+logsd2 <- sdlog(1.4, 0.4)
+
+y1s <- dlnorm(xs, logm1, logsd1)
+y2s <- dlnorm(xs, logm2, logsd2)
+
+med1 <- 0.68
+med2 <- 1.40
+
+annot1 <- paste("Log-normal: meanlog = ", round(logm1, 2), ", sdlog = ", round(logsd1, 2))
+annot2 <- paste("Log-normal: meanlog = ", round(logm2, 2), ", sdlog = ",  round(logsd1, 2))
+
+fig <- plot_ly() %>%  
+      add_lines(x = xs, y = y1s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot1, hoverinfo = 'text', line=list(color=palette[1])) %>%
+      add_lines(x = xs, y = y2s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot2, hoverinfo = 'text', line=list(color=palette[2])) %>%      
+      add_annotations(x = med1, y = max(y1s), text = "easy", xref = "x", yref = "y", showarrow = F, font = list(color = palette[1]), xanchor = 'left') %>% 
+      add_annotations(x = med2, y = max(y2s), text = "hard", xref = "x", yref = "y", showarrow = F, font = list(color = palette[2]), xanchor = 'left') %>%   
+      layout(
+        showlegend = FALSE,
+        xaxis = list(title = "Time (min)", range = c(0, 4.5), showgrid = F, showticks = T, ticks="outside", zeroline = F), 
+        yaxis = list(showgrid = F, showticklabels = F, showline = F, range=c(0, max(y1s) + .05), fixedrange=T)
+      ) %>% 
+	      config(displayModeBar = TRUE, scrollZoom = FALSE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale", "hoverclosest", 'hoverCompare'))  %>% layout(dragmode='pan')
+
+fig
+
+```
+Log-normal distributions with equal variances but different means. Notice that their shapes are distinct. 
+:::
+
+### Discrete distributions
+As discussed earlier, @luepsen:2017 found that ART frequently fails when reponses are discrete. The problem becomes more pronounced for variables with few discrete levels and as the sample size increases. The author provides a detailed analysis of why this happens, summarized as follows:
+
+> *"There is an explanation for the increase of the type I error rate when the number of distinct values gets smaller or the sample size larger: due to the subtraction of the other effects --- a linear combination of the means --- from the observed values even tiny differences between the means lead to large differences in the ranking"* [@luepsen:2017].
+
+@fig-art-binary illustrates this problem using a simple dataset with a binary variable. In our example, all but one value are zero. Notice how dramatically ART alters the ranks and exaggerates the difference between the two levels of $B$ ($b_1$ vs. $b_2$). This issue persists even when a large number of participants are added and there is only a single value of 1 among thousands of 0s, causing the method to produce arbitrarily low *p*-values. Then, a single value variation (e.g., turning this 1 to 0) will cause ART’s results to drastically change.
+
+::: {#fig-art-binary}
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=3.2, fig.width=8}
+library(gridExtra)
+#library(ggplot2)
+
+df <- read.csv("data-binary.csv", sep=",", header=TRUE, strip.white=TRUE)
+df$S <- factor(df$S)
+df$A <- factor(df$A)
+df$B <- factor(df$B)
+
+df$rnk <- rank(df$Y)
+
+m <- mean(df$Y)
+Ai <- aggregate(Y ~ A, data = df, mean)
+Bj <- aggregate(Y ~ B, data = df, mean) 
+AiBj <- aggregate(Y ~ A+B, data = df, mean) 
+cmean <- aggregate(Y ~ A+B, data = df, mean) 
+
+library(dplyr)
+df <- df %>% group_by(A) %>% mutate(Ai = mean(Y)) %>% 
+  group_by(B) %>% mutate(Bj = mean(Y)) %>% 
+  group_by(A,B) %>% mutate(AiBj = mean(Y)) %>% mutate(Cell = mean(Y))
+
+df$m <- mean(df$Y)
+
+df$artA <- df$Y - df$Cell + df$Ai - df$m
+df$artB <- df$Y - df$Cell + df$Bj - df$m
+df$artAB <- df$Y - df$Cell + df$AiBj - df$Ai - df$Bj + df$m 
+
+df$rnkA <- rank(round(df$artA, digits = 7))
+df$rnkB <- rank(round(df$artB, digits = 7))
+df$rnkAB <- rank(round(df$artAB, digits = 7))
+
+mytheme <- gridExtra::ttheme_default(
+    core = list(fg_params=list(cex = 2.0)),
+    colhead = list(fg_params=list(cex = 1.0)),
+    rowhead = list(fg_params=list(cex = 1.0)))
+
+myTable <- tableGrob(df[,1:4], theme = ttheme_minimal(base_size = 10) ) 
+
+diffPalette <- c("#e2e6fa", "#99b9f9")
+p1 <- (df %>%   
+        ggplot(aes(x = B, y = rnk, fill = B)) + ggtitle("RNK") +
+        geom_boxplot(outlier.shape = NA) +
+        geom_jitter(shape=1, position=position_jitter(0.3,0), size = 2) +
+        theme_bw() + theme(legend.position = "none", plot.title = element_text(hjust = 0.5))) + scale_fill_manual(values=diffPalette) +  
+        ylab("ranking") + scale_y_discrete(limits=as.character(1:nrow(df)))
+
+p2 <- (df %>%   
+        ggplot(aes(x = B, y = rnkB, fill = B)) + ggtitle("ART_B") +
+        geom_boxplot(outlier.shape = NA) + 
+        geom_jitter(shape=1, position=position_jitter(0.3,0), size = 2) +
+        theme_bw() + theme(legend.position = "none", plot.title = element_text(hjust = 0.5))) + scale_fill_manual(values=diffPalette) +  
+        theme(axis.title.y=element_blank(), axis.text.y=element_blank()) + scale_y_discrete(limits=as.character(1:nrow(df)))
+
+grid.arrange(myTable, p1, p2, nrow = 1)
+```
+Results from an experiment following a $3 \times 2$ design, where the response variable $Y$ is binary and indicates the presence of an error. The plots show the rankings produced by the simple rank transformation (RNK) and by ART for the second factor. The solid lines represent group medians.    
+:::
