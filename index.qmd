@@ -69,7 +69,6 @@ source("interactions_plot.R")
 {{< include text/50-ExperimentalMethod.qmd >}}
 
 
-<!---
 
 ## Results {#findings}
 Each experiment concentrated on a unique combination of distributions, experimental designs, and evaluation measures. Consequently, we organize our results into several subsections, addressing both main and interaction effects.
@@ -89,8 +88,6 @@ Each experiment concentrated on a unique combination of distributions, experimen
 {{< include text/70-CaseStudies.qmd >}}
 
 {{< include text/80-Recommandations.qmd >}}
-
--->
 
 {{< include text/90-Conclusions.qmd >}} 
 
