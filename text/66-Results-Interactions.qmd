@@ -1,0 +1,67 @@
+### Interactions under parallel main effects {#interactions}
+Let us now examine interaction effects when both coefficients $a_1$ and $a_2$ increase in parallel.
+In this scenario, the interpretation of an interaction effect can become ambiguous. Here, we define the null hypothesis in terms of the coefficients of the latent linear model, following the recommendation of @Greene:2010 -- that is, $a_{12} = 0$.
+
+**Ratio scales**. @fig-ratio-interaction-2 presents Type I error rates for ratio scales. 
+
+::: {#fig-ratio-interaction-2}
+```{r, echo=FALSE, message=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+distributions <- c("norm", "lnorm", "exp", "cauchy", "poisson", "binom")
+dnames <- c("Normal", "Log-normal", "Exponential", "Cauchy", "Poisson", "Binomial")
+alpha <- .05
+prefix <- "1_test_4x3_Ratio"
+df <- readlyData(prefix, alpha, 0, distributions, dnames)
+
+#xlab <- TeX("\\text{main effect of factors }X_1\\text{ and }X_2\\text{ }(a_1 = a_2)")
+plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
+```
+Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$. *Note: Type I errors are defined based on the null hypothesis $a_{12} = 0$. A different definition may lead to different results.* 
+:::
+
+Error rates become exceptionally high in some cases, reaching up to 100%. However, these results require careful interpretation. As discussed in [Section 4](#interpretation), interaction effects in nonlinear models can be interpreted in two distinct ways, and the results from the different methods are not consistent with our definition. Let us examine the outcomes for each method:
+
+- *PAR*. Error rates are high for all non-normal distributions and become even higher when the sample size increases. However, this behavior clearly stems from the method's sensitivity to the scale of the observations, rather than to the model parameters.
+
+- *RNK.* Error rates explode when both main effects exceed a certain level (e.g., when $a_1, a_2 \ge 4$ and $n = 20$). This problem arises from the way the rank transformation distorts interaction effects (see @fig-interactions-rank). For all continuous distributions, we observe that error rates exhibit the exact same patterns, since ranks are scale-invariant.  
+
+- *INT.* It performs better than RNK. Errors begin to increase across all distributions only when the main effects become large. An exception is the binomial distribution, for which the error rates of INT and RNK are similar.
+
+- *ART.* It maintains correct error rates as long as population distributions are normal. For all other distributions, error rates increase rapidly as effect sizes grow. Two factors explain this behavior: (i) a lack of statistical robustness to violation of the method's assumptions, as also observed in earlier tests; and (ii) interaction interpretation issues. These results confirm that ART is not scale-invariant, interpreting interactions relative to the scale of the observed data.
+
+**Ordinal scales.** @fig-ordinal-interaction-2 presents our results for ordinal data. No method maintains low error rates under all conditions. We note that ART consistently performs worse than PAR. INT performs worse than ART and PAR in one specific case ($a_2, a_2 = 8$ in a scale with 11 equidistant levels), but overall, it exhibits a better behavior than all other methods. Once again, the high error rates can be partly explained by insufficient statistical robustness and ambiguities in how the methods interpret interaction effects.
+
+::: {#fig-ordinal-interaction-2}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "2_test_4x3_Ordinal"
+distributions <- c("likert5", "likert5B", "likert7", "likert7B", "likert11", "likert11B")
+dnames <- c("5 - equidistant", "5 - flexible", "7 - equidistant", "7 - flexible", "11 - equidistant", "11 - flexible")
+
+df <- readlyData(prefix, alpha, 0, distributions, dnames)
+plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
+
+```
+Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$. *Note: Type I errors are defined based on the null hypothesis $a_{12} = 0$. A different definition may lead to different results.*
+:::
+
+**Other designs.** Our findings in @fig-designs-interaction-2 further demonstrate that all methods struggle to accurately detect interactions for different reasons. Interestingly, INT shows unusually low error rates in certain configurations (e.g., $2 \times 3$ and $2 \times 2 \times 2$), indicating potential difficulty in detecting subtle interaction effects when main effects are large. RNK follows a similar trend for the $2 \times 2 \times 2$ design. Both RNK and INT also exhibit higher error rates under ordinal and binomial scales, though these remain lower than those observed for PAR and ART.
+
+::: {#fig-designs-interaction-2}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "3_test-Designs"
+distributions <- c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames <- c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+df <- readData(prefix, n = 20, alpha, effectType = 0, distributions)
+df <- reshapeByDesign(df, dnames)
+plotlyErrorByDesign(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
+```
+Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$  ($n = 20$). *Note: Type I errors are defined based on the null hypothesis $a_{12} = 0$. A different definition may lead to different results.*
+:::
+
+Some readers may argue that evaluating PAR and ART using an interaction definition that accounts for the scale of the observed variable might be more appropriate. We offer three responses to this criticism:
+
+1. It is unclear how to reliably control the null hypothesis at the level of the response scale when both main effects are varied.
+
+2. Our earlier experiments demonstrate that ART fails to maintain nominal Type I error rates for interactions even when only a single main effect is present. Introducing a second main effect could only exacerbate the problem.
+
+3. The purpose of these results is not to provide precise benchmarks, but rather to illustrate the complexity and pitfalls of interpreting interaction effects under assumption violations -- regardless of the method used. Many researchers are unaware of these issues and often misinterpret the $p$-value when testing interactions. As previously noted, @elkin:2021 compared ART to ANOVA on log-transformed data under the belief that ART tests null hypotheses about parameters of the latent linear model. Our findings clearly show that this is not the case.

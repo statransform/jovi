@@ -19,7 +19,7 @@ Furthermore, we assess how a growing interaction effect, either in isolation or 
 Previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also tested unbalanced designs, where the cell size is not constant across all levels of a factor. When combined with unequal variances, unbalanced designs are often problematic for both parametric procedures [@blanca:2018] and rank transformation methods [@Beasley:2009; @luepsen:2018]. As we mentioned earlier, we do not evaluate unbalanced designs here. However, we provide additional experimental results on missing data in the [appendix](appendix.html).
 
 ### Statistical modeling
-To model the latent variable $Y$, we use a two-way (two factors) or a three-way (three factors) mixed-effects model. For simplicity, we explain here the model for two factors. Its extension to three factors is straightforward. The model has the following form:
+To model the latent variable $\mathcal{Y}$, we use a two-way (two factors) or a three-way (three factors) mixed-effects model. For simplicity, we explain here the model for two factors. Its extension to three factors is straightforward. The model has the following form:
 
 $$ 
 y_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j} + \epsilon_{ijk}
@@ -57,11 +57,11 @@ To simplify our simulations, we fix the following population parameters: $\mu = 
 source("effects_plot.R")
 plotEffects()
 ```
-Varying $a_1$ or $a_2$ to control the magnitude of main effects. The plots show examples of population distributions on the latent variable $Y$ for factors ($X_1$ or $X_2$) with two (top), three (middle), or four categorical levels (bottom).    
+Varying $a_1$ or $a_2$ to control the magnitude of main effects. The plots show examples of population distributions on the latent variable $\mathcal{Y}$ for factors ($X_1$ or $X_2$) with two (top), three (middle), or four categorical levels (bottom).    
 :::
 
 We follow the approach of @DeBruine:2021 and use the R package *faux* v1.2.1 [@faux] to simulate data for our mixed-effects models. We assume that the distributions of random intercepts and errors are normal, or $s_k \sim N(0,\sigma_s)$ and $\epsilon_{ijk} \sim N(0,\sigma)$.
-To simulate the observed variable $Y'$, we then transform the response values $y_{ijk}$ as described in [Section 3](#approach). A key advantage of this method is that we can generate responses for any distribution, while we control effects on the latent variable in the exact same way.
+To simulate the observed variable $Y$, we then transform the response values $y_{ijk}$ as described in [Section 3](#approach). A key advantage of this method is that we can generate responses for any distribution, while we control effects on the latent variable in the exact same way.
 
 ### Implementation of rank transformation methods 
 For the aligned rank transformation (ART), we use the R implementation of ARTool v0.11.1 [@artool]. For the pure rank transformation (RNK), we use R's *rank()* function. We use the *Rankit* formulation [@Bliss:1956] for the inverse normal transformation (INT), as explained earlier. Unless explicitly mentioned otherwise, we use the formula ``Y' ~ X1*X2 + (1|S)`` with R's *lmer* function, except for the between-subjects design where we use the formula ``Y' ~ X1*X2 + Error(S)`` with R's *aov* function.
@@ -71,14 +71,14 @@ Significance tests have two types of errors. *Type I errors*, or false positives
 
 Statistical significance testing requires setting a significance threshold known as significance or $\alpha$ (alpha) level, with typical values $\alpha = .05$ and $\alpha = .01$. The Type I error rate of a well-behaved significance test should be close to this nominal alpha level. An error rate clearly above this level suggests that the significance test is too liberal, while an error rate clearly below this level suggests that the test is too conservative. Four of our experiments specifically assess the Type I error rate of the methods. We test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brevity, we only report results for $\alpha = .05$ in the main paper and include additional results in our supplementary material. 
 
-We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. In addition to power, we assess effect size estimates, where we use as ground truth the estimates of a parametric ANOVA conducted on the latent variable $Y$. While partial $\eta^2$ is the most commonly used effect size measure, we chose to base our analysis on Cohen's $f$, as its expected value is proportional to the real magnitude of effect. However, $\eta^2$ can be directly derived from Cohen's $f$ as follows:
+We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. In addition to power, we assess effect size estimates, where we use as ground truth the estimates of a parametric ANOVA conducted on the latent variable $\mathcal{Y}$. While partial $\eta^2$ is the most commonly used effect size measure, we chose to base our analysis on Cohen's $f$, as its expected value is proportional to the real magnitude of effect. However, $\eta^2$ can be directly derived from Cohen's $f$ as follows:
 
 $$ 
 \eta^2 = \frac{f^2}{1 + f^2}
 $${#eq-cohensf}
 
 
-As we explained earlier, interaction effects are deformed when we transform the latent variable $Y$ to obtain the observed responses. Such transformations also affect the Type I error rates and power that we observe. Here, we are interested in evaluating these measures with respect to the effects we apply to the latent variable $Y$. We make this distinction whenever it is relevant in our analysis.  
+As we explained earlier, interaction effects are deformed when we transform the latent variable $\mathcal{Y}$ to obtain the observed responses. Such transformations also affect the Type I error rates and power that we observe. Here, we are interested in evaluating these measures with respect to the effects we apply to the latent variable $\mathcal{Y}$. We make this distinction whenever it is relevant in our analysis.  
 
 ### Hardware platform and iterations
 Our experimental R code is available in our supplementary material. We ran our experiments separately in a cluster of 8 machines Dell R640 Intel Xeon Silver 4112 2.6GHz with 4 cores and 64 GB memory. Our R code was parallelized to use all four cores of each machine. Some experiments took a few hours to complete, while others took several days. 

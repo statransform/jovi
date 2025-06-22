@@ -53,71 +53,60 @@ source("interactions_plot.R")
 </style>
 ```
 
-::: {.callout-note appearance="simple" icon=false collapse=false}
+::: {#fig-eta-squared}
+```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
+data <- read.csv("data/effect-sizes-lognormal.csv", sep=",", header=TRUE, strip.white=TRUE)
+data$effectX2 <- factor(data$effectX2)
 
+ylab = "X1 - partial eta squared"
+xlab = "X2 - magnitude of main effect (a2)"
 
-{{< include text/10-abstract.qmd >}}
+margins <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
+cbPalette = c("#8888ff", "#888888", "#E69F00", "#009E73", "#FF5E00")
+cbPalette2 = c("#8888ff88", "#88888888", "#E69F0088", "#009E7388", "#FF5E0088")
 
+df <- data[data$effectX1 == 0,]
 
-::: {#tbl-example}
-```{r, echo=FALSE, warning=FALSE}
-df <- read.csv("example-data.csv", sep=",", header=TRUE, strip.white=TRUE)
-kbl(df) %>% kable_paper(position = "center") %>% scroll_box(width = "740px", height = "170px")
-``` 
+fig1 <- plot_ly(df, x = ~effectX2, y = ~X1, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
+fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
+fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
+fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
+fig.art <- plot_ly(df, x = ~effectX2, y = ~artX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'ART', marker = list(color = cbPalette2[5]), fillcolor = cbPalette2[5], line = list(color = cbPalette[5])) %>% layout(xaxis = list(title = NA))
 
-::: {#fig-example}
-```{r, echo=FALSE, warning=FALSE, fig.height=2.7, fig.width=8}
-cbPalette <- c("#999999", "#E69F00", "#F15854")
+fig <- subplot(fig1, fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY = T) %>% 
+  layout(annotations = list(x = 0.5, y = -0.25, yshift = 0, xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F, text = xlab), margin = margins) %>%
+	config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>%  layout(legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5, colors = cbPalette), yaxis = list(title = ylab)) %>% layout(
+    hovermode = "x unified",  # Shared hover on the x-axis
+    yaxis = list(spikemode = "across", spikesnap = "cursor")
+  )
 
-p1 <- (df %>%  group_by(Participant,Technique) %>% summarise(Time = median(Time), .groups="drop") %>%   
-        ggplot(aes(x = Technique, y = Time, fill = Technique)) + 
-        geom_boxplot(outlier.shape = NA) +
-        ylab("Median Time (min)") +
-        ylim(0, 3) + 
-        geom_jitter(shape=20, position=position_jitter(0.1, 0)) +
-        theme_bw() + theme(legend.position = "none") + scale_fill_manual(values=cbPalette))
+fig
 
-
-p2 <- (df %>%  group_by(Participant,Difficulty,Technique) %>% summarise(Time = median(Time), .groups="drop") %>%   
-        ggplot(aes(x = Difficulty, y = Time, fill = Technique)) + 
-        geom_boxplot(outlier.shape = NA) +
-        ylab("Median Time (min)") +
-        ylim(0, 6) +
-        #geom_jitter(shape=20, position=position_jitter(0.1)) +
-        geom_point(size = 0.7, position=position_jitterdodge(0.1)) +
-        theme_bw() + theme(legend.position = "none") +
-        #scale_fill_brewer()
-        scale_fill_manual(values=cbPalette))
-
-grid.arrange(p1, p2, nrow = 1, widths = c(1.5, 2.5))
+df <- data[data$effectX1 == 1,]
 ```
 Boxplots summarizing time performance results for our illustrative example. Dots represent the median time for each individual participant. 
 :::
 
+::: {#fig-eta-squared-2}
+```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
+df <- data[data$effectX1 == 1,]
 
-::: {#fig-example-ordinal}
-```{r, echo=FALSE, warning=FALSE, fig.height=3, fig.width=9}
-df$Perceived_Efficiency <- ordered(df$Perceived_Efficiency, levels = c("inefficient", "somewhat inefficient", "neutral", "somewhat efficient", "efficient"))
+fig1 <- plot_ly(df, x = ~effectX2, y = ~X1, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
+fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
+fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
+fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
+fig.art <- plot_ly(df, x = ~effectX2, y = ~artX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'ART', marker = list(color = cbPalette2[5]), fillcolor = cbPalette2[5], line = list(color = cbPalette[5])) %>% layout(xaxis = list(title = NA))
 
-p3 <- (df %>%  group_by(Participant,Technique) %>% summarise(Perceived_Efficiency = mean(as.integer(Perceived_Efficiency)), .groups="drop") %>%   
-        ggplot(aes(x = Technique, y = Perceived_Efficiency, fill = Technique)) + 
-        geom_boxplot(outlier.shape = NA) +
-        ylab("Perceived Efficiency") +
-        scale_y_continuous(breaks = 1:5, limits = c(1,5), labels=levels(df$Perceived_Efficiency)) +
-        geom_jitter(shape=1, position=position_jitter(0.2,0), size = 2) +
-        theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=cbPalette) +  
-        theme(axis.text.y=element_text(angle=50, hjust=0.7))
+fig <- subplot(fig1, fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY = T) %>% 
+  layout(annotations = list(x = 0.5, y = -0.25, yshift = 0, xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F, text = xlab), margin = margins) %>%
+	config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>%  layout(legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5, colors = cbPalette), yaxis = list(title = ylab)) %>% layout(
+    hovermode = "x unified",  # Shared hover on the x-axis
+    yaxis = list(spikemode = "across", spikesnap = "cursor")
+  )
 
-#diffPalette <- c("#f9f9f9", "#e2e2e2", "#b9b9b9", "#999999")
-diffPalette <- c("#f9f9fd", "#e2e6fa", "#bacafb", "#99b9f9")
-p4 <- (df %>%  group_by(Participant,Difficulty) %>% summarise(Perceived_Efficiency = mean(as.integer(Perceived_Efficiency)), .groups="drop") %>%   
-        ggplot(aes(x = Difficulty, y = Perceived_Efficiency, fill = Difficulty)) + 
-        geom_boxplot(outlier.shape = NA) + ylim(1,5)+
-        geom_jitter(shape=1, position=position_jitter(0.2,0), size = 2) +
-        theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=diffPalette) +  
-        theme(axis.title.y=element_blank(), axis.text.y=element_blank())
+fig
 
-grid.arrange(p3, p4, nrow = 1, widths = c(3, 3))
+df <- data[data$effectX1 == 1,]
 ```
-Boxplots summarizing the results on efficiency as perceived by participants. Circles represent the mean rating of each individual participant. 
+Boxplots summarizing time performance results for our illustrative example. Dots represent the median time for each individual participant. 
 :::

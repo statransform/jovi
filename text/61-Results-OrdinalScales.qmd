@@ -1,5 +1,5 @@
 ### Type I error rates in ordinal scales {#ordinal}
-Our second experiment evaluates Type I error rates for ordinal scales. We test again a $4 \times 3$ repeated-measures design. We focus on individual Likert items levels and implement an ordered-probit method [@Liddell:2018] to discretize the latent variable $Y$ into 5, 7, or 11 ordinal levels. To derive the discretization thresholds, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of the responses $y_{ijk}$. We then divide this range into 5, 7, or 11 intervals, following two different strategies: (i) setting thresholds to be *equidistant*; or (ii) considering *flexible* thresholds, randomly drawing their position in the above range. @fig-ordinal presents examples of equidistant and flexible thresholds for a 5-level scale when the magnitude of main effect of $X_1$ is either $a_1 = 2$ or $a_1 = 8$, while all other effects are zero. 
+We also evaluate Type I error rates for ordinal scales. We test again a $4 \times 3$ repeated-measures design. We focus on individual Likert items levels and implement an ordered-probit method [@Liddell:2018] to discretize the latent variable $Y$ into 5, 7, or 11 ordinal levels. To derive the discretization thresholds, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of the responses $y_{ijk}$. We then divide this range into 5, 7, or 11 intervals, following two different strategies: (i) setting thresholds to be *equidistant*; or (ii) considering *flexible* thresholds, randomly drawing their position in the above range. @fig-ordinal presents examples of equidistant and flexible thresholds for a 5-level scale when the magnitude of main effect of $X_1$ is either $a_1 = 2$ or $a_1 = 8$, while all other effects are zero. 
 
 ::: {#fig-ordinal}
 ```{r, echo=FALSE, message=FALSE, fig.height=2.5, fig.width = 9, warning=FALSE}
@@ -8,7 +8,7 @@ plotThresholds()
 The four vertical lines in each plot represent thresholds defining 5-level ordinal scales. Thresholds are either equidistant (top) or flexible (bottom) within a range of $\pm 2$ standard deviations around the grand mean $\mu = 0$.  
 :::
 
-**Main effects**. @fig-ordinal-main present Type I errors for $X_2$'s main effect, as we vary $X_1$'s magnitude of main effect. Our results indicate that PAR, RNK, and INT consistently maintain error rates close to $5\%$ across all tested ordinal scales. In contrast, ART exhibits a significant inflation of error rates, although this issue becomes less severe when the number of levels increases. Notably, error rates are more pronounced for flexible thresholds and tend to increase with sample size. 
+**Main effects**. @fig-ordinal-main present Type I errors for $X_2$'s main effect, as we vary $X_1$'s magnitude of main effect. 
 
 ::: {#fig-ordinal-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -23,7 +23,9 @@ plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effec
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$
 :::
 
-**Interaction effects**. @fig-ordinal-interaction-1 displays error rates for the interaction $X_1 \times X_2$ with a single main effect applied to $X_1$. The observed patterns align with our previous findings; ART consistently inflates error rates, although to a lesser extent now.  
+Our results indicate that PAR, RNK, and INT consistently maintain error rates close to $5\%$ across all tested ordinal scales. In contrast, ART exhibits a significant inflation of error rates, although this issue becomes less severe when the number of levels increases. Notably, error rates are more pronounced for flexible thresholds and tend to increase with sample size. 
+
+**Interaction effects**. @fig-ordinal-interaction-1 displays error rates for the interaction $X_1 \times X_2$ with a single main effect applied to $X_1$. The observed patterns align with our previous findings; ART consistently inflates error rates.  
 
 ::: {#fig-ordinal-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -33,13 +35,19 @@ plotlyError(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "eff
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
 
-Finally, @fig-ordinal-interaction-2 presents our results when main effects are applied to both factors. None of the methods successfully maintains low error rates across all conditions. Intriguingly, we note that ART consistently performs worse than PAR. INT performs worse than ART and PAR in one specific case ($a_2, a_2 = 8$ in a scale with 11 equidistant levels), but overall, it exhibits a better behavior than all other methods. 
+**Analysis for large samples.** Let us further explore ART's error rates when sample sizes become larger. As shown in @fig-ordinal-large-samples, error rates explode even when all population effects are null. 
 
-::: {#fig-ordinal-interaction-2}
+::: {#fig-ordinal-large-samples}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-df <- readlyData(prefix, alpha, 0, distributions, dnames)
-plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
+prefix <- "2_test_4x3_Ordinal_sample_size"
 
+distributions <- c("likert5", "likert5B", "likert7", "likert7B", "likert11", "likert11B")
+dnames <- c("5 - equidistant", "5 - flexible", "7 - equidistant", "7 - flexible", "11 - equidistant", "11 - flexible")
+
+df <- readlyData1(prefix, alpha, 0, distributions, dnames)
+plotlyErrorByEffect(df, xlab = "n", max = 100)
 ```
-Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ 
+Type I error rates ($\alpha = .05$) as a function of the size $n$ of the sample, where all population effects are null.
 :::
+
+We will observe similar trends if we test other discrete distributions, such as binomial distributions. These results confirm that ART is inappropriate for discrete data.

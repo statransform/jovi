@@ -1,7 +1,7 @@
 ### Type I error rates in ratio scales {#ratio}
-Our first experiments evaluate Type I error rates for ratio scales. We test a 4 $\times$ 3 repeated-measures design, where we refer to the 4-level factor as $X_1$ and the 3-level factor as $X_2$. For the observed response variable $Y' = \mathcal{T}(Y)$, we evaluate transformations to four continuous and two discrete distributions:  
+We first evaluate Type I error rates for ratio scales. We test a 4 $\times$ 3 repeated-measures design, where we refer to the 4-level factor as $X_1$ and the 3-level factor as $X_2$. For the observed response variable $Y = \mathcal{T}(\mathcal{Y})$, we evaluate transformations to four continuous and two discrete distributions:  
 
-1. No transformation, or $Y' = Y$. Distributions are normal with a grand mean $\mu = 0$ (e.g., see @fig-effects). 
+1. No transformation, or $Y = \mathcal{Y}$. Distributions are normal with a grand mean $\mu = 0$ (e.g., see @fig-effects). 
 
 2. Log-normal distribution $LogN(\mu, \sigma)$ with global parameters $\mu = 0$ and $\sigma = 1$. As discussed in [the introduction](#intro), the log-normal distribution is a good model for various measures bounded by zero, such as task-completion times. 
 
@@ -15,7 +15,7 @@ Our first experiments evaluate Type I error rates for ratio scales. We test a 4 
 
 Specifically for the log-normal and binomial distributions, we present results for a wider range of their parameters in the [appendix](appendix.html).
 
-**Main effects**. @fig-ratio-main presents Type I error rates for the main effect of $X_2$ as the magnitude of the main effect of $X_1$ increases. The results show a very good behavior for RNK and INT across all distributions. The regular parametric ANOVA (PAR) keeps error rates below $5\%$. However, error rates become extremely low for some distributions, suggesting a loss in statistical power. We confirm previous results that ART fails to control the Type I error rate under the Cauchy distribution [@Mansouri:1995; @elkin:2021]. However, we also show that the method can be problematic with other non-normal distributions. As the main effect on the first factor $X_1$ increases, Type I errors on the second factor $X_2$ grow and reach high levels. This pattern is particularly pronounced under the log-normal distribution. We also observe that for the binomial distribution, error rates are high ($\approx 11\%$ for $n = 20$) even when effects on $X_1$ are zero. In addition, error rates further grow when the sample size increases.
+**Main effects**. @fig-ratio-main presents Type I error rates for the main effect of $X_2$ as the magnitude of the main effect of $X_1$ increases.
 
 ::: {#fig-ratio-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -34,6 +34,8 @@ plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effec
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$
 :::
 
+ The results show a very good behavior for RNK and INT across all distributions. The regular parametric ANOVA (PAR) keeps error rates below $5\%$. However, error rates become extremely low for some distributions, suggesting a loss in statistical power. We confirm previous results that ART fails to control the Type I error rate under the Cauchy distribution [@Mansouri:1995; @elkin:2021] but we also show that the method is problematic with other non-normal distributions. As the main effect on the first factor $X_1$ increases, Type I errors on the second factor $X_2$ grow and reach high levels. This pattern is particularly pronounced under the log-normal distribution. We also observe that for the binomial distribution, error rates are high ($\approx 11\%$ for $n = 20$) even when effects on $X_1$ are zero. In addition, error rates further grow when the sample size increases.
+
 **Contrasts**. The same problems appear when we run ART's procedure for contrasts [@elkin:2021]. @fig-ratio-contrasts shows our results, where we report average error rates for three pairwise comparisons (since $X_2$ has three levels). In the rest of the paper, we only show results for overall effects, since results for contrasts exhibit the same patterns. 
 
 ::: {#fig-ratio-contrasts}
@@ -46,7 +48,7 @@ plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effec
 Average Type I error rates ($\alpha = .05$) for **contrasts on factor $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
 
-**Interaction effects**. @fig-ratio-interaction-1 presents Type I error rates for the interaction effect $X_1 \times X_2$, when the main effect on $X_2$ is zero while the main effect on $X_1$ increases. Overall, we observe the same trends as for main effects. Again, ART fails in similar ways, although its error rates are now slightly lower. 
+**Interaction effects**. @fig-ratio-interaction-1 presents Type I error rates for the interaction effect $X_1 \times X_2$, when the main effect on $X_2$ is zero while the main effect on $X_1$ increases. Overall, we observe the same trends as for main effects. Again, ART fails in similar ways, although its error rates are now slightly lower.
 
 ::: {#fig-ratio-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -58,24 +60,4 @@ plotlyError(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "eff
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
 
-Finally, @fig-ratio-interaction-2 presents our results when the main effects on the two factors increase in parallel. Error rates become exceptionally high in some cases, growing up to $100\%$. 
-
-::: {#fig-ratio-interaction-2}
-```{r, echo=FALSE, message=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-df <- readlyData(prefix, alpha, 0, distributions, dnames)
-
-#xlab <- TeX("\\text{main effect of factors }X_1\\text{ and }X_2\\text{ }(a_1 = a_2)")
-plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
-```
-Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ 
-:::
-
-However, these results require special attention since interaction interpretation issues come now into place. Let us examine the performance of each method: 
-
-- *PAR*. Error rates are high for all non-normal distributions, and become even higher when the sample size increases. As we explained in [Section 3](#interpretation), the parametric method cannot deal with scale differences that emerge when effects are transformed in a non-linear fashion. If we interpreted interactions based on absolute mean differences, disregarding their different scales (i.e., if we decided that the trend in @fig-interactions (left) is indeed a valid interaction effect), we would not observe these high error rates. 
-
-- *RNK.* Error rates explode when both main effects exceed a certain level (e.g., when $a_1, a_2 \ge 4$ and $n = 20$). As shown in @fig-interactions-rank, the problem is due to the way the rank transformation deforms interactions.
-
-- *INT.* The method exhibits a better behavior than RNK. Errors start again increasing for all distributions, but not until main effects become significantly large. An exception is the binomial distribution, for which the error rates of INT and RNK are similar. We also observe that for continuous distributions, both INT and RNK are scale invariant, since their performance is not affected by the choice of scale. 
-
-- *ART.* It keeps error rates at correct levels as long as population distributions are normal. For all other distributions, its error rates grow rapidly as effect sizes increase. We distinguish between two sources of errors: (i) lack of statistical robustness as observed in our previous tests; and (ii) interaction interpretation issues (see [Section 3](#interpretation)). Our results confirm that ART is not scale invariant. On the contrary, it is extremely sensitive to the scale of the observed data. 
+The scenarios above do not capture the failure cases of the rank transformation discussed earlier (see @fig-interactions-rank), as those arise only when both coefficients $a_1$ and $a_2$ are non-zero. Since there can be different possible definitions of an interaction effect in these cases, we address them in a separate subsection.

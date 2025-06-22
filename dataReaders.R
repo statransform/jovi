@@ -6,7 +6,12 @@ readData <- function(prefix, n = 20, alpha = .05, effectType = 0,
 		distributions=c("norm", "lnorm", "exp", "cauchy", "poisson", "binom"),
 		methods = c("PAR", "RNK", "INT", "ART")) {
 
-	df <- read.csv(paste("data/", prefix, "_", n, ".csv" , sep=""), sep=",", header=TRUE, strip.white=TRUE)
+	if(n < 0) {
+		df <- read.csv(paste("data/", prefix, ".csv" , sep=""), sep=",", header=TRUE, strip.white=TRUE)
+	}
+	else {
+		df <- read.csv(paste("data/", prefix, "_", n, ".csv" , sep=""), sep=",", header=TRUE, strip.white=TRUE)
+	}
 
 	df <- df[df$distr %in% distributions,]
 	df$distr <- factor(df$distr, levels=distributions)
@@ -49,6 +54,22 @@ readlyData <- function(prefix, alpha = .05, effectType = 0,
 
 	# Different column for each n
 	df <- reshape(df, idvar=c("design", "distr","method","alpha", effectvars), timevar = "n", direction = "wide")
+	df <- df %>% group_by(distr) %>%  mutate(distr=dnames[cur_group_id()])
+	df$distr <- factor(df$distr, levels = dnames)
+
+	df
+}
+
+# Keep the column for sample size
+readlyData1 <- function(prefix, alpha = .05, effectType = 0,
+		distributions=c("norm", "lnorm", "exp", "cauchy", "poisson", "binom"),
+		dnames = c("Normal", "Log-normal", "Exponential", "Cauchy", "Poisson", "Binomial"),
+		methods = c("PAR", "RNK", "INT", "ART"), effectvars = c("effectX1","effectX2","effectX1X2")) {
+
+	df <- readData(prefix, -1, alpha, effectType, distributions, methods)
+
+	# Different column for each n
+#	df <- reshape(df, idvar=c("design", "distr","method","alpha", effectvars), timevar = "n", direction = "wide")
 	df <- df %>% group_by(distr) %>%  mutate(distr=dnames[cur_group_id()])
 	df$distr <- factor(df$distr, levels = dnames)
 
