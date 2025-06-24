@@ -122,6 +122,14 @@ toCohensf <- function(df){
     df
 }
 
+toCohensf2 <- function(df){
+    df[,5:10] <- sqrt(df[,5:10]/(1-df[,5:10]))
+    names(df)[5:10] <- c("fX1X2.2x3", "fX1X2_.2x3", "fX1X2.2x4", "fX1X2_.2x4", "fX1X2.4x3", "fX1X2_.4x3")
+
+    df
+}
+
+
 
 #prefix <- "6_scatter-Effect_Size-Main"
 #df <- readlyDataPoints(prefix,  distributions=c("norm", "lnorm", "likert5B"), dnames = c("Normal", "Log-normal", "Ordinal (5 levels)"))

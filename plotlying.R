@@ -93,6 +93,8 @@ plotlyErrorByEffect <- function(df, xlab = "n", max = 100,
 	fig
 }
 
+
+
 plotlyErrorByDesign <- function(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", ytitle = 'Type I errors (%)', max = 100){
 	# aesthetics
 	symbols <- c("asterisk", "x", "star-diamond", "star-triangle-up")

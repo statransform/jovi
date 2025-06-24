@@ -1,7 +1,78 @@
 ### Effect size estimates {#effect-sizes}
+
+We expect that discrepancies in the *p*-values produced by different methods will also be reflected in their corresponding effect size estimates. We presents results from various experiments, concentrating on either partial $\eta^2$ estimates or Cohen's $f$ estimates.
+
+**Effect sizes estimates in log-normal distributions.** Consider a $4 \times 3$ repeated-measures design with $n = 20$, where the effect of the first factor $X_1$ is null ($a_1 = 0$) and there is no interaction ($a_{12} = 0$). We assume that the responses follow log-normal distributions. @fig-eta-squared displays the partial $\eta^2$ estimated by each method for the effect of $X_1$ as the magnitude of the effect on the second factor increases. Each cell contains 300 data points. The ground truth uses ANOVA directly on the latent variable, where distributions are normal.
+
+::: {#fig-eta-squared}
+```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
+data <- read.csv("data/effect-sizes-lognormal.csv", sep=",", header=TRUE, strip.white=TRUE)
+data$effectX2 <- factor(data$effectX2)
+
+ylab = "X1 - partial eta squared"
+xlab = "X2 - magnitude of main effect (a2)"
+
+margins <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
+cbPalette = c("#8888ff", "#888888", "#E69F00", "#009E73", "#FF5E00")
+cbPalette2 = c("#8888ff88", "#88888888", "#E69F0088", "#009E7388", "#FF5E0088")
+
+df <- data[data$effectX1 == 0,]
+
+fig1 <- plot_ly(df, x = ~effectX2, y = ~X1, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
+fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
+fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
+fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
+fig.art <- plot_ly(df, x = ~effectX2, y = ~artX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'ART', marker = list(color = cbPalette2[5]), fillcolor = cbPalette2[5], line = list(color = cbPalette[5])) %>% layout(xaxis = list(title = NA))
+
+fig <- subplot(fig1, fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY = T) %>% 
+  layout(annotations = list(x = 0.5, y = -0.25, yshift = 0, xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F, text = xlab), margin = margins) %>%
+	config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>%  layout(legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5, colors = cbPalette), yaxis = list(title = ylab)) %>% layout(
+    hovermode = "x unified",  # Shared hover on the x-axis
+    yaxis = list(spikemode = "across", spikesnap = "cursor")
+  )
+
+fig
+
+df <- data[data$effectX1 == 1,]
+```
+Boxplots summarizing the $\eta^2$ estimates obtained with each method for 300 data points. The population effect of $X1$ is null, and responses follow log-normal distributions. Hover over the plots to compare the methods.
+:::
+
+ART is the only method whose effect size estimates for $X_1$ are affected by the magnitude of the effect on $X_2$. The results clearly demonstrate that the method's alignment mechanism fails in nonlinear models with skewed distributions and confounds effects.    
+
+@fig-eta-squared-2 shows the $\eta^2$ estimates when the effect of $X_1$ is no longer null ($a_1 = 1$). In this scenario, PAR consistently underestimates effect sizes, indicating its unsuitability for such data. RNK also slightly underestimates effects. ART tends to underestimate effects when $a_2 = 0$, but as $a_2$ increases, its estimates become more variable and exhibit an upward bias. INT provides the most accurate and stable estimates, with only a slight deviation when $a_2 = 8$.
+
+@fig-eta-squared-2 presents $\eta^2$ estimates when the effect of $X_1$ is no longer null ($a_1 = 1$). We observe that PAR is not ideal for such data, as it consistently underestimates effect sizes. RNK also slightly underestimates effects. ART tends to underestimate effects when $a_2 = 0$, but as $a_2$ increases, its estimates become more variable and show an overall tendency to increase. INT provides the most precise estimates but is also slightly affected when $a_2 = 8$. 
+
+::: {#fig-eta-squared-2}
+```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
+df <- data[data$effectX1 == 1,]
+
+fig1 <- plot_ly(df, x = ~effectX2, y = ~X1, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
+fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
+fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
+fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
+fig.art <- plot_ly(df, x = ~effectX2, y = ~artX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'ART', marker = list(color = cbPalette2[5]), fillcolor = cbPalette2[5], line = list(color = cbPalette[5])) %>% layout(xaxis = list(title = NA))
+
+fig <- subplot(fig1, fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY = T) %>% 
+  layout(annotations = list(x = 0.5, y = -0.25, yshift = 0, xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F, text = xlab), margin = margins) %>%
+	config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>%  layout(legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5, colors = cbPalette), yaxis = list(title = ylab)) %>% layout(
+    hovermode = "x unified",  # Shared hover on the x-axis
+    yaxis = list(spikemode = "across", spikesnap = "cursor")
+  )
+
+fig
+
+df <- data[data$effectX1 == 1,]
+```
+Boxplots summarizing the $\eta^2$ estimates obtained with each method for 300 data points. The population effect of $X1$ is now non-null ($a_1 = 1$). Responses follow again log-normal distributions. Hover over the plots to compare the methods.
+:::
+
 Our final experiment assesses the precision of the effect size estimates (Cohen's $f$) of each method. 
 
-**Main effects**. We first evaluate estimates of the main effect of $X_1$ as the magnitude of the two main effects varies. @fig-effect-main-scatterplots-1 illustrates the relationship between the Cohen's $f$ obtained with each method and the $f$ of the ground-truth method, when $a_1$ and $a_2$ vary within the range $[-2, 2]$. The proximity of data points to the black diagonal indicates the closeness of estimates to the ground truth. Points above the line are likely to overestimate the effect size, while points under the line are likely to underestimate it. 
+**Relationship to ground truth estimates**. We evaluate the precision of effect size estimates for wider range of effects. We now use Cohen's $f$ as a measure of effect size, which is expected to be proportional to the real effect. Without loss of generality, we focus on the main effect of $X_1$. We also limit our analysis to three distributions: normal, log-normal, and ordinal with five flexible levels. 
+
+@fig-effect-main-scatterplots-1 illustrates the relationship between the Cohen's $f$ obtained with each method and the $f$ of the ground-truth method, when $a_1$ and $a_2$ vary within the range $[-2, 2]$. The proximity of data points to the black diagonal indicates the closeness of estimates to the ground truth. Points above the line are likely to overestimate the effect size, while points under the line are likely to underestimate it. 
 
 ::: {#fig-effect-main-scatterplots-1}
 ```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
@@ -17,7 +88,7 @@ Scatterplots showing the relationship between effect size estimates (Cohen's $f$
 
 We observe that PAR tends to underestimate effect sizes under log-normal distributions, in consistency with its low power (see @fig-power-main-1). ART's estimates are instead spread across both sides. We invite the reader to zoom in on the lower range of values ($f < 0.4$), where the method frequently exaggerates effects. INT demonstrates the highest precision, followed by RNK. However, their performance deteriorates under the ordinal scale. Still, ART performs worse than all other methods.
 
-@fig-effect-main-scatterplots-2 shows the same relationship but for a larger range of effects $[-8, 8]$. We observe that all three rank-based methods struggle to detect large effects, even when the underlying distribution is normal. Interestingly, INT's performance declines when Cohen's $f$ exceeds a certain level. For the ordinal distribution, estimates are extremely noisy across all methods. We emphasize, however, that this is at least partly due to the low precision of the ordinal scale itself, since its five discrete levels cannot capture the full range of variations of the latent variable. The fact that all methods underestimate large effects can be simply explained by the limited range of the ordinal scale's extremes.
+@fig-effect-main-scatterplots-2 shows the same relationship but for a larger range of effects $[-8, 8]$. 
 
 ::: {#fig-effect-main-scatterplots-2}
 ```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
@@ -32,6 +103,11 @@ fig
 Scatterplots showing the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground-truth method for the main effect of $X_1$, when $a_1$ and $a_2$ vary within the range $[-8, 8]$. 
 :::
 
+We observe that all three rank-based methods struggle to detect large effects, even when the underlying distribution is normal. This result reflects a fundamental limitation of ranks. Consider, for example, two sets of numbers $A= \{1, 2, 3\}$ and $B= \{4, 5, 6\}$. The mean difference between them is $\overline{B} - \overline{A} = 3$, whether calculated from the row values or their ranks. However, if the set $B$ becomes ${9, 10, 11\}$, the mean difference of raw values increases to $8$, while the mean difference in ranks remains $3$. As effects become larger, this problem becomes more apparent. 
+
+In the case of ordinal data, all methods yield highly variable estimates. This variability is largely due to the limited resolution of the ordinal scale itself: with only five discrete levels, it cannot adequately represent the full range of variation in the latent variable. The systematic underestimation of large effects across methods is also due to the limited range of the ordinal scale's extremes, which masks the true magnitude of underlying differences.
+
+<!--
 To systematically evaluate the precision of effect size estimates across different methods, we employ the coefficient of determination, denoted as $R^2$ ($R$ squared). This metric quantifies the proportion of variation in the $f$ estimates of each method that is predictable from the estimate provided by the reference method, considered as the ground truth. We compute $R^2$ over 1000 iterations. Within each iteration, we randomly sample the magnitude of the two main effects ($a_1$ and $a_2$) from a range spanning $[-g, g]$, where $g$ takes values from the set ${0, 0.5, 1, 2, 4, 8}$. It is worth noting that the $R^2$ measure assesses the proximity of estimates to the ground truth, without distinguishing between underestimates and overestimates. We present these results based on a sample size of $n=20$.
 
 @fig-effect-main-1 depicts trends for the first factor $X_1$. INT performs exceptionally well across all continuous distributions, but its precision declines when the range of effects becomes large ($g > 4$). PAR's performance is strikingly low under the log-normal distribution and, to a lesser degree, under the exponential distribution. ART emerges as the second-worst method for these distributions. Finally, we observe low $R^2$ values for all methods under the binomial and ordinal distributions. ART's performance is particularly problematic when effects sizes are low.  
@@ -72,3 +148,5 @@ plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "cohensfX1X2", xva
 ```
 $R^2$ scores measuring the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground truth method for the interaction effect $X_1 \times X_2$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
+
+-->

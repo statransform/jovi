@@ -41,6 +41,7 @@ library(plotly)
 # Source code for reading data from experimental results and for plotting
 source("dataReaders.R")
 source("plotting.R")
+source("plotlying.R")
 source("effects_plot.R")
 source("interactions_plot.R")
 ```
@@ -53,60 +54,16 @@ source("interactions_plot.R")
 </style>
 ```
 
-::: {#fig-eta-squared}
-```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
-data <- read.csv("data/effect-sizes-lognormal.csv", sep=",", header=TRUE, strip.white=TRUE)
-data$effectX2 <- factor(data$effectX2)
 
-ylab = "X1 - partial eta squared"
-xlab = "X2 - magnitude of main effect (a2)"
+::: {#fig-effect-main-scatterplots-1}
+```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
+source("effect_sizes_scatterplots.R")
+prefix <- "6_scatter-Effect_Size-g2"
+df <- readlyDataPoints(prefix,  distributions=c("norm", "lnorm", "likert5B"), dnames = c("Normal", "Log-normal", "Ordinal (5 levels)"), effect = "X1X2") %>% toCohensf2()
 
-margins <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
-cbPalette = c("#8888ff", "#888888", "#E69F00", "#009E73", "#FF5E00")
-cbPalette2 = c("#8888ff88", "#88888888", "#E69F0088", "#009E7388", "#FF5E0088")
-
-df <- data[data$effectX1 == 0,]
-
-fig1 <- plot_ly(df, x = ~effectX2, y = ~X1, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
-fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
-fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
-fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
-fig.art <- plot_ly(df, x = ~effectX2, y = ~artX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'ART', marker = list(color = cbPalette2[5]), fillcolor = cbPalette2[5], line = list(color = cbPalette[5])) %>% layout(xaxis = list(title = NA))
-
-fig <- subplot(fig1, fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY = T) %>% 
-  layout(annotations = list(x = 0.5, y = -0.25, yshift = 0, xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F, text = xlab), margin = margins) %>%
-	config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>%  layout(legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5, colors = cbPalette), yaxis = list(title = ylab)) %>% layout(
-    hovermode = "x unified",  # Shared hover on the x-axis
-    yaxis = list(spikemode = "across", spikesnap = "cursor")
-  )
+fig <- plotlyScatter(df, xlab = "Ground truth", ylab= "Cohen's f", xvar = "fX1X2", max = 0.6)
 
 fig
-
-df <- data[data$effectX1 == 1,]
 ```
-Boxplots summarizing time performance results for our illustrative example. Dots represent the median time for each individual participant. 
-:::
-
-::: {#fig-eta-squared-2}
-```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
-df <- data[data$effectX1 == 1,]
-
-fig1 <- plot_ly(df, x = ~effectX2, y = ~X1, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
-fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
-fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
-fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
-fig.art <- plot_ly(df, x = ~effectX2, y = ~artX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'ART', marker = list(color = cbPalette2[5]), fillcolor = cbPalette2[5], line = list(color = cbPalette[5])) %>% layout(xaxis = list(title = NA))
-
-fig <- subplot(fig1, fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY = T) %>% 
-  layout(annotations = list(x = 0.5, y = -0.25, yshift = 0, xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F, text = xlab), margin = margins) %>%
-	config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>%  layout(legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5, colors = cbPalette), yaxis = list(title = ylab)) %>% layout(
-    hovermode = "x unified",  # Shared hover on the x-axis
-    yaxis = list(spikemode = "across", spikesnap = "cursor")
-  )
-
-fig
-
-df <- data[data$effectX1 == 1,]
-```
-Boxplots summarizing time performance results for our illustrative example. Dots represent the median time for each individual participant. 
+Scatterplots showing the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground-truth method for the main effect of $X_1$, when $a_1$ and $a_2$ vary within the range $[-2, 2]$. 
 :::
