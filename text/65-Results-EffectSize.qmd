@@ -28,14 +28,13 @@ fig <- subplot(fig1, fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY =
   layout(annotations = list(x = 0.5, y = -0.25, yshift = 0, xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F, text = xlab), margin = margins) %>%
 	config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>%  layout(legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5, colors = cbPalette), yaxis = list(title = ylab)) %>% layout(
     hovermode = "x unified",  # Shared hover on the x-axis
-    yaxis = list(spikemode = "across", spikesnap = "cursor")
+    yaxis = list(spikemode = "across", spikesnap = "cursor"),
+    xaxis = list(fixedrange=T)
   )
 
 fig
-
-df <- data[data$effectX1 == 1,]
 ```
-Boxplots summarizing the $\eta^2$ estimates obtained with each method for 300 data points. The population effect of $X1$ is null, and responses follow log-normal distributions. Hover over the plots to compare the methods.
+Boxplots summarizing the $\eta^2$ estimates obtained with each method for 300 data points ($n=20$). The population effect of $X1$ is null, and responses follow **log-normal distributions**. Hover over the plots to compare the methods.
 :::
 
 ART is the only method whose effect size estimates for $X_1$ are affected by the magnitude of the effect on $X_2$. The results clearly demonstrate that the method's alignment mechanism fails in nonlinear models with skewed distributions and confounds effects.    
@@ -58,14 +57,13 @@ fig <- subplot(fig1, fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY =
   layout(annotations = list(x = 0.5, y = -0.25, yshift = 0, xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F, text = xlab), margin = margins) %>%
 	config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>%  layout(legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5, colors = cbPalette), yaxis = list(title = ylab)) %>% layout(
     hovermode = "x unified",  # Shared hover on the x-axis
-    yaxis = list(spikemode = "across", spikesnap = "cursor")
+    yaxis = list(spikemode = "across", spikesnap = "cursor"),
+    xaxis = list(fixedrange=T)
   )
 
 fig
-
-df <- data[data$effectX1 == 1,]
 ```
-Boxplots summarizing the $\eta^2$ estimates obtained with each method for 300 data points. The population effect of $X1$ is now non-null ($a_1 = 1$). Responses follow again log-normal distributions. Hover over the plots to compare the methods.
+Boxplots summarizing the $\eta^2$ estimates obtained with each method for 300 data points ($n=20$). The population effect of $X1$ is now non-null ($a_1 = 1$). Responses follow again **log-normal distributions**. Hover over the plots to compare the methods.
 :::
 
 Our final experiment assesses the precision of the effect size estimates (Cohen's $f$) of each method. 
@@ -107,6 +105,77 @@ We observe that all three rank-based methods struggle to detect large effects, e
 
 In the case of ordinal data, all methods yield highly variable estimates. This variability is largely due to the limited resolution of the ordinal scale itself: with only five discrete levels, it cannot adequately represent the full range of variation in the latent variable. The systematic underestimation of large effects across methods is also due to the limited range of the ordinal scale's extremes, which masks the true magnitude of underlying differences.
 
+**Interactions**. We also provide additional results illustrating how rank-based methods can fail to accurately estimate interaction effects. @fig-eta-squared-interaction shows the estimated values of partial $\eta^2$ for the interaction term under normal distributions, as both main effects increase. Once again, we observe that RNK can substantially distort the estimated interaction. While INT reduces this distortion, the problem reappears as the main effects grow larger.   
+
+::: {#fig-eta-squared-interaction}
+```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
+data <- read.csv("data/effect-sizes-normal-interactions.csv", sep=",", header=TRUE, strip.white=TRUE)
+data$effectX2 <- factor(data$effectX2)
+
+ylab = "interaction - partial eta squared"
+xlab = "magnitude of main effects: a1 and a2"
+
+margins <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
+cbPalette = c("#8888ff", "#888888", "#E69F00", "#009E73", "#FF5E00")
+cbPalette2 = c("#8888ff88", "#88888888", "#E69F0088", "#009E7388", "#FF5E0088")
+
+df <- data
+
+fig1 <- plot_ly(df, x = ~effectX2, y = ~X1X2, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
+fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1X2, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
+fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
+fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
+fig.art <- plot_ly(df, x = ~effectX2, y = ~artX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'ART', marker = list(color = cbPalette2[5]), fillcolor = cbPalette2[5], line = list(color = cbPalette[5])) %>% layout(xaxis = list(title = NA))
+
+fig <- subplot(fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY = T) %>% 
+  layout(annotations = list(x = 0.5, y = -0.25, yshift = 0, xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F, text = xlab), margin = margins) %>%
+	config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>%  layout(legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5, colors = cbPalette), yaxis = list(title = ylab), xaxis = list(fixedrange=T)) %>% layout(
+    hovermode = "x unified",  # Shared hover on the x-axis
+    yaxis = list(spikemode = "across", spikesnap = "cursor")
+  )
+         
+fig
+```
+Boxplots summarizing the $\eta^2$ estimates for interactions obtained with each method for 300 data points ($n=20$). The population interaction effect is null, and responses follow **normal distributions**. Hover over the plots to compare the methods.
+:::
+
+If the data take a discrete form, effect size estimates become even more distorted across all methods. @fig-eta-squared-ordinal presents results for an ordinal scale with 5 flexible levels.    
+
+::: {#fig-eta-squared-ordinal}
+```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
+data <- read.csv("data/effect-sizes-ordinal-interactions.csv", sep=",", header=TRUE, strip.white=TRUE)
+data$effectX2 <- factor(data$effectX2)
+
+ylab = "interaction - partial eta squared"
+xlab = "magnitude of main effects: a1 and a2"
+
+margins <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
+cbPalette = c("#8888ff", "#888888", "#E69F00", "#009E73", "#FF5E00")
+cbPalette2 = c("#8888ff88", "#88888888", "#E69F0088", "#009E7388", "#FF5E0088")
+
+df <- data
+#df <- data[data$effectX1 == 0,]
+
+fig1 <- plot_ly(df, x = ~effectX2, y = ~X1X2, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
+fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1X2, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
+fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
+fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
+fig.art <- plot_ly(df, x = ~effectX2, y = ~artX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'ART', marker = list(color = cbPalette2[5]), fillcolor = cbPalette2[5], line = list(color = cbPalette[5])) %>% layout(xaxis = list(title = NA))
+
+fig <- subplot(fig1, fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY = T) %>% 
+  layout(annotations = list(x = 0.5, y = -0.25, yshift = 0, xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F, text = xlab), margin = margins) %>%
+	config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>%  layout(legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5, colors = cbPalette), yaxis = list(title = ylab), xaxis = list(fixedrange=T)) %>% layout(
+    hovermode = "x unified",  # Shared hover on the x-axis
+    yaxis = list(spikemode = "across", spikesnap = "cursor")
+  )
+         
+fig
+```
+Boxplots summarizing the $\eta^2$ estimates for interactions obtained with each method for 300 data points ($n=20$). The population interaction effect is null, and responses are **ordinal with 5 flexible levels**. Hover over the plots to compare the methods.
+:::
+
+As discussed extensively earlier, such ordinal scales can distort interaction trends when main effects are non-zero, leading to interpretation issues. Although the methods may detect strong interaction effects under these conditions, the effects may not be intrinsic or meaningful.
+  
 <!--
 To systematically evaluate the precision of effect size estimates across different methods, we employ the coefficient of determination, denoted as $R^2$ ($R$ squared). This metric quantifies the proportion of variation in the $f$ estimates of each method that is predictable from the estimate provided by the reference method, considered as the ground truth. We compute $R^2$ over 1000 iterations. Within each iteration, we randomly sample the magnitude of the two main effects ($a_1$ and $a_2$) from a range spanning $[-g, g]$, where $g$ takes values from the set ${0, 0.5, 1, 2, 4, 8}$. It is worth noting that the $R^2$ measure assesses the proximity of estimates to the ground truth, without distinguishing between underestimates and overestimates. We present these results based on a sample size of $n=20$.
 

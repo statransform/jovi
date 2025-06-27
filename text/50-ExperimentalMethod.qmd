@@ -5,18 +5,18 @@ We can now detail our experimental method. We evaluate the standard parametric a
 
 2. We present results for five experimental designs. To simplify our presentation, we start with a 4 $\times$ 3 repeated-measures factorial design. We then show how our conclusions generalize to four additional designs: (i) a 2 $\times$ 3 between-subjects design; (ii) a 2 $\times$ 4 mixed design, with a between-subjects factor and a repeated-measures factor; (iii) a 2 $\times$ 2 $\times$ 2 repeated-measures design, and (iv) a 3 $\times$ 3 $\times$ 3 repeated-measures design.
 
-3. We evaluate three sample sizes, $n=10$, $n=20$, and $n=30$, where $n$ represents the cell size in an experimental design. For within-subjects designs where all factors are treated as repeated measures, $n$ coincides with the number $N$ of subjects (or commonly human participants in HCI research). In contrast, for a 2 $\times$ 3 between-subjects design, if the cell size is $n = 20$, then the number of subjects is $N = 120$.
+3. We focus on three sample sizes, $n=10$, $n=20$, and $n=30$, where $n$ represents the cell size in an experimental design. In within-subjects designs, where all factors are treated as repeated measures, $n$ corresponds to the number of subjects $N$ (commonly human participants in HCI research). In contrast, in a 2 $\times$ 3 between-subjects design, a cell size of $n = 20$, implies a total of $N = 120$ subjects. For ordinal data only, we also report results for a larger range of sample sizes, up to $n = 512$. 
 
-4. We test the robustness of the methods under unequal variances. 
+4. We test the robustness of the methods when the variances on the latent variable are unequal. 
 
-5. In addition to Type I error rates, we compare the statistical power of the methods and also evaluate the quality of their effect size estimates.  
+5. In addition to Type I error rates, we compare the statistical power of the methods and assess the accuracy of their effect size estimates.
 
-6. We assess the above measures for both main and interaction effects and examine how growing effects on one or two factors affect the Type I error rate on other factors and their interactions. 
+6. We analyze both main and interaction effects, examining how increasing the effect size of one or two factors influences the Type I error rates of other factors and their interactions.
 
 <!--
 Furthermore, we assess how a growing interaction effect, either in isolation or in combination with a main effect, can affect the inference of main effects. -->
 
-Previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also tested unbalanced designs, where the cell size is not constant across all levels of a factor. When combined with unequal variances, unbalanced designs are often problematic for both parametric procedures [@blanca:2018] and rank transformation methods [@Beasley:2009; @luepsen:2018]. As we mentioned earlier, we do not evaluate unbalanced designs here. However, we provide additional experimental results on missing data in the [appendix](appendix.html).
+Previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also examined unbalanced designs, where cell sizes vary across the levels of a factor. When combined with unequal variances, such designs often pose challenges for both parametric procedures [@blanca:2018] and rank transformation methods [@Beasley:2009; @luepsen:2018]. As noted earlier, we do not include unbalanced designs in our evaluation. However, we provide additional experimental results on missing data in the [appendix](appendix.html).
 
 ### Statistical modeling
 To model the latent variable $\mathcal{Y}$, we use a two-way (two factors) or a three-way (three factors) mixed-effects model. For simplicity, we explain here the model for two factors. Its extension to three factors is straightforward. The model has the following form:
@@ -71,14 +71,13 @@ Significance tests have two types of errors. *Type I errors*, or false positives
 
 Statistical significance testing requires setting a significance threshold known as significance or $\alpha$ (alpha) level, with typical values $\alpha = .05$ and $\alpha = .01$. The Type I error rate of a well-behaved significance test should be close to this nominal alpha level. An error rate clearly above this level suggests that the significance test is too liberal, while an error rate clearly below this level suggests that the test is too conservative. Four of our experiments specifically assess the Type I error rate of the methods. We test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brevity, we only report results for $\alpha = .05$ in the main paper and include additional results in our supplementary material. 
 
-We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. In addition to power, we assess effect size estimates, where we use as ground truth the estimates of a parametric ANOVA conducted on the latent variable $\mathcal{Y}$. While partial $\eta^2$ is the most commonly used effect size measure, we chose to base our analysis on Cohen's $f$, as its expected value is proportional to the real magnitude of effect. However, $\eta^2$ can be directly derived from Cohen's $f$ as follows:
+We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. In addition to power, we assess effect size estimates, where we use as ground truth the estimates of a parametric ANOVA conducted on the latent variable $\mathcal{Y}$. While partial $\eta^2$ is the most commonly used effect size measure, we also evaluate Cohen's $f$, as its expected value is proportional to the real magnitude of effect. However, $\eta^2$ can be directly derived from Cohen's $f$ as follows:
 
 $$ 
 \eta^2 = \frac{f^2}{1 + f^2}
 $${#eq-cohensf}
 
-
-As we explained earlier, interaction effects are deformed when we transform the latent variable $\mathcal{Y}$ to obtain the observed responses. Such transformations also affect the Type I error rates and power that we observe. Here, we are interested in evaluating these measures with respect to the effects we apply to the latent variable $\mathcal{Y}$. We make this distinction whenever it is relevant in our analysis.  
+As explained earlier, interaction effects are distorted when the latent variable $\mathcal{Y}$ is transformed to produce the observed responses. These transformations also influence the Type I error rates and statistical power we observe. In this analysis, we focus on evaluating these measures with respect to the effects applied to the latent variable $\mathcal{Y}$. We explicitly make this distinction whenever it is relevant to our discussion. 
 
 ### Hardware platform and iterations
 Our experimental R code is available in our supplementary material. We ran our experiments separately in a cluster of 8 machines Dell R640 Intel Xeon Silver 4112 2.6GHz with 4 cores and 64 GB memory. Our R code was parallelized to use all four cores of each machine. Some experiments took a few hours to complete, while others took several days. 
