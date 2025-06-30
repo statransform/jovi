@@ -55,61 +55,40 @@ source("interactions_plot.R")
 ```
 
 
-::: {#fig-art-binary}
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=3.2, fig.width=8}
-library(gridExtra)
+::: {#fig-higgins-model}
+```{r, echo=FALSE, message=FALSE, fig.height=2.5, fig.width = 9, warning=FALSE}
+library(plotly)
 
-df <- read.csv("data-binary.csv", sep=",", header=TRUE, strip.white=TRUE)
-df$S <- factor(df$S)
-df$A <- factor(df$A)
-df$B <- factor(df$B)
+palette <- c("#E69F00", "#009E73")
 
-df$rnk <- rank(df$Y)
+logsd <- 0.5
+logm <- -0.3
 
-m <- mean(df$Y)
-Ai <- aggregate(Y ~ A, data = df, mean)
-Bj <- aggregate(Y ~ B, data = df, mean) 
-AiBj <- aggregate(Y ~ A+B, data = df, mean) 
-cmean <- aggregate(Y ~ A+B, data = df, mean) 
+xs <- seq(0, 10, length.out = 1000)
+y1s <- dlnorm(xs, logm, logsd)
+y2s <- dlnorm(xs - 0.5, logm, logsd)
 
-library(dplyr)
-df <- df %>% group_by(A) %>% mutate(Ai = mean(Y)) %>% 
-  group_by(B) %>% mutate(Bj = mean(Y)) %>% 
-  group_by(A,B) %>% mutate(AiBj = mean(Y)) %>% mutate(Cell = mean(Y))
+med1 <- exp(logm)
+med2 <- exp(logm) + 0.5
 
-df$m <- mean(df$Y)
+annot1 <- paste("Log-normal: meanlog = ", logm, ", sdlog = ", logsd)
+annot2 <- paste("Log-normal: meanlog = ", logm, ", sdlog = ", logsd)
 
-df$artA <- df$Y - df$Cell + df$Ai - df$m
-df$artB <- df$Y - df$Cell + df$Bj - df$m
-df$artAB <- df$Y - df$Cell + df$AiBj - df$Ai - df$Bj + df$m 
+fig <- plot_ly() %>%  
+      add_lines(x = xs, y = y1s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot1, hoverinfo = 'text', line=list(color=palette[1])) %>%
+      add_lines(x = xs, y = y2s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot2, hoverinfo = 'text', line=list(color=palette[2])) %>%      
+      add_annotations(x = med1-0.06, y = max(y1s), text = "easy", xref = "x", yref = "y", showarrow = F, font = list(color = palette[1]), xanchor = 'left') %>% 
+      add_annotations(x = med2-0.06, y = max(y2s), text = "hard", xref = "x", yref = "y", showarrow = F, font = list(color = palette[2]), xanchor = 'left') %>%   
+      layout(
+        showlegend = FALSE,
+        xaxis = list(title = "Time (min)", range = c(0, 4.5), showgrid = F, showticks = T, ticks="outside", zeroline = F), 
+        yaxis = list(showgrid = F, showticklabels = F, showline = F, range=c(0, max(y1s) + .05), fixedrange=T)
+      ) %>% 
+	      config(displayModeBar = TRUE, scrollZoom = FALSE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale", "hoverclosest", 'hoverCompare'))  %>% layout(dragmode='pan')
 
-df$rnkA <- rank(round(df$artA, digits = 7))
-df$rnkB <- rank(round(df$artB, digits = 7))
-df$rnkAB <- rank(round(df$artAB, digits = 7))
+fig
 
-mytheme <- gridExtra::ttheme_default(
-    core = list(fg_params=list(cex = 2.0)),
-    colhead = list(fg_params=list(cex = 1.0)),
-    rowhead = list(fg_params=list(cex = 1.0)))
-
-myTable <- tableGrob(df[,1:4], theme = ttheme_minimal(base_size = 10) ) 
-
-diffPalette = c("#E69F00", "#FF5E00")
-p1 <- (df %>%   
-        ggplot(aes(x = B, y = rnk, fill = B)) + ggtitle("RNK") +
-        geom_boxplot(outlier.shape = NA) +
-        geom_jitter(position=position_jitter(0.3,0), size = 2, color=diffPalette[1], alpha=0.6) +
-        theme_bw() + theme(legend.position = "none", plot.title = element_text(hjust = 0.5))) +  
-        ylab("ranking") + scale_y_discrete(limits=as.character(1:nrow(df)))
-
-p2 <- (df %>%   
-        ggplot(aes(x = B, y = rnkB, fill = B)) + ggtitle("ART_B") +
-        geom_boxplot(outlier.shape = NA) + 
-        geom_jitter(position=position_jitter(0.3,0), size = 2, color=diffPalette[2], alpha=0.6) +
-        theme_bw() + theme(legend.position = "none", plot.title = element_text(hjust = 0.5))) +  
-        theme(axis.title.y=element_blank(), axis.text.y=element_blank()) + scale_y_discrete(limits=as.character(1:nrow(df)))
-
-grid.arrange(myTable, p1, p2, nrow = 1)
 ```
-Results from an experiment following a $3 \times 2$ design, where the response variable $Y$ is binary and indicates the presence of an error. The plots show the rankings produced by the simple rank transformation (RNK) and by ART for the second factor. The solid lines represent group medians.    
+The model of @higgins:1990 assumes that distributions have an identical shape across all conditions. Here, the log-normal distribution of the time measure is simply shifted to the right as the task difficulty increases. 
 :::
+

@@ -28,7 +28,7 @@ Thus, the critical question we must address is: how does ART perform when its co
 Suppose we studied image-editing tasks (as in our illustrative example), measuring the time participants needed to complete them for two difficulty levels: *easy* and *hard*. If we assume that observed times follow log-normal distributions, the model of @higgins:1990 will generate distributions as the ones in @fig-higgins-model. We observe that the distribution for the hard task is simply shifted to the right, while their shape conveniently remains identical. @Mansouri:1995 have shown that at least for interaction effects, ART remains robust under such distributions. However, how realistic are these distributions?
 
 ::: {#fig-higgins-model}
-```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 9, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, fig.height=2.5, fig.width = 9, warning=FALSE}
 library(plotly)
 
 palette <- c("#E69F00", "#009E73")
@@ -64,10 +64,10 @@ fig
 The model of @higgins:1990 assumes that distributions have an identical shape across all conditions. Here, the log-normal distribution of the time measure is simply shifted to the right as the task difficulty increases. 
 :::
 
-Heavy-tailed distributions, such as the log-normal distribution here, commonly arise in nature when measurements cannot be negative or fall below a certain threshold (Limpert et al., 2001), e.g., the minimum time needed to react to a visual stimulus. In most experimental research, however, this threshold does not shift across conditions while preserving the distribution’s shape. Instead, distributions are more likely to resemble the ones in @fig-realistic-model. 
+Heavy-tailed distributions, such as the log-normal distribution here, commonly arise in nature when measurements cannot be negative or fall below a certain threshold [@Limbert:2001], e.g., the minimum time needed to react to a visual stimulus. In most experimental research, however, this threshold does not shift across conditions while preserving the distribution’s shape. Instead, distributions are more likely to resemble the ones in @fig-realistic-model. 
 
 ::: {#fig-realistic-model}
-```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 9, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, fig.height=2.5, fig.width = 9, warning=FALSE}
 library(plotly)
 
 palette <- c("#E69F00", "#009E73")
@@ -104,7 +104,7 @@ fig
 Log-normal distributions produced using a generalized linear model. As the mean of the distributions increases, their overall shape changes. 
 :::
 
-In these distributions, the mean for had tasks also increases, but this increase is not reflected as a simple global shift in the distribution. Instead, the overall shape of the distribution changes. The model we used to generate these distributions is structured as follows:
+In these distributions, the mean for hard tasks also increases, but this increase is not reflected as a simple global shift in the distribution. Instead, the overall shape of the distribution changes. The model we used to generate these distributions is structured as follows:
 
 $$ 
 log(Y_{ijk} - \theta) = \mu + \alpha_i + \beta_j + (\alpha \beta)_{ij} + \epsilon_{ijk}
@@ -122,7 +122,7 @@ We acknowledge that @elkin:2021 diverged from the modeling approach described by
 However, a question remains: Is ART’s failure in handling such models due solely to heteroscedasticity issues? For example, consider the two time distributions in @fig-homoscedastic-model, which --- despite having different shapes --- share the same standard deviation. Would ART perform correctly in this case? While we do not directly address this question in the main paper, we include additional results in the [appendix](appendix.html) showing that as long as distribution shapes differ across levels, ART tends to confound effects. Naturally, as the shapes become more similar, the problem diminishes. In conclusion, heteroscedasticity may exacerbate the problem, but it is not its sole cause.
 
 ::: {#fig-homoscedastic-model}
-```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 9, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, fig.height=2.5, fig.width = 9, warning=FALSE}
 library(plotly)
 
 palette <- c("#E69F00", "#009E73")
