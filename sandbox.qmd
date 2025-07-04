@@ -55,40 +55,14 @@ source("interactions_plot.R")
 ```
 
 
-::: {#fig-higgins-model}
-```{r, echo=FALSE, message=FALSE, fig.height=2.5, fig.width = 9, warning=FALSE}
-library(plotly)
+**When the interpretation of effects becomes ambiguous.** Issues with interpreting interaction effects arise only when there are parallel main effects -- that is, when the coefficients of all interacting factors are non-zero. Interpretation issues may also extend to main effects when the interaction coefficient $a_{12}$ is non-zero. In such cases, we may observe a change in the marginal effect of a factor (e.g., $x_1$), even if its associated model coefficient (e.g., $a_1$) is zero.
 
-palette <- c("#E69F00", "#009E73")
+By contrast, interpretation is unambiguous in these situations:
 
-logsd <- 0.5
-logm <- -0.3
+- *Main effects*: when the interaction coefficient $a_{12}$ is zero.
 
-xs <- seq(0, 10, length.out = 1000)
-y1s <- dlnorm(xs, logm, logsd)
-y2s <- dlnorm(xs - 0.5, logm, logsd)
+- *Interaction effect*: when either $a_{1}$ or $a_{2}$ is zero.    
 
-med1 <- exp(logm)
-med2 <- exp(logm) + 0.5
+For example, the divergence in ART's results in our illustrative example (see @fig-example) cannot be attributed to interpretation issues, since the sample was drawn from a population with no effect of *Technique* ($a_{1} = 0$) and no interaction ($a_{12}=0$). 
 
-annot1 <- paste("Log-normal: meanlog = ", logm, ", sdlog = ", logsd)
-annot2 <- paste("Log-normal: meanlog = ", logm, ", sdlog = ", logsd)
-
-fig <- plot_ly() %>%  
-      add_lines(x = xs, y = y1s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot1, hoverinfo = 'text', line=list(color=palette[1])) %>%
-      add_lines(x = xs, y = y2s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot2, hoverinfo = 'text', line=list(color=palette[2])) %>%      
-      add_annotations(x = med1-0.06, y = max(y1s), text = "easy", xref = "x", yref = "y", showarrow = F, font = list(color = palette[1]), xanchor = 'left') %>% 
-      add_annotations(x = med2-0.06, y = max(y2s), text = "hard", xref = "x", yref = "y", showarrow = F, font = list(color = palette[2]), xanchor = 'left') %>%   
-      layout(
-        showlegend = FALSE,
-        xaxis = list(title = "Time (min)", range = c(0, 4.5), showgrid = F, showticks = T, ticks="outside", zeroline = F), 
-        yaxis = list(showgrid = F, showticklabels = F, showline = F, range=c(0, max(y1s) + .05), fixedrange=T)
-      ) %>% 
-	      config(displayModeBar = TRUE, scrollZoom = FALSE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale", "hoverclosest", 'hoverCompare'))  %>% layout(dragmode='pan')
-
-fig
-
-```
-The model of @higgins:1990 assumes that distributions have an identical shape across all conditions. Here, the log-normal distribution of the time measure is simply shifted to the right as the task difficulty increases. 
-:::
-
+Throughout the remainder of the article, we make every effort to clarify when the interpretation of an effect is ambiguous. Because different methods may rely on different assumptions about the null hypothesis, we analyze such situations separately. However, it is important to note that the existing literature offers no guidance on how ART is expected to interpret main and interaction effects under these conditions. Early evaluations of ART did not consider nonlinear models, and therefore this issue was not raised. While @elkin:2021 does examine such models, they avoid these scenarios and do not address these problems.
