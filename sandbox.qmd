@@ -54,15 +54,40 @@ source("interactions_plot.R")
 </style>
 ```
 
+## Main effects in the presence of interactions {#interactions}
+In all experiments assessing Type I error rates reported in our article, we assumed no interaction effects. However, we also need to understand whether weak or strong interaction effects could affect the sensitivity of the methods in detecting main effects. Unfortunately, the interpretation of main effects may become ambiguous when interactions are present. 
 
-**When the interpretation of effects becomes ambiguous.** Issues with interpreting interaction effects arise only when there are parallel main effects -- that is, when the coefficients of all interacting factors are non-zero. Interpretation issues may also extend to main effects when the interaction coefficient $a_{12}$ is non-zero. In such cases, we may observe a change in the marginal effect of a factor (e.g., $x_1$), even if its associated model coefficient (e.g., $a_1$) is zero.
+To understand the problem, let us take a [dataset](removable_main.csv) from a fictional experiment (within-participants design with $n = 24$) that evaluates the performance of two techniques (*Tech A* and *Tech B*) under two task difficulty levels (*easy* vs. *hard*). @fig-example-interactions visualizes the means for each combination of the levels of the factors, using the original scale of measurements (left) and a logarithmic scale (right). Note that time measurements were drawn from log-normal distributions.
 
-By contrast, interpretation is unambiguous in these situations:
+::: {#fig-example-interactions}
+```{r, echo=FALSE, message=FALSE, fig.height=3.5, fig.width = 9, warning=FALSE}
+df <- read.csv("removable_main.csv", sep=",", header=TRUE, strip.white=TRUE)
+dftime <- aggregate(Time ~ Difficulty+Technique, data = df, mean)
 
-- *Main effects*: when the interaction coefficient $a_{12}$ is zero.
+fig1 <- createInteractionPlot(dftime) %>% layout( yaxis = list(hoverformat = '.2f'))
+fig2 <- createInteractionPlot(dftime, logscale = TRUE) %>% layout( yaxis = list(hoverformat = '.2f'))
 
-- *Interaction effect*: when either $a_{1}$ or $a_{2}$ is zero.    
+fig <- subplot(fig1, fig2, titleY = TRUE, titleX = TRUE, margin = 0.06) %>% layout(hovermode = 'x', dragmode='pan')
 
-For example, the divergence in ART's results in our illustrative example (see @fig-example) cannot be attributed to interpretation issues, since the sample was drawn from a population with no effect of *Technique* ($a_{1} = 0$) and no interaction ($a_{12}=0$). 
+fig
+```
+The line charts visualize the effects of task difficulty (*easy* vs. *hard*) and technique (*Tech* A vs. *Tech B*) for task completion time. All data points represent group means. 
+:::
 
-Throughout the remainder of the article, we make every effort to clarify when the interpretation of an effect is ambiguous. Because different methods may rely on different assumptions about the null hypothesis, we analyze such situations separately. However, it is important to note that the existing literature offers no guidance on how ART is expected to interpret main and interaction effects under these conditions. Early evaluations of ART did not consider nonlinear models, and therefore this issue was not raised. While @elkin:2021 does examine such models, they avoid these scenarios and do not address these problems.
+We observe a clear main effect of *Difficulty* and a strong interaction effect, regardless of the scale. However, the main effect of *Technique* largely depends on the scale used to present the results. Can we then conclude that *Technique A* is overall faster than *Technique B*? 
+
+Below, we present the results of the analysis using different methods.
+
+|        | PAR  | LOG  | ART | RNK | INT |
+|--------|------|------|-----|-----|-----|
+| Difficulty  | $7.8 \times 10^{-8}$ | $4.3 \times 10^{-16}$  |  $8.6 \times 10^{-12}$ | $2.5 \times 10^{-16}$ | $1.1 \times 10^{-15}$ |
+| Technique   | $.024$ | $.81$  | $.00017$ | $.69$ | $.69$ |
+| Difficulty $\times$ Technique | $7.6 \times 10^{-6}$ | $4.1 \times 10^{-9}$ | $9.4 \times 10^{-8}$ | $1.1 \times 10^{-9}$ | $1.3 \times 10^{-9}$ |
+: *p*-values for main and interaction effects {.sm}
+
+PAR detects a main effect of *Technique* ($\alpha = .05$), as does ART, which yields an even smaller $p$-value. In contrast, LOG, RNK, and INT do not find no evidence for such an effect. As with *removable interactions*, we can speak about *removable main effects* in this case. 
+
+As a general principle, it makes little sense to interpret main effects when crossing patterns emerge due to a strong interaction. In this scenario, the researchers should instead compare techniques within each level of *Difficulty*. Accordingly, we can conclude that *Technique A* is slower on *easy* tasks but faster on *hard* tasks in this experiment.
+
+In the $4 \times 3$ design, error rates for PAR and ART grow rapidly as the interaction effect becomes large under the log-normal and exponential distributions. This is largely due to interpretation issues, as illustrated in our example. However, ART also fails to control the error rate in other scenarios. Finally, under the binomial and ordinal scales, we observe that RNK and INT may also inflate Type I error rates when the interaction effect becomes sufficiently large.
+

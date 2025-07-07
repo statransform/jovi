@@ -137,17 +137,17 @@ meanlog <- function(mean, sd) {
 
 xs <- seq(0, 10, length.out = 1000)
 
-logm1 <- meanlog(0.8, 0.4)
-logm2 <- meanlog(1.4, 0.4)
+logm1 <- meanlog(0.8, 1)
+logm2 <- meanlog(1.4, 1)
 
-logsd1 <- sdlog(0.8, 0.4)
-logsd2 <- sdlog(1.4, 0.4)
+logsd1 <- sdlog(0.8, 1)
+logsd2 <- sdlog(1.4, 1)
 
 y1s <- dlnorm(xs, logm1, logsd1)
 y2s <- dlnorm(xs, logm2, logsd2)
 
-med1 <- 0.68
-med2 <- 1.40
+x1 <- 0.36
+x2 <- 1.30
 
 annot1 <- paste("Log-normal: meanlog = ", round(logm1, 2), ", sdlog = ", round(logsd1, 2))
 annot2 <- paste("Log-normal: meanlog = ", round(logm2, 2), ", sdlog = ",  round(logsd1, 2))
@@ -155,8 +155,8 @@ annot2 <- paste("Log-normal: meanlog = ", round(logm2, 2), ", sdlog = ",  round(
 fig <- plot_ly() %>%  
       add_lines(x = xs, y = y1s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot1, hoverinfo = 'text', line=list(color=palette[1])) %>%
       add_lines(x = xs, y = y2s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot2, hoverinfo = 'text', line=list(color=palette[2])) %>%      
-      add_annotations(x = med1, y = max(y1s), text = "easy", xref = "x", yref = "y", showarrow = F, font = list(color = palette[1]), xanchor = 'left') %>% 
-      add_annotations(x = med2, y = max(y2s), text = "hard", xref = "x", yref = "y", showarrow = F, font = list(color = palette[2]), xanchor = 'left') %>%   
+      add_annotations(x = x1, y = max(y1s), text = "easy", xref = "x", yref = "y", showarrow = F, font = list(color = palette[1]), xanchor = 'left') %>% 
+      add_annotations(x = x2, y = max(y2s), text = "hard", xref = "x", yref = "y", showarrow = F, font = list(color = palette[2]), xanchor = 'left') %>%   
       layout(
         showlegend = FALSE,
         xaxis = list(title = "Time (min)", range = c(0, 4.5), showgrid = F, showticks = T, ticks="outside", zeroline = F), 

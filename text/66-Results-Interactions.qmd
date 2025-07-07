@@ -1,6 +1,6 @@
 ### Interactions under parallel main effects {#interactions}
 Let us now examine interaction effects when both coefficients $a_1$ and $a_2$ increase in parallel.
-In this scenario, the interpretation of an interaction effect can become ambiguous. Here, we define the null hypothesis in terms of the coefficients of the latent linear model, following the recommendation of @Greene:2010 -- that is, $a_{12} = 0$.
+In this scenario, the interpretation of an interaction effect can become ambiguous. Here, we define the null hypothesis in terms of the coefficients of the latent linear model, following the recommendation of @Greene:2010 --- that is, $a_{12} = 0$.
 
 **Ratio scales**. @fig-ratio-interaction-2 presents Type I error rates for ratio scales. 
 
@@ -64,4 +64,4 @@ Some readers may argue that evaluating PAR and ART using an interaction definiti
 
 2. Our earlier experiments demonstrate that ART fails to maintain nominal Type I error rates for interactions even when only a single main effect is present. Introducing a second main effect could only exacerbate the problem.
 
-3. The purpose of these results is not to provide precise benchmarks, but rather to illustrate the complexity and pitfalls of interpreting interaction effects under assumption violations -- regardless of the method used. Many researchers are unaware of these issues and often misinterpret the $p$-value when testing interactions. As previously noted, @elkin:2021 compared ART to ANOVA on log-transformed data under the belief that ART tests null hypotheses about parameters of the latent linear model. Our findings clearly show that this is not the case.
+3. The purpose of these results is not to provide precise benchmarks, but rather to illustrate the complexity and pitfalls of interpreting interaction effects under assumption violations --- regardless of the method used. Many researchers are unaware of these issues and often misinterpret the $p$-value when testing interactions. As previously noted, @elkin:2021 compared ART to ANOVA on log-transformed data under the belief that ART tests null hypotheses about parameters of the latent linear model. Our findings clearly show that this is not the case.
