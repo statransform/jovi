@@ -360,7 +360,7 @@ We focus again on two-factor experimental designs, setting the sample size to $n
 
 Since the interpretation of main effects can be ambiguous, we define Type I errors with respect to the coefficients of the linear model. Accordingly, the null hypothesis is either $a_1 = 0$ or $a_2 = 0$, depending on the variable of interest. 
 
-**Interaction effect only**. We first examine how the interaction effect alone influences the Type I error rate for $X_2$. The results are shown in @fig-interactions-main-2. We emphasize that interpretation issues arise only in the case of the $4 \times 3$ design. In the other two designs, $X_1$ has only two levels, and due to their symmetry, the observed main effects should be null --- regardless of how we define the null hypothesis. 
+**Interaction effect only**. We first examine how the interaction effect alone influences the Type I error rate for $X_2$. The results are shown in @fig-interactions-main-1. We emphasize that interpretation issues arise only in the case of the $4 \times 3$ design. In the other two designs, $X_1$ has only two levels, and due to their symmetry, the observed main effects should be null --- regardless of how we define the null hypothesis. 
 
 In the $4 \times 3$ design, error rates for PAR and ART grow rapidly as the interaction effect becomes large under the log-normal and exponential distributions. This is largely due to interpretation issues, as illustrated in our example. However, ART also fails to control the error rate in other scenarios. Finally, under the binomial and ordinal scales, we observe that RNK and INT may also inflate Type I error rates when the interaction effect becomes sufficiently large.
 

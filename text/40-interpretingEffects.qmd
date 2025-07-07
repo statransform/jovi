@@ -181,7 +181,7 @@ For continuous predictors, this can be formalized as the second-order cross part
 
 Our position is fully aligned with Greene's argument. As our earlier example (see @fig-interactions) demonstrates, interactions assessed on the scale of the response variable can be misleading about the true underlying effects that generated the data. How meaningful is it to declare interaction effects that arise solely from parallel main effects and lack any theoretical interpretation? It is worth noting that @Ai:2003, as well as @McCabe:2022, overlook Loftus' [-@Loftus:1978] critique of uninterpretable interactions. 
 
-**When the interpretation of effects becomes ambiguous.** Issues with interpreting interaction effects arise only when there are parallel main effects --- that is, when the coefficients of all interacting factors are non-zero. Interpretation issues may also extend to main effects when the interaction coefficient $a_{12}$ is non-zero. In such cases, we may observe a change in the marginal effect of a factor (e.g., $x_1$), even if its associated model coefficient (e.g., $a_1$) is zero.
+**When the interpretation of effects becomes ambiguous.** Issues with interpreting interaction effects arise only when there are parallel main effects --- that is, when the coefficients of all interacting factors are non-zero. Interpretation issues may also extend to main effects when the interaction coefficient $a_{12}$ is non-zero. In such cases, we may observe a change in the marginal effect of a factor (e.g., $x_1$), even if its associated model coefficient (e.g., $a_1$) is zero. We discuss such scenarios in more depth in the [appendix](appendix.html#removable-main).
 
 By contrast, interpretation is unambiguous in these situations:
 
