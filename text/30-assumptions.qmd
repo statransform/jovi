@@ -1,6 +1,5 @@
 ## Revisiting ART's distributional assumptions {#assumptions}
-Although ART is often regarded as a nonparametric method, its alignment mechanism relies on a set of strict assumptions.
-For a two-way experimental design with independent observation, @higgins:1990 assume the following model for responses: 
+ART is often regarded as a nonparametric method, but its alignment mechanism relies on a set of strict assumptions. For a two-way experimental design with independent observation, @higgins:1990 assume the following model for the responses: 
 
 $$ 
 Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha \beta)_{ij} + \epsilon_{ijk}
@@ -19,10 +18,6 @@ The proof by @Mansouri:1995 assessing the limiting distributional properties of 
 It is worth noting that ANOVA relies on similar assumptions, with the added requirement that errors be normally distributed. One might therefore argue that ART imposes fewer assumptions than ANOVA. Additionally, since ART is rank-based, it may appear reasonable to expect some degree of robustness to violations of the linear model.
 
 Unfortunately, this line of reasoning is not correct. ART's assumptions pertain specifically to its alignment mechanism, which is unique to this method. The rank transformation is applied only after alignment, and the authors of ART have not provided any theoretical or empirical justification for their alignment method under non-linear models, non-equal variances, or discrete data. We explain the severity of these assumptions in more detail. 
-
-<!--
-Thus, the critical question we must address is: how does ART perform when its core assumptions are violated?
--->
 
 ### Violations of the linearity assumption
 Suppose we studied image-editing tasks (as in our illustrative example), measuring the time participants needed to complete them for two difficulty levels: *easy* and *hard*. If we assume that observed times follow log-normal distributions, the model of @higgins:1990 will generate distributions as the ones in @fig-higgins-model. We observe that the distribution for the hard task is simply shifted to the right, while their shape conveniently remains identical. @Mansouri:1995 have shown that at least for interaction effects, ART remains robust under such distributions. However, how realistic are these distributions?
@@ -119,7 +114,7 @@ We acknowledge that @elkin:2021 diverged from the modeling approach described by
 
 @Wagenmakers:2007 conducted an analysis of nine independent experiments to empircally investigate this pattern in response time distributions. They confirmed that standard deviations were proportional to the mean. The model we presented earlier (see @eq-generalized-model) is in line with these observations. Even when the standard deviation of the error term $\epsilon_{ijk}$ is constant, the standard deviation of observed log-normal distributions increases linearly with their mean. @fig-example (right) shows this pattern in our illustrative example, where the standard deviation of time responses increases proportionally with task difficulty. 
 
-However, a question remains: Is ART’s failure in handling such models due solely to heteroscedasticity issues? For example, consider the two time distributions in @fig-homoscedastic-model, which --- despite having different shapes --- share the same standard deviation. Would ART perform correctly in this case? While we do not directly address this question in the main paper, we include additional results in the [appendix](appendix.html) showing that as long as distribution shapes differ across levels, ART tends to confound effects. Naturally, as the shapes become more similar, the problem diminishes. In conclusion, heteroscedasticity may exacerbate the problem, but it is not its sole cause.
+However, a question remains: Is ART’s failure in handling such models due solely to heteroscedasticity issues? For example, consider the two time distributions in @fig-homoscedastic-model, which --- despite having different shapes --- share the same standard deviation. Would ART perform correctly in this case? 
 
 ::: {#fig-homoscedastic-model}
 ```{r, echo=FALSE, message=FALSE, fig.height=2.5, fig.width = 9, warning=FALSE}
@@ -169,6 +164,8 @@ fig
 ```
 Log-normal distributions with equal variances but different means. Notice that their shapes are distinct. 
 :::
+
+While we do not directly address this question in the main paper, we include additional results in the [appendix](appendix.html) showing that as long as distribution shapes differ across levels, ART tends to confound effects. Naturally, as the shapes become more similar, the problem diminishes. In conclusion, heteroscedasticity may exacerbate the problem, but it is not its sole cause.
 
 ### Discrete distributions
 As discussed earlier, @luepsen:2017 found that ART frequently fails when reponses are discrete. The problem becomes more pronounced for variables with few discrete levels and as the sample size increases. The author provides a detailed analysis of why this happens, summarized as follows:
