@@ -132,11 +132,15 @@ meanlog <- function(mean, sd) {
 
 xs <- seq(0, 10, length.out = 1000)
 
-logm1 <- meanlog(0.8, 1)
-logm2 <- meanlog(1.4, 1)
+sd <- 1 # This is the common standard deviation
+m1 <- 0.8
+m2 <- 1.4
 
-logsd1 <- sdlog(0.8, 1)
-logsd2 <- sdlog(1.4, 1)
+logm1 <- meanlog(m1, sd)
+logm2 <- meanlog(m2, sd)
+
+logsd1 <- sdlog(m1, sd)
+logsd2 <- sdlog(m2, sd)
 
 y1s <- dlnorm(xs, logm1, logsd1)
 y2s <- dlnorm(xs, logm2, logsd2)
@@ -144,8 +148,8 @@ y2s <- dlnorm(xs, logm2, logsd2)
 x1 <- 0.36
 x2 <- 1.30
 
-annot1 <- paste("Log-normal: meanlog = ", round(logm1, 2), ", sdlog = ", round(logsd1, 2))
-annot2 <- paste("Log-normal: meanlog = ", round(logm2, 2), ", sdlog = ",  round(logsd1, 2))
+annot1 <- paste("Log-normal: mean = ", m1, ", sd = ", sd)
+annot2 <- paste("Log-normal: mean = ", m2, ", sd = ", sd)
 
 fig <- plot_ly() %>%  
       add_lines(x = xs, y = y1s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot1, hoverinfo = 'text', line=list(color=palette[1])) %>%
