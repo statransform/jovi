@@ -16,7 +16,7 @@ We can now detail our experimental method. We evaluate the standard parametric a
 <!--
 Furthermore, we assess how a growing interaction effect, either in isolation or in combination with a main effect, can affect the inference of main effects. -->
 
-Previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also examined unbalanced designs, where cell sizes vary across the levels of a factor. When combined with unequal variances, such designs often pose challenges for both parametric procedures [@blanca:2018] and rank transformation methods [@Beasley:2009; @luepsen:2018]. As noted earlier, we do not include unbalanced designs in our evaluation. However, we provide additional experimental results on missing data in the [appendix](appendix.html).
+Previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also examined unbalanced designs, where cell sizes vary across the levels of a factor. When combined with unequal variances, such designs often pose challenges for both parametric procedures [@blanca:2018] and rank transformation methods [@Beasley:2009; @luepsen:2018]. As noted earlier, we do not include unbalanced designs in our evaluation. However, we provide additional experimental results on missing data in the [appendix](appendix.html#missing).
 
 ### Statistical modeling
 To model the latent variable $\mathcal{Y}$, we use a two-way (two factors) or a three-way (three factors) mixed-effects model. For simplicity, we explain here the model for two factors. Its extension to three factors is straightforward. The model has the following form:
