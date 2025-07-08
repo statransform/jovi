@@ -165,7 +165,7 @@ fig
 Log-normal distributions with equal variances but different means. Notice that their shapes are distinct. 
 :::
 
-While we do not directly address this question in the main paper, we include additional results in the [appendix](appendix.html) showing that as long as distribution shapes differ across levels, ART tends to confound effects. Naturally, as the shapes become more similar, the problem diminishes. In conclusion, heteroscedasticity may exacerbate the problem, but it is not its sole cause.
+While we do not directly address this question in the main paper, we include additional results in the [appendix](appendix.html#log-normal-distributions-with-equal-variances) showing that as long as distribution shapes differ across levels, ART tends to confound effects. Naturally, as the shapes become more similar, the problem diminishes. In conclusion, heteroscedasticity may exacerbate the problem, but it is not its sole cause.
 
 ### Discrete distributions
 As discussed earlier, @luepsen:2017 found that ART frequently fails when reponses are discrete. The problem becomes more pronounced for variables with few discrete levels and as the sample size increases. The author provides a detailed analysis of why this happens, summarized as follows:

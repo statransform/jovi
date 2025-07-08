@@ -34,7 +34,7 @@ Our tests in the [appendix](appendix.html) show that ART's Type I error rates fo
 
 **Monte Carlo simulation.** What if the experimental design were balanced, and such issues did not emerge? What risks would arise from using ART with such binary responses? To delve into this issue, we conduct a new Monte Carlo experiment.
 
-Like @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design and set the number of participants to $n=22$. However, we now test a perfectly balanced design. We transform the latent variable to a Bernoulli distribution with a success probability parameter $p=.46$ ---average success rate found by @Martin:2023--- and then assess the Type I error rate of ART in the absence of any effect. We also assess the Type I error rate of regular ANOVA (LMER model) with no transformation (PAR). Our results over 5000 iterations are as follows:
+Like @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design and set the number of participants to $n=22$. However, we now test a perfectly balanced design. We transform the latent variable to a Bernoulli distribution with a success probability parameter $p=.46$ --- average success rate found by @Martin:2023 --- and then assess the Type I error rate of ART in the absence of any effect. We also assess the Type I error rate of regular ANOVA (LMER model) with no transformation (PAR). Our results over 5000 iterations are as follows:
 
 |  | $X_1$ | $X_2$ | $X_3$ | $X_1 \times X_2$ | $X_1 \times X_3$ | $X_2 \times X_3$ | $X_1 \times X_2 \times X_3$ |
 |------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|

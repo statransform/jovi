@@ -1,6 +1,5 @@
 ### Interactions under parallel main effects {#interactions}
-Let us now examine interaction effects when both coefficients $a_1$ and $a_2$ increase in parallel.
-In this scenario, the interpretation of an interaction effect can become ambiguous. Here, we define the null hypothesis in terms of the coefficients of the latent linear model, following the recommendation of @Greene:2010 --- that is, $a_{12} = 0$.
+Let us now examine interaction effects when both coefficients $a_1$ and $a_2$ increase in parallel. In this scenario, the interpretation of an interaction effect can become ambiguous. Here, we define the null hypothesis in terms of the coefficients of the latent linear model, following the recommendation of @Greene:2010 --- that is, $a_{12} = 0$.
 
 **Ratio scales**. @fig-ratio-interaction-2 presents Type I error rates for ratio scales. 
 
@@ -22,11 +21,11 @@ Error rates become exceptionally high in some cases, reaching up to 100%. Howeve
 
 - *PAR*. Error rates are high for all non-normal distributions and become even higher when the sample size increases. However, this behavior clearly stems from the method's sensitivity to the scale of the observations, rather than to the model parameters.
 
-- *RNK.* Error rates explode when both main effects exceed a certain level (e.g., when $a_1, a_2 \ge 4$ and $n = 20$). This problem arises from the way the rank transformation distorts interaction effects (see @fig-interactions-rank). For all continuous distributions, we observe that error rates exhibit the exact same patterns, since ranks are scale-invariant.  
+- *RNK.* Error rates explode when both main effects exceed a certain level (e.g., when $a_1, a_2 \ge 4$ and $n = 20$). This problem arises from the way the rank transformation distorts interaction effects (see @fig-interactions-rank). For all continuous distributions, we observe that error rates exhibit the exact same patterns.  
 
 - *INT.* It performs better than RNK. Errors begin to increase across all distributions only when the main effects become large. An exception is the binomial distribution, for which the error rates of INT and RNK are similar.
 
-- *ART.* It maintains correct error rates as long as population distributions are normal. For all other distributions, error rates increase rapidly as effect sizes grow. Two factors explain this behavior: (i) a lack of statistical robustness to violation of the method's assumptions, as also observed in earlier tests; and (ii) interaction interpretation issues. These results confirm that ART is not scale-invariant, interpreting interactions relative to the scale of the observed data.
+- *ART.* It maintains correct error rates as long as population distributions are normal. For all other distributions, error rates increase rapidly as effect sizes grow. Two factors explain this behavior: (i) a lack of statistical robustness to violation of the method's assumptions, as also observed in our previous experiments; and (ii) interaction interpretation issues. These results confirm that ART is not scale-invariant, interpreting interactions relative to the scale of the observed data.
 
 **Ordinal scales.** @fig-ordinal-interaction-2 presents our results for ordinal data. No method maintains low error rates under all conditions. We note that ART consistently performs worse than PAR. INT performs worse than ART and PAR in one specific case ($a_2, a_2 = 8$ in a scale with 11 equidistant levels), but overall, it exhibits a better behavior than all other methods. Once again, the high error rates can be partly explained by insufficient statistical robustness and ambiguities in how the methods interpret interaction effects.
 
@@ -64,4 +63,4 @@ Some readers may argue that evaluating PAR and ART using an interaction definiti
 
 2. Our earlier experiments demonstrate that ART fails to maintain nominal Type I error rates for interactions even when only a single main effect is present. Introducing a second main effect could only exacerbate the problem.
 
-3. The purpose of these results is not to provide precise benchmarks, but rather to illustrate the complexity and pitfalls of interpreting interaction effects under assumption violations --- regardless of the method used. Many researchers are unaware of these issues and often misinterpret the $p$-value when testing interactions. As previously noted, @elkin:2021 compared ART to ANOVA on log-transformed data under the belief that ART tests null hypotheses about parameters of the latent linear model. Our findings clearly show that this is not the case.
+3. The purpose of these results is not to provide precise benchmarks, but rather to illustrate the complexity and pitfalls of interpreting interaction effects under assumption violations --- regardless of the method used. Many researchers are unaware of these issues and often misinterpret the $p$-value when testing interactions. Note that @elkin:2021 compared ART to ANOVA on log-transformed data under the belief that ART tests null hypotheses about parameters of the latent linear model. Our findings clearly show that this is not the case.
