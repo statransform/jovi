@@ -155,8 +155,8 @@ Notice that we omit the log-transformation method (*LOG*), as it is not relevant
 
 In conclusion, focusing solely on the issues with the rank tranformation illustrated in @fig-interactions-rank is akin to missing the forest for the trees. When parallel main effects are present, interpreting interactions can be challenging for all methods --- and ART offers no solution to this problem. 
 
-### Controversy about the interpretation of interactions
-We further discuss interpetation issues in the broader context of generalized liner models (GLMs).
+### Disagreement on the interpretation of effects in GLMs
+We further discuss interpetation issues in the broader context of generalized linear models (GLMs).
 
 GLMs are defined by a link function $g$ that connects a variable --- linearly defined by the predictors --- to a response variable $Y$, which follows an arbitrary distribution. For an experimental design with two factors, $x_1$ and $x_2$, the expected value (or mean) of $Y$ conditional on $x_1$ and $x_2$ is expressed as follows:
 

@@ -1,6 +1,6 @@
+```         
 ---
 title: "The illusory promise of the Aligned Rank Transform"
-subtitle: "A systematic study of rank transformations"
 author: 
   - name: Theophanis Tsandilas
     orcid: 0000-0002-0158-228X
@@ -10,7 +10,6 @@ author:
         country: France
   - name: Géry Casiez
     orcid: 0000-0003-1905-815X
-    email: gery.casiezuniv-lille.fr
     affiliations:
       - name: Univ. Lille, CNRS, Inria, Centrale Lille, UMR 9189 CRIStAL
         country: France
@@ -19,12 +18,12 @@ csl: canadian-journal-of-philosophy.csl
 
 tbl-cap-location: top
 ---
+```
 
 ::: {.callout-important appearance="simple"}
 ## Under Review {.unnumbered}
-This paper is [under review](https://www.journalovi.org/under-review.html) on the experimental track of
-the [Journal of Visualization and Interaction](https://www.journalovi.org/). See the 
-[reviewing process](https://github.com/journalovi/2024-tsandilas-ranktransforms/issues).
+
+This paper is [under review](https://www.journalovi.org/under-review.html) on the experimental track of the [Journal of Visualization and Interaction](https://www.journalovi.org/). See the [reviewing process](https://github.com/journalovi/2024-tsandilas-ranktransforms/issues).
 :::
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -53,3 +52,5 @@ source("interactions_plot.R")
 }
 </style>
 ```
+
+Hello!
