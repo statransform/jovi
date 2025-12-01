@@ -22,6 +22,8 @@ library(lmerTest) # Lmer functions
 library(ARTool) # ARTool library
 library(effectsize) # To estimate effect sizes 
 
+library(car)
+
 # Additional libraries for plotting and reporting
 library(kableExtra) 
 library(gridExtra)

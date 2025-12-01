@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Responses to our reviewer</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="response_files/libs/clipboard/clipboard.min.js"></script>
+<script src="response_files/libs/quarto-html/quarto.js"></script>
+<script src="response_files/libs/quarto-html/popper.min.js"></script>
+<script src="response_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="response_files/libs/quarto-html/anchor.min.js"></script>
+<link href="response_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="response_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="response_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="response_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="response_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overall-weakness" id="toc-overall-weakness" class="nav-link active" data-scroll-target="#overall-weakness">“Overall weakness”</a></li>
+  <li><a href="#specific-comments" id="toc-specific-comments" class="nav-link" data-scroll-target="#specific-comments">Specific comments</a></li>
+  <li><a href="#general-comment-about-the-mixed-models-and-the-r-implementation" id="toc-general-comment-about-the-mixed-models-and-the-r-implementation" class="nav-link" data-scroll-target="#general-comment-about-the-mixed-models-and-the-r-implementation">General comment about the mixed models and the R implementation</a></li>
+  <li><a href="#illustrative-example-in-addition-to-my-previous-comments" id="toc-illustrative-example-in-addition-to-my-previous-comments" class="nav-link" data-scroll-target="#illustrative-example-in-addition-to-my-previous-comments">Illustrative example: in addition to my previous comments</a></li>
+  <li><a href="#interactions" id="toc-interactions" class="nav-link" data-scroll-target="#interactions">Interactions</a></li>
+  <li><a href="#simulation-study" id="toc-simulation-study" class="nav-link" data-scroll-target="#simulation-study">Simulation study</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Responses to our reviewer</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>We thank our reviewer for her time and constructive comments. We provide detailed clarifications below and address each point in turn. We would <strong>greatly appreciate a direct discussion within this thread</strong> to ensure that all points of doubt are adequately addressed.</p>
+<p>A brief summary of some key points:</p>
+<ol type="1">
+<li><p><strong>Comparability of methods</strong>. Our article clearly distinguishes between scenarios where interpretation issues due to different definitions of the null hypothesis arise, and those where they do NOT. For most of the scenarios we test, the Type I error rates and power are perfectly comparable across methods—both for main and interaction effects. Comparability issues arise when testing interactions in the presence of parallel main effects (also <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#fig-unequal-main-1">in this scenario (Fig. 29)</a> and <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/appendix.html#removable-main">in Appendix: Fig. 16-19</a>), but the article explicitly identifies and discusses these scenarios and is explicit about the null hypothesis we test.</p></li>
+<li><p><strong>LMER models</strong>. For the scenarios we test, using <em>lmer</em> leads to identical (or nearly identical) results to ANOVA. Any potential issues with mixed models have not affected our results.</p></li>
+<li><p><strong>Categorical variables</strong>. We treat independent variables as categorical, not numerical. Our coding approach is compatible with dummy coding but offers additional control over effect magnitudes.</p></li>
+<li><p><strong>Data transformations</strong>. The monotonic transformations we apply do not induce selection bias and do not violate any assumptions of random sampling.</p></li>
+</ol>
+<p>We respond below to all individual reviewer comments (numbered from 1 to 28 for easy reference). Regarding presentation suggestions, we note that our reviewer’s disciplinary background differs from ours. We kindly ask that the discussion focus primarily on the validity of our research methods and conclusions rather than presentation preferences.</p>
+<p><strong>Note on terminology:</strong> Our reviewer uses the term <em>estimand</em>, whereas we refer to population parameters of interest. We prefer our terminology for conceptual clarity and consistency with the terminology most commonly used in disciplines closer to ours.</p>
+<section id="overall-weakness" class="level3">
+<h3 class="anchored" data-anchor-id="overall-weakness">“Overall weakness”</h3>
+<p><strong>Comment 1.</strong> <em>“Nevertheless, what is presented as bias or error (for ART) in the manuscript might be explained by something more fundamental: a discrepancy between the estimands the authors wish to target, and the estimands actually targeted with each estimator. Although the authors clearly state that the methods they investigate test different null hypotheses, the simulation study may not fully capture this. My main concern is that comparing these methods is like comparing apples and oranges, but with the aim to show they all look like apples …”</em></p>
+<p><a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#interpretation">Section 4</a> already extensively discusses these points.</p>
+<p>Unless we explicitly mention interpretational issues, the Type I error rates and power results we report are identical regardless of whether one tests means, medians, or full distributional shape. This holds for the vast majority of our results (e.g., Figures 15–17, 19–24, 30–34). In all these cases, Type I errors are evaluated for identical populations, meaning all population parameters (means, medians, etc.) coincide—both in the latent and transformed spaces. Hence, the null hypothesis definition does not affect these comparisons.</p>
+<p>We agree that there are situations where interpretation issues arise, but the article is very clear about when this happens. See captions of Figures 25-27, and 29, as well as the related discussion in these paragraphs. As we further discuss later, we are explicit about which null hypothesis we test for these results.</p>
+</section>
+<section id="specific-comments" class="level3">
+<h3 class="anchored" data-anchor-id="specific-comments">Specific comments</h3>
+<p><strong>Comment 2.</strong> <em>“… the current structure of the manuscript could be improved … This is particularly important because the illustrative example comes before any explanation of the methods … the illustrative example is the least convincing section.</em></p>
+<p>Our choice to begin with an illustrative example is motivated by closely related work. Higgins et al.&nbsp;(1990) demonstrated the breakdown of rank transformations for interactions using a concrete data example. Elkin et al.&nbsp;(2021) likewise used a specific running example to show how ART fails to handle contrasts, and Lüpsen (2016) illustrated ART’s problems under discrete distributions with a concrete example as well.</p>
+<p>Naturally, the examples in all these works are deliberately chosen. Their purpose is to illustrate the problem and provide intuition for readers—not to serve as a systematic proof. It is the role of Monte Carlo experiments to evaluate such issues systematically over a large number of iterations.</p>
+<p><strong>Comment 3.</strong> <em>“Was this dataset selected at random (as it should be) or selected to illustrate the point? If it is the latter, it may not be completely honest: based on this example, it may only be fair to argue that ART may be more sensitive to outliers.”</em></p>
+<p>The example was chosen to <em>illustrate</em> (so we call it <em>illustrative</em>) ART’s erratic behavior.</p>
+<p>Our results clearly demonstrate that ART inflates Type I errors. However, in many cases, it still produces results that are numerically close to the ground truth. For this reason, we do not see how randomly drawing a dataset would add meaningful insight.</p>
+<p>It is also important to note that ART’s <em>p</em>-values in our example are orders of magnitude smaller than those returned by other methods—indicating an erratic behavior that is clearly not normal. We do not present this example as a proof, and we would not have included it without first confirming this problematic pattern through systematic simulations.</p>
+<p>Even if one interprets these results as showing that ART is more sensitive to “outliers” than other methods, this is already troubling, since previous literature advocating ART explicitly claims the opposite.</p>
+<p><strong>Comment 4.</strong> <em>“Given the small sample size, I am not confident in commenting on observed differences between p-values.”</em></p>
+<p>We used a small sample to keep the example simple and easily reproducible. Larger samples do not reduce <em>p</em>-value variability. Nonetheless, if preferred, we can provide an example with a larger sample (e.g., see <a href="https://github.com/journalovi/2024-tsandilas-ranktransforms/issues/2#issuecomment-2564006376">“A challenge for Prof.&nbsp;Higgins”</a>).</p>
+</section>
+<section id="general-comment-about-the-mixed-models-and-the-r-implementation" class="level3">
+<h3 class="anchored" data-anchor-id="general-comment-about-the-mixed-models-and-the-r-implementation">General comment about the mixed models and the R implementation</h3>
+<p><strong>Comment 5:</strong> <em>“The authors used a random-effect model as an estimator across methods. Was the correlation between pairs of measures for a participant assumed identical no matters the order of the repetitions?”</em></p>
+<p>We did not model any order effect; our simulation design includes none.</p>
+<p><strong>Comment 6:</strong> <em>“Also, by default, the lmer package does not provide p-values for main effects. How were the p-values calculated? (Wald test with REML, LRT with ML, etc.). In particular, the authors provide one p-value per variable (even when there are more than two levels), so it is important to clarify how this overall p-value is obtained for categorical variables, given that they are not provided by default.”</em></p>
+<p>We verified that results are identical (or nearly so) across all these methods:</p>
+<ol type="1">
+<li>Conducting ANOVA with R’s <em>aov()</em> function, where <em>p</em>-values are then obtained using R’s <em>summary()</em> function. Example: <code>mpar &lt;- aov(Time ~ Difficulty*Technique + Error(factor(Participant)), data=df)</code> <code>summary(mpar)</code></li>
+<li>Using <em>lmer</em> (fit by REML) and then R’s <em>anova()</em> function to obtain <em>p</em>-values (Type III tests). Example: <code>mpar &lt;- lmer(Time ~ Difficulty*Technique + (1|Participant), data=df)</code> <code>anova(mpar)</code></li>
+<li>Using <em>lmer</em> (fit by REML) and then R’s <em>car::Anova()</em> function to obtain <em>p</em>-values (Type II Wald F tests). Example: <code>mpar &lt;- lmer(Time ~ Difficulty*Technique + (1|Participant), data=df)</code> <code>car::Anova(mpar, type=2, test.statistic = "F")</code></li>
+</ol>
+<p>For example, the figure below reproduces <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#fig-ratio-main">Figure 15</a> for <span class="math inline">\(n=10\)</span> (this is the smallest sample size we test), using repeated measures ANOVA: <img src="https://notes.inria.fr/uploads/upload_7b6bd501ee3d7f2c12e7a733ad2ee615.png" class="img-fluid"></p>
+<p>Trends are identical with the ones of <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#fig-ratio-main">Figure 15</a>. We can provide additional results upon request.</p>
+<p><strong>Comment 7:</strong> <em>“My concern after reading the simulation plan is that the main effects were included as numeric variables …”</em></p>
+<p>We treat all experimental factors as categorical, not numeric. All factor levels in our simulated data take the form A1, A2, … or B1, B2, …, and we use R’s <em>factor()</em> function before analysis. Our coding method (sum-to-zero contrasts) (explained <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#statistical-modeling">here</a>) ensures symmetry and a grand mean of <span class="math inline">\(\mu\)</span>, while allowing controlled manipulation of effect sizes via parameters like <span class="math inline">\(a_1\)</span>, <span class="math inline">\(a_2\)</span>, and <span class="math inline">\(a_{12}\)</span>.</p>
+<p>See examples of distributions <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#fig-effects">(Figure 14)</a> we generate with this approach for two, three, or four <strong>categorical</strong> levels.</p>
+<p><strong>Comment 8:</strong> <em>“… thus making the unrealistic assumption of a linear effect of the experimentation conditions on the outcome. This assumption is not needed, and the different levels of the fixed effects can be included as dummy variables. In particular, the authors state that both ART and ANOVA require the linearity assumption, but as far as I understand, the variables considered in this paper are all categorical (e.g.&nbsp;easy, medium, hard), included as dummy variables, and therefore no linearity assumption is required.”</em></p>
+<p>All linear regression and ANOVA models are linear regardless of how categorical variables are encoded. Assumptions about a linear relationship between independent variables and responses do not disappear when using dummy coding.</p>
+<p>For example, consider the first factor <span class="math inline">\(X_1\)</span> in Equation 9. Suppose it has three levels. Using dummy coding, the term <span class="math inline">\(x_{1i}\)</span> can be expressed as:</p>
+<p><span class="math display">\[x_{1i} = \beta_1​ + \beta_2 d_2 + \beta_3 d_3\]</span></p>
+<p>where <span class="math inline">\(d_2\)</span>, and <span class="math inline">\(d_3\)</span> are the dummy variables for the three levels of the categorical variable. Our coding simply enforces desirable constraints (zero-centered effects) for <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, and <span class="math inline">\(\beta_3\)</span>. But linearity is intrinsic to the model, not to the coding scheme.</p>
+<p>We would appreciate clarification from the reviewer: how would the linearity assumption disappear when using dummy coding?</p>
+<p><strong>Comment 9:</strong> <em>“Finally, mixed-models can lead to incorrect type I error rates in small samples. Did the authors use any small sample correction?”</em></p>
+<p>No correction was used. Type I error rates are stable across sample sizes in our simulations, and as our results show, Type I error rates are not affected by small sample sizes (down to <span class="math inline">\(n=10\)</span>). ART’s problems, in contrast, worsen with larger <span class="math inline">\(n\)</span> (and this is unrelated to the models we use).</p>
+</section>
+<section id="illustrative-example-in-addition-to-my-previous-comments" class="level3">
+<h3 class="anchored" data-anchor-id="illustrative-example-in-addition-to-my-previous-comments">Illustrative example: in addition to my previous comments</h3>
+<p><strong>Comment 10:</strong> <em>“‘We observe that ART exaggerates both the effect of Technique and its interaction with Difficulty’ : this is incorrect, the p-values quantify the strength of evidence, not the magnitude of the effect.”</em></p>
+<p>Our statement refers to the partial <span class="math inline">\(\eta^2\)</span> values shown in the preceding table, not to <em>p</em>-values.</p>
+<p><strong>Comment 11:</strong> <em>“Figure 1, y-axis label: should it be Time (rather than median time) unless each dot is a median across other parameters.”</em></p>
+<p>For the first plot, we aggregate over difficulty levels but not for the second one. We will correct the mistake.</p>
+<p><strong>Comment 12:</strong> <em>“Perceived efficiency: despite having in theory 5 levels, in the sample it is almost binary and any method for continuous or discrete data should be prohibited. This example is too extreme and as a consequence may be quite damaging overall. The authors should only compare the performance of methods that are realistic for the setting.”</em></p>
+<p>The data are not binary, though responses cluster at higher scale points. Such skewed ordinal data are common in practice—precisely where nonparametric methods like ART are typically recommended. Demonstrating ART’s instability here is therefore important and relevant.</p>
+<p>Furthermore, as we discuss <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#analyzing-likert-type-data">here</a>, there is ongoing debate regarding the use of parametric techniques with Likert data, thus we therefore disagree with the term “prohibited.”</p>
+<p><strong>Comment 13:</strong> <em>“Table 1 (p-values): it would be useful to report the regression coefficient and CI from the mixed models (even though their interpretation differ), along with the p-values, and be consistent with the number of decimal places.”</em></p>
+<p>Regression coefficients are not comparable across methods. Adding them may confuse readers, but we can switch to repeated-measures ANOVA for this example (which yields equivalent results) if this addresses reviewer’s concern. See <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/supplementary/examples-case-studies/1-Introduction/illustrative-example-aov.html">ANOVA analysis</a> vs.&nbsp;<a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/supplementary/examples-case-studies/1-Introduction/illustrative-example.html">LMER</a>.</p>
+</section>
+<section id="interactions" class="level3">
+<h3 class="anchored" data-anchor-id="interactions">Interactions</h3>
+<p><strong>Comment 14:</strong> <em>“In the paper, the methods apply different transformations, thus making the coefficients (and inferences) for the interaction parameters not comparable.”</em></p>
+<p>We have already clarified this in our <a href="https://github.com/journalovi/2024-tsandilas-ranktransforms/issues/2">our responses to Prof.&nbsp;Higgins</a>, where we presents additional tests to explain why our comparisons are correct. Also see <a href="https://github.com/journalovi/2024-tsandilas-ranktransforms/issues/2#issuecomment-2627759256">our last response to Matthew Kay</a>.</p>
+<p>A <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#interpreting-interaction-effects">full subsection in our article</a> is dedicated to this issue. An <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#disagreement-on-the-interpretation-of-effects-in-glms">additional subsection</a> discusses the debate within the context of GLMs, where we explicitly state when the interpretation of interaction is ambiguous (and thus comparisons are problematic) and <strong>when it is not</strong>.</p>
+<p>We repeat that when either <span class="math inline">\(a_1 = 0\)</span> or <span class="math inline">\(a_2 = 0\)</span> (see Equation 4), there is no ambiguity in the interpretation of Type I errors for the interaction—no matter which method we use, no matter whether we test means or medians, either on the latent or the observed variable. If <span class="math inline">\(a_{12} = 0\)</span>, no interaction should appear under any monotonic transformation—so comparing Type I errors across methods (see Figures 17, 20, 21, 24, 31) is valid.</p>
+<p><em>Note on power:</em> As discussed in the article, transformations to discrete distributions are monotonic but not strictly monotonic. Thus, an effect in the latent variable may vanish after transformation. This issue affects all methods equally, so power comparisons remain valid.</p>
+<p><strong>Comment 15:</strong> <em>“Instead of debating whether one is better than the other, the authors should instead explain when one type of interaction may be more relevant than the other for the research question of interest. Thinking about the different experimental settings, when do we care about interaction, and which type of interaction is relevant?”</em></p>
+<p>This is precisely what we do for the scenarios in which interpretational issues arise–namely, when the main effects of all interacting factors are non-zero:</p>
+<ul>
+<li><p>Please see our discussion on <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#disagreement-on-the-interpretation-of-effects-in-glms">the interpretation of effects in GLMs</a>.</p></li>
+<li><p>Please also see our results on <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#interactions">interactions under parallel main effects</a> and the related discussion in this section. Note that the captions of Figures 25, 26, 27 explicitly state that “Type I errors are defined based on the null hypothesis <span class="math inline">\(a_{12} = 0\)</span>. A different definition may lead to different results.”</p></li>
+</ul>
+</section>
+<section id="simulation-study" class="level3">
+<h3 class="anchored" data-anchor-id="simulation-study">Simulation study</h3>
+<p><strong>Comment 16:</strong> <em>“The authors should also consider whether the simulations on ordinal scales are important here. Many statisticians would argue for the use of appropriate regression models for this type of outcomes (extensions of logistic regression) …</em>”</p>
+<p>Our article includes a dedicated <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#analyzing-likert-type-data">discussion on ordinal data</a>, where we explicitly advocate for the use of appropriate regressions models. However, these methods also present several practical challenges, and, as we discuss extensively, there is no consensus on whether ANOVAs and linear parametric models can be safely applied to ordinal data.</p>
+<p>Moreover, in practice, researchers often use nonparametric methods far more frequently than ordinal regression models. As detailed in <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#ART-use">this section</a>, ART is very commonly used for exactly this type of data.</p>
+<p>We invite our reviewer to consider:</p>
+<ol type="1">
+<li><p><a href="https://github.com/valentin-schwind/statistics-decision-tree/?tab=readme-ov-file">This decision tree</a>, which provides methodological recommendations for HCI researchers. For discrete ordinal data and multiple independent variables, it explicitly recommends ART—ordered probit models are not even mentioned.</p></li>
+<li><p>A simple query to ChatGPT: <em>“I want to conduct a multifactorial statistical analysis where responses follow an ordinal scale of 5 levels. Which statistical methods could I use?”</em> ART appears among the five recommended methods <a href="https://chatgpt.com/share/6910d909-ae20-8008-bb05-8935f1040404">see here</a>, despite the fact that no empirical studies have demonstrated that ART is valid for such data.</p></li>
+</ol>
+<p>Our results provide clear evidence that ART is <strong>inappropriate</strong> for ordinal data and poses <strong>greater risks</strong> than commonly used parametric methods. We therefore believe it is both relevant and necessary to present these findings.</p>
+<p><strong>Comment 17:</strong> <em>“Similarly, it is unlikely statisticians pick methods for continuous data for count (Poisson distribution) or binomial distributions. This applies to the re-analyses as well. It may be useful to reduce the amount of examples and scenarios but focus on the key differences between methods.”</em></p>
+<p>Rank transformations (and the nonparametric statistical tests based on them) are in fact very commonly used for both continuous and discrete data. While this may not be typical practice in our reviewer’s field, it is widespread in many others. Importantly, researchers ignore that the alignment step in ART implicitly assumes continuous distributions.</p>
+<p>It is true that trained statisticians may not typically choose such methods. However, in many scientific domains, data analyses are performed by non-statisticians (ourselves included) and frequently by researchers with limited statistical training. Our work aims precisely to evaluate how these widely used methods behave under realistic conditions encountered in such applied research contexts.</p>
+<p><strong>Comment 18:</strong> <em>“More fundamentally, the authors should clarify how the simulation plan with a latent variable relates to real-life data generation mechanisms.”</em></p>
+<p>Our simulation plan produces a broad range of distributions that are commonly used as benchmarks in the related literature. A justification for the various ratio scales employed is provided <a href="https://www.journalovi.org/2024-tsandilas-ranktransforms/#ratio">here</a>. For ordinal scales, we used appropriate ordinal models, following approaches such as those described by Liddell and Kruschke (2018).</p>
+<p>As we <a href="https://github.com/journalovi/2024-tsandilas-ranktransforms/issues/2#issuecomment-2638043122">also explain here</a>, the great advantage of our methodology lies in its flexibility: it enables the generation of data for any distribution using the same underlying structure, by changing only a single line of code. This also allows us to: - present results consistently across different distributions by varying the same parameters, - define a clear ground truth for effect size estimates (see below), and - systematically study scenarios where interaction interpretation issues arise—defining the null hypothesis with respect to the parameters of the latent linear model, as is standard in regression analyses.</p>
+<p>We also provide <a href="https://github.com/journalovi/2024-tsandilas-ranktransforms/tree/main/supplementary/rebuttals/kay">supplementary code and results</a> using a more traditional simulation methodology, where data are drawn directly from the target distributions (e.g., using the <em>rlnorm()</em> function for log-normal samples). The results are fully consistent with those obtained via our latent-variable approach. However, controlling parameters becomes cumbersome with this approach, and presenting results coherently across multiple distributions is considerably more difficult.</p>
+<p><strong>Comment 19:</strong> <em>“If the true population distribution is normal, but the observed distribution follows a different distribution, it seems to immediately imply a selection bias and a violation of the assumption of random sampling.”</em></p>
+<p>This is incorrect: there is neither selection bias nor any violation of random sampling. If we draw a random sample of the latent variable <span class="math inline">\(Y\)</span> and then apply a monotonic transform <span class="math inline">\(g\)</span>, the transformed observations <span class="math inline">\(g(Y_i)\)</span> are an independent and identically distributed sample from <span class="math inline">\(g(Y)\)</span>.</p>
+<p>Monotonic transformations preserve the rank order and quantiles of the distribution. Specifically, if <span class="math inline">\(q_k\)</span> denotes the <span class="math inline">\(k^{th}\)</span> quantile of <span class="math inline">\(Y\)</span>, then <span class="math inline">\(g(q_k)\)</span> is the <span class="math inline">\(k^{th}\)</span> quantile of <span class="math inline">\(g(Y)\)</span>.</p>
+<p><strong>Comment 20:</strong> <em>“Either the null hypothesis relates to the population but the assumptions for all the methods are violated … Therefore, my concern is that the design of the simulation study implicitly favours some methods over others.</em>”</p>
+<p>This is not the case. Suppose we have two identical distributions <span class="math inline">\(Y_1 = Y_2\)</span>. This implies that their population parameters—means, medians, and so on— are also identical. Because monotonic transformations preserve equality, it follows that <span class="math inline">\(g(Y_1) = g(Y_2)\)</span>, and the corresponding means, medians, etc. of <span class="math inline">\(g(Y_1)\)</span> and <span class="math inline">\(g(Y_2)\)</span> are again the same.</p>
+<p>If a method rejects the null hypothesis under these conditions, it constitutes a Type I error, regardless of how the method defines the null hypothesis (e.g., in terms of means, medians, or another parameter).</p>
+<p>As we noted earlier, our article explicitly clarifies when and why issues related to the definition of the null hypothesis become relevant.</p>
+<p><strong>Comment 21:</strong> <em>“What may be helpful would be to write down the different possible null hypotheses for the main effects (e.g.&nbsp;No difference in means, No difference in mean log, No difference of location shift …) and for the interaction (e.g.&nbsp;no multiplicative interaction), and compare the statistical performances of each method.”</em></p>
+<p>See our response above.</p>
+<p>Note that in the case of parallel main effects, where the definition of the null hypothesis for interaction becomes ambiguous, we explicitly state that the reported Type I error rates are defined with respect to the null hypothesis <span class="math inline">\(a_{12}=0\)</span>. As we further discuss at this end of this section: <em>“It is unclear how to reliably control the null hypothesis at the level of the response scale when both main effects are varied.”</em></p>
+<p>If our reviewer is aware of any method for nonlinear models that allows defining null hypotheses for interactions (for example, based on means) directly at the level of the response scale and comparing methods under this definition, we would be very interested to learn more.</p>
+<p><strong>Comment 22:</strong> <em>“How come the type I error rate for ART is inflated as compared to the other methods, but the power is similar?”</em></p>
+<p>We explain in our article: <em>“Because there is a tradeoff between Type I and Type II errors, high power can simply be the result of a high Type I error rate. Since parallel effects can inflate errors (see our previous results), we focus here on single effects, both main or interaction effects.”</em></p>
+<p>To clarify further: for continuous heavy-tailed distributions (e.g., log-normal and exponential), ART’s Type I error inflation for one factor (e.g., <span class="math inline">\(X_1\)</span>) is only noticeable when there is also an effect on the other factor (e.g., <span class="math inline">\(X_2\)</span>). In the power results we present, the effect on the second factor is zero. This choice avoids confounding Type I and Type II errors. If the effect on <span class="math inline">\(X_2\)</span> were increased, ART would appear more powerful, but such a comparison would be unfair.</p>
+<p>For discrete distributions, however, ART inflates Type I error rates even when all effects are null. This explains why ART’s power may appear higher for small effects (due to increased Type I errors) but deteriorates relative to other methods as effects grow larger—because the influence of Type I errors diminishes in these scenarios.</p>
+<p><strong>Comment 23:</strong> <em>“DGM: the authors should explain why the variables x1 and x2 were not generated using dummy indicators.”</em></p>
+<p>See responses to Comments 7-8.</p>
+<p><strong>Comment 24:</strong> <em>“It would be interesting to see, for each mixed model, whether the residuals and the random effects follow a normal distribution.”</em></p>
+<p>We are not entirely sure we understand the purpose of this suggestion. Could the reviewer clarify what insight they expect from examining the residuals and random effects distributions?</p>
+<p><strong>Comment 25:</strong> <em>“Were there any convergence issues with the mixed models?”</em></p>
+<p>Our models are relatively simple, and we did not encounter any convergence issues throughout the simulations. Convergence problems can arise in discrete data when all values for a particular factor level coincide, especially with a small number of levels; however, we have excluded such cases from our results.</p>
+<p><strong>Comment 26:</strong> <em>“Did the empirical standard deviation of the regression coefficients across simulations correspond to the model-based standard errors?</em>”</p>
+<p>We did not perform checks on the regression coefficients and are unsure what specific comparison the reviewer intends with this suggestion.</p>
+<p><strong>Comment 27:</strong> <em>“In the presence of heteroscedasticity, sandwich standard errors may be used. Did the authors consider it?”</em></p>
+<p>Our experiments focus on comparing the robustness of different methods without any additional corrections. In reviewing previous studies using ART, we observed that several authors justify its use as a way to handle heteroscedasticity—even though, as we noted earlier, these authors ignore the method’s underlying assumptions.</p>
+<p>While we agree that more appropriate methods exist to address heteroscedasticity, evaluating them was beyond the scope of our study.</p>
+<p><strong>Comment 28:</strong> <em>“Can the eta squared be directly compared across methods? Given that the total variance changes based on the transformation, it may impact the percentage explained by each of the variables.”</em></p>
+<p>This is an excellent question. We fully agree that (partial) eta squared is not preserved under transformations, whether monotonic or not. We will clarify this point in a revised version.</p>
+<p>It is also important to note that when researchers use ART, they typically report standardized effect sizes, following <a href="https://cran.r-project.org/web/packages/ARTool/vignettes/art-effect-size.html#partial-eta-squared">Matthew Kay’s vignette on effect sizes with ART</a>. This raises a broader question: how should standardized effect sizes obtained from rank transformations be interpreted? Are they meaningful?</p>
+<p>Our approach, using a latent variable, addresses this question by providing a baseline (ground truth) for comparison (see Figures 35–40). In many scenarios, we observe that the estimates from rank-based methods are close to this baseline, indicating that they can provide useful information in those cases.</p>
+<p>However, significant discrepancies occur in certain situations, mainly due to two types of information loss (as discussed in the article):</p>
+<ol type="1">
+<li><p>Rank transformations fail to capture large effects. As we explain: <em>“Consider, for example, two sets of numbers <span class="math inline">\(A= \{1, 2, 3\}\)</span> and <span class="math inline">\(B= \{4, 5, 6\}\)</span>. The mean difference between them is <span class="math inline">\(\overline{B} - \overline{A} = 3\)</span>, whether calculated from the row values or their ranks. However, if the set <span class="math inline">\(B\)</span> becomes <span class="math inline">\(\{9, 10, 11\}\)</span>, the mean difference of raw values increases to <span class="math inline">\(8\)</span>, while the mean difference in ranks remains <span class="math inline">\(3\)</span>. As effects become larger, this problem becomes more apparent.”</em></p></li>
+<li><p>Discretization in ordinal scales leads to information loss. All methods tend to underestimate effect sizes, though some methods still perform better than others.</p></li>
+</ol>
+<p>A natural question arises: why is our ground truth appropriate? The answer is that it represents the effect size estimates of the <strong>ideal</strong> generalized linear regression model, which fully normalizes the data and supports inference at the level of the latent linear model parameters. If the data are log-normal, our baseline represents the effect sizes estimates of the linear model after applying a log transformation. If the data are binomial, it represents the estimates of the ideal logistic regression model. If the data are ordinal, it represents the estimates of the ideal ordinal regression model, and so on.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

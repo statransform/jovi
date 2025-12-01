@@ -227,7 +227,7 @@ Percentage of positives (%) over 5000 repetitions ($\alpha = .05$). For $X_1$, v
 :::
 
 ### Conclusion
-Heteroscedasticity alone cannot explain ART's failures under log-normal distributions. ART's alignment method is based on the assumption that the shape of the distribution (log-normal here) is identical across all factor levels. This is not the case in the above scenarios where distribution shapes change across difficulty levels, causing the method to break down.
+Heteroscedasticity alone cannot explain ART's failures under log-normal distributions. ART's alignment method is based on the assumption that the shape of the distribution (log-normal here) is identical across all factor levels. This is not the case in the above scenarios where distribution shapes change across the levels of $X_1$, causing the method to break down.
 
 ## Binomial distributions {#binomial}
 We also evaluate a wider range of parameters for the binomial distribution. We focus on the lower range of probabilities $p$. However, we expect results to be identical for their symmetric probabilities $1-p$. Specifically, we test $p=.05$, $.1$, and $.2$, and for each, we consider $k=5$ and $10$ task repetitions (Bernoulli trials). 

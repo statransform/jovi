@@ -8,6 +8,11 @@ norm2lnorm <- function(x, meanlog = 0, sdlog = 1, mu = mean(x), sd = stats::sd(x
    stats::qlnorm(p, meanlog, sdlog, ...)
 }
 
+norm2cauchy <- function(x, location = 0, scale = 1, mu = mean(x), sd = stats::sd(x), ...) {
+  p <- stats::pnorm(x, mu, sd)
+  stats::qcauchy(p, location, scale, ...)
+}
+
 toOrdinal = function(values, thresholds) {
   discretizeValue = function(x){
     for(i in 1:length(thresholds)) {
@@ -18,6 +23,14 @@ toOrdinal = function(values, thresholds) {
 
   sapply(values, discretizeValue)
 }
+
+
+norm2binom = function(x, size = 1, prob = 0.5, mu = mean(x), sd = stats::sd(x)) 
+{
+    p <- stats::pnorm(x, mu, sd)
+    stats::qbinom(p, size, prob)
+}
+
 
 set.seed(100)
 
@@ -50,6 +63,24 @@ plotConversion <- function(xs, ys, xlab = "Normal scale", ylab, ymin = 0, ymax =
   plot
 }
 
+n <- 5000
 
+xs1 <- c(rnorm(n, mean = -1, sd = 1))
+xs2 <- c(rnorm(n, mean = 1, sd = 1)) 
+xs <- c(xs1, xs2)
 
+#ys1 <- norm2lnorm(xs1, meanlog = 0, sdlog = 1, mu = -4, sd = 1)
+#ys2 <- norm2lnorm(xs2, meanlog = 0, sdlog = 1, mu = -4, sd = 1)
 
+ys1 <- c(rlnorm(n, mean = -1, sd = 1), rlnorm(n, mean = 1, sd = 1))
+plot1 <- plotConversion(xs, ys1, ylab = "Log-normal scale", ymax = 10)
+
+ys2 <- norm2binom(xs, size = 10, prob=.1)
+plot2 <- plotConversion(xs, ys2, ymin = - 0.3, ylab = "Binomial scale", as.density = F)
+
+ys3 <-  norm2gamma(xs, shape = 1, rate = 2, mu = mean(xs), sd = stats::sd(xs))
+plot3 <- plotConversion(xs, ys3, ymin = - 0.3, ylab = "Expnential scale")
+
+fig <- cowplot::plot_grid(plot1, plot2, plot3, ncol= 3) 
+
+fig

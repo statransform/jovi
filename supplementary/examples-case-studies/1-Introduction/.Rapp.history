@@ -1,0 +1,265 @@
+effects=c(20,0,0)
+df <- sim.within.2f(n, c(2,2), effects) %>% toDistribution(distr)
+df$y
+df <- sim.within.2f(n, c(2,2), effects) %>% toDistribution(distr)
+df$y
+df <- sim.within.2f(n, c(2,2), effects) %>% toDistribution(distr)
+df$y
+df <- sim.within.2f(n, c(2,2), effects) %>% toDistribution(distr)\
+df <- sim.within.2f(n, c(2,2), effects) %>% toDistribution(distr)
+df$y
+lmer(y ~ x1*x2 + (1|s), data=df)
+lmer(rank(y) ~ x1*x2 + (1|s), data=df)
+m = lmer(rank(y) ~ x1*x2 + (1|s), data=df)
+anova(m)
+df$y[15-20]
+df$y[15:20]
+df$y[20:25]
+df$y[20:26]
+df$y[26] = 2
+df$y
+m = lmer(rank(y) ~ x1*x2 + (1|s), data=df)
+anova(m)
+m = lmer(y ~ x1*x2 + (1|s), data=df)
+art(y ~ x1*x2 + (1|s), data=df)
+9*28
+mint <- aov(int(Time) ~ Difficulty*Technique + Error(factor(Participant)), data=df)
+source('~/Documents/Projects/statransform/2024-tsandilas-ranktransforms/supplementary/experimental-code/data-generators.R', chdir = TRUE)
+df <- read.csv("example-data.csv", sep=",", header=TRUE, strip.white=TRUE)#
+#
+df$Participant <- factor(df$Participant)#
+df$Difficulty <- factor(df$Difficulty, ordered = TRUE) # We can consider it as ordinal#
+df$Technique <- factor(df$Technique)#
+#
+df$Perceived_Efficiency <- ordered(df$Perceived_Efficiency, levels = c("inefficient", "somewhat inefficient", "neutral", "somewhat efficient", "efficient"))
+mint <- aov(int(Time) ~ Difficulty*Technique + Error(factor(Participant)), data=df)
+summary(mint)
+m = lmer(rank(y) ~ x1*x2 + (1|s), data=df)
+mpar <- lmer(Time ~ Difficulty*Technique + (1|Participant), data=df)
+anova(mpar)
+? anova
+Anova(mpar)
+? Anova
+Anova(mpar, type="II")
+Anova(mpar, type="III")
+?anova
+mint <- lmer(int(Time) ~ Difficulty*Technique + (1|Participant), data=df)
+Anova(mint)
+anova(mint)
+Anova(mint,type=2)
+Anova(mint,type=3)
+Anova(mint,type=1)
+mart <- art(Time ~ Difficulty*Technique + (1|Participant), data=df)
+anova(art)
+anova(mart)
+anova(mart,type=1)
+anova(mart,type=2)
+anova(mart,type=3)
+Anova(mart,type=3)
+flat.anova(mart)
+summary(mpar)
+mint <- aov(int(Time) ~ Difficulty*Technique + Error(factor(Participant)), data=df)
+summary(mint)
+anova(mint)
+Anova(mint)
+mart <- art(Time ~ Difficulty*Technique + (1|Participant), data=df) # ARTool
+anova(mart)
+mart2 <- art(Time ~ Difficulty*Technique + Error(Participant), data=df) # ARTool
+anova(mart2)
+mint <- lmer(int(Time) ~ Difficulty*Technique + (1|Participant), data=df)
+mint <- lmer(int(PerceivedDifficulty) ~ Difficulty*Technique + (1|Participant), data=df)
+df
+mint <- lmer(int(Difficulty) ~ Difficulty*Technique + (1|Participant), data=df)
+mint <- lmer(int(Difficulty) ~ Difficulty*Technique + (1|Participant), data=df)
+mint <- lmer(int(Perceived_Efficiency) ~ Difficulty*Technique + (1|Participant), data=df)
+anova(mint)
+Anova(mint)
+Anova(mint,type = 1)
+Anova(mint,type = 2)
+Anova(mint,type = 3)
+anova(mint)
+Anova(mint,type = 3)
+Anova(mint,type = 2)
+mint <- lmer(int(Perceived_Efficiency) ~ Difficulty*Technique + (1|Participant), data=df)
+mint
+anova(mint)
+mint2 <- aov(int(Time) ~ Difficulty*Technique + Error(factor(Participant)), data=df)
+mint2
+summary(mint2)
+?lmer
+mint <- lmer(int(Perceived_Efficiency) ~ Difficulty*Technique + (1|Participant), data=df, REML=F)
+anova(mint)
+mint <- lmer(int(Perceived_Efficiency) ~ Difficulty*Technique + (1|Participant), data=df)
+anova(mint)
+df
+mart
+mart$aligned.ranks
+mart$aligned.ranks$Difficulty
+df$Diff = mart$aligned.ranks$Difficulty
+df$Tech = mart$aligned.ranks$Technique
+df$DiffTech = mart$aligned.ranks$Difficulty:Technique
+df$DiffTech = mart$aligned.ranks$"Difficulty:Technique"
+df
+mart.lmer <- lmer(Diff ~ Difficulty*Technique + (1|Participant), data=df)
+mart.diff <- lmer(Diff ~ Difficulty*Technique + (1|Participant), data=df)
+mart.tech <- lmer(Tech ~ Difficulty*Technique + (1|Participant), data=df)
+mart.difftech <- lmer(DiffTech ~ Difficulty*Technique + (1|Participant), data=df)
+anova(mart.diff)
+anova(mart.tech)
+anova(mart.difftech)
+?anova
+?anova
+anova(mart.difftech, ddf="Kenward-Roger")
+anova(mint, ddf="Kenward-Roger")
+anova(mint)
+car::Anova(mint,type=3)
+car::Anova(mint,type=3,test.statistic = "Wald")
+car::Anova(mint,type=3,test.statistic = "F")
+car::Anova(mint,type=2,test.statistic = "F")
+car::Anova(mint,type=1,test.statistic = "F")
+car::Anova(mint,type=3,test.statistic = "F")
+car::Anova(mint,type=2,test.statistic = "F")
+car::Anova(mint,type=2,test.statistic = "F")
+mint2 <- aov(int(Time) ~ Difficulty*Technique + Error(factor(Participant)), data=df)
+summary(mint2)
+mint <- lmer(int(Time) ~ Difficulty*Technique + (1|Participant), data=df)
+car::Anova(mint,type=2,test.statistic = "F")
+mint2
+summary(mint2)
+car::Anova(mint,type=2,test.statistic = "F")
+car::Anova(mint,type=2)
+car::Anova(mint,type="III")
+car::Anova(mint,type="III",test.statistic = "F")
+car::Anova(mint,type="III",test.statistic = "F",,contrasts=list(w=contr.sum))
+mint <- lmer(int(Time) ~ Difficulty*Technique + (1|Participant), data=df, contrasts=list(w=contr.sum))
+mint <- lmer(int(Time) ~ Difficulty*Technique + (1|Participant), data=df)
+options(contrasts = c(“contr.sum”,”contr.poly”))
+options(contrasts = c("contr.sum","contr.poly"))
+car::Anova(mint,type="III",test.statistic = "F")
+car::Anova(mint,type="III",test.statistic = "F", contrasts=list(topic=contr.sum, sys=contr.sum)))
+car::Anova(mint,type="III",test.statistic = "F", contrasts=list(topic=contr.sum, sys=contr.sum))
+car::Anova(mint,type="III",test.statistic = "F")
+car::Anova(mint,type="III",test.statistic = "F", contrasts=list(topic=contr.sum))
+car::Anova(mint,type=3,test.statistic = "F", contrasts=list(topic=contr.sum, sys=contr.sum))
+car::Anova(mint,type=2)
+car::Anova(mint,type=3,test.statistic = "F", factor.contrasts="contr.sum")
+car::Anova(mint,type=3,test.statistic = "F")
+car::Anova(mint,type=2)
+anova(mint)
+car::Anova(mint,type=2,test.statistic = "F")
+anova(mart.difftech, ddf="Kenward-Roger")
+car::Anova(mart.difftech, type=2)
+car::Anova(mart.difftech, type=2,test.statistic = "F")
+car::Anova(mart.difftech, type=3,test.statistic = "F")
+car::Anova(mint,type=2,test.statistic = "F"))
+car::Anova(mint,type=2,test.statistic = "F")
+car::Anova(mint,type=3,test.statistic = "F")
+car::Anova(mart.diff, type=2,test.statistic = "F")
+car::Anova(mart.tech, type=2,test.statistic = "F")
+car::Anova(mart.tech, type=3,test.statistic = "F")
+anova(mart.tech, type=3,test.statistic = "F")
+designs = c(2,4)
+effects <- c(4, 0, 0, 0)
+designs <- list(c(2,3), c(2,4), c(2,2,2), c(3,3,3))
+designs = c(2,4)
+design = c(2,4)
+n=10
+distr="lnorm"
+df <- sim.mixed.2f(design[1]*n, design, effects) %>% toDistribution(distr)
+df
+model0 <- lmer(y ~ x1*x2 + (1|s), data=df)
+anova(model0)
+m0 = aov(y ~ x1*x2 + Error(s), data=df)
+summary(m0)
+n=4
+df <- sim.mixed.2f(design[1]*n, design, effects) %>% toDistribution(distr)
+m0 = aov(y ~ x1*x2 + Error(s), data=df)
+summary(m0)
+model0 <- lmer(y ~ x1*x2 + (1|s), data=df)
+anova(model0)
+df
+df <- read.csv("example-data.csv", sep=",", header=TRUE, strip.white=TRUE)
+mpar <- aov(Time ~ Difficulty*Technique + Error(Participant), data=df) # Parametric - no transformationmlog <- aov(log(Time) ~ Difficulty*Technique + Error(Participant), data=df) # Parametric - Log-transformationmart <- art(Time ~ Difficulty*Technique + Error(Participant), data=df) # ARToolmrnk <- aov(rank(Time) ~ Difficulty*Technique + Error(Participant), data=df) # Rank transformation mint <- aov(int(Time) ~ Difficulty*Technique + Error(Participant), data=df) # Inverse Transform transformation
+df$Participant <- factor(df$Participant)df$Difficulty <- factor(df$Difficulty, ordered = TRUE) # We can consider it as ordinaldf$Technique <- factor(df$Technique)df$Perceived_Efficiency <- ordered(df$Perceived_Efficiency, levels = c("inefficient", "somewhat inefficient", "neutral", "somewhat efficient", "efficient"))
+mpar <- aov(Time ~ Difficulty*Technique + Error(Participant), data=df) # Parametric - no transformationmlog <- aov(log(Time) ~ Difficulty*Technique + Error(Participant), data=df) # Parametric - Log-transformationmart <- art(Time ~ Difficulty*Technique + Error(Participant), data=df) # ARToolmrnk <- aov(rank(Time) ~ Difficulty*Technique + Error(Participant), data=df) # Rank transformation mint <- aov(int(Time) ~ Difficulty*Technique + Error(Participant), data=df) # Inverse Transform transformation
+summary(mart)
+anova(mart)
+summary(mint)
+eta_squared(mint)
+eta_squared(mart)
+library("emmeans")
+art.con(model, expr, adjust = "bonferroni")
+expr = ~Technique
+art.con(mart, expr, adjust = "bonferroni")
+emmeans(mint, expr)
+contrast(emmeans(mint, expr), method="pairwise", adjust = "bonferroni")
+contrast(emmeans(mlog, expr), method="pairwise", adjust = "bonferroni")
+mlog <- aov(log(Time) ~ Difficulty*Technique + Error(Participant), data=df)
+contrast(emmeans(model, expr), method="pairwise", adjust = "bonferroni")
+contrast(emmeans(mlog, expr), method="pairwise", adjust = "bonferroni")
+which emmeans
+where emmeans
+emmeans
+car::emmeans()
+mlog
+summary(mlog)
+emmeans::emmeans(mlog, ~Technique)
+version()
+R.version()
+R.version
+emmeans::emmeans(mlog, ~Technique)
+norm2lnorm <- function(x, meanlog = 0, sdlog = 1, mu = mean(x), sd = sd(x), ...) {#
+     p <- pnorm(x, mu, sd) #
+     qlnorm(p, meanlog, sdlog, ...) #
+}
+norm2lnorm(rnorm(20))
+norm2lnorm <- function(x, meanlog = 0, sdlog = 1, mu = mean(x), sdd = sd(x), ...) {#
+     p <- pnorm(x, mu, sdd) #
+     qlnorm(p, meanlog, sdlog, ...) #
+}
+norm2lnorm(rnorm(20))
+norm2lnorm(rnorm(20))
+x1=norm2lnorm(rnorm(20))
+x2=norm2lnorm(rnorm(20))
+hist(c(x1,x2))
+hist(c(x1,x2))
+hist(log(c(x1,x2)))
+x1=norm2lnorm(rnorm(50))
+x2=norm2lnorm(rnorm(50))
+hist(log(c(x1,x2)))
+qqnorm(log(c(x1,x2)))
+qqnorm(log(c(x1)))
+qqnorm(log(c(x1)))
+qqnorm(log(c(x2)))
+qqnorm(log(c(x1)))
+qqnorm(log(c(x1,x2)))
+qqnorm(x1)
+qqnorm(rnorm(50))
+x1= rnorm(20)
+x2 = rnorm(20)
+x2
+x2
+x1
+x2
+norm2lnorm(x1)
+norm2lnorm(x2)
+sort(x1)
+sort(x2)
+sort(norm2lnorm(x1))
+sort(norm2lnorm(x2))
+norm2lnorm(-2.2245213)
+norm2lnorm(x1[1:2])
+norm2lnorm(x1)
+x1
+norm2lnorm(x1[1:3])
+norm2lnorm(x1[1:4])
+norm2lnorm(x1[1:5])
+norm2lnorm(x1[1:20])
+norm2lnorm(x1[1:18])
+norm2lnorm(x1)
+hist(norm2lnorm(x1))
+hist(norm2lnorm(x2))
+norm2lnorm <- function(x, meanlog = 0, sdlog = 1, mu = 0, sdd = 5, ...) {#
++      p <- pnorm(x, mu, sdd) #
++      qlnorm(p, meanlog, sdlog, ...) #
++ }
