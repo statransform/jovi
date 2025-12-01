@@ -183,7 +183,7 @@ simulate_response <- function(
   # Create design with correct within/between logic
   # -------------------------------------------------
   design <- make_design(nlevels, within, n)
-
+print(coeffs)
   # -------------------------------------------------
   # Build effects based on number of factors
   # -------------------------------------------------
@@ -191,9 +191,9 @@ simulate_response <- function(
   # Currently supporting up to three factors
   effects <- switch(
     k,
-    with(design, coeffs["X1"]*x1)[[1]],
-    with(design, coeffs["X1"]*x1 + coeffs["X2"]*x2 + coeffs["X1X2"]*x1*x2)[[1]],
-    with(design, coeffs["X1"]*x1 + coeffs["X2"]*x2 + coeffs["X3"]*x3 + coeffs["X1X2"]*x1*x2)[[1]]
+    with(design, coeffs["X1"]*x1),
+    with(design, coeffs["X1"]*x1 + coeffs["X2"]*x2 + coeffs["X1:X2"]*x1*x2),
+    with(design, coeffs["X1"]*x1 + coeffs["X2"]*x2 + coeffs["X3"]*x3 + coeffs["X1:X2"]*x1*x2)
   )
 
   # -------------------------------------------------

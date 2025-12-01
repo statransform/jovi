@@ -60,3 +60,51 @@ compare_p_values <- function(df,
     INT = suppressMessages(get_p_values(model_int, vars, is_aov))
   )
 }
+
+# This the iterative simulation process
+# generationFunction: This is the data generation function that knows how to choose the various distributions parameters
+repeat_test <- function(
+  nlevels=c(4,3), 
+  within = c(1,1),
+  n=20, 
+  coeffs=c("X1"=0, "X2"=0, "X1:X2"=0),
+  family="normal",
+  params_function,
+  formula,
+  vars,
+  iterations = 1000 
+) {
+  results <- foreach(rid = 1:iterations, .combine=rbind) %dopar% {
+    tryCatch(
+      {
+        compare_p_values(simulate_response(nlevels, within, n, coeffs, family, params_function(family)), formula, vars)
+      }, 
+      error = function(cond) {
+        # do nothing
+      }, finally = {
+        # do nothing
+      }
+    )
+  }
+
+  # From p-values to positive rates that represent (depending on whether there is a true effect) either Type I error rates (false positives) or power (true positives) 
+  res.05 <- round(colMeans(results<.05, na.rm = TRUE), digits = 4) # alpha = .05
+  res.01 <- round(colMeans(results<.01, na.rm = TRUE), digits = 4) # alpha = .01
+
+  designStr <- paste(nlevels, collapse="x")
+
+  # Split the results into separate rows 
+  return(tribble(~n, ~design, ~family, ~method, ~alpha, ~effect, ~rate,
+      n, designStr, family, "PAR", 0.05, coeffs, res.05[grep("PAR", names(res.05))],   
+      n, designStr, family, "RNK", 0.05, coeffs, res.05[grep("RNK", names(res.05))],   
+      n, designStr, family, "ART", 0.05, coeffs, res.05[grep("ART", names(res.05))],
+      n, designStr, family, "INT", 0.05, coeffs, res.05[grep("INT", names(res.05))],
+
+      n, designStr, family, "PAR", 0.01, coeffs, res.01[grep("PAR", names(res.01))],   
+      n, designStr, family, "RNK", 0.01, coeffs, res.01[grep("RNK", names(res.01))],   
+      n, designStr, family, "ART", 0.01, coeffs, res.01[grep("ART", names(res.01))],
+      n, designStr, family, "INT", 0.01, coeffs, res.01[grep("INT", names(res.01))]
+    )
+  )
+}
+
