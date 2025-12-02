@@ -151,14 +151,13 @@ makeDiscrete <- function(values, thresholds = c(-2,-1, 1,2)) {
 
 # Transforms a set of values to ordinal based on the given thresholds
 # Here, the thresholds take into account the variance of the data, trying to better cover the full range of values.
-toOrdinal <- function(values, levels = 5, equidistant = TRUE) {
+toOrdinal <- function(values, levels = 5, flexible = TRUE) {
   lim <- 2*sd(values) # I take 2 standard deviations that should contain the largest portion of the data (around 95% of the data values)
-
   thresholds <- NA
-  if(equidistant) {
-    thresholds <- seq(from=-lim, to=lim, by=2*lim/levels)[c(-1, -(levels + 1))]
-  } else {
+  if(flexible) {
     thresholds <- sort(runif(levels - 1))*2*lim-lim
+  } else {
+    thresholds <- seq(from=-lim, to=lim, by=2*lim/levels)[c(-1, -(levels + 1))]    
   }
 
   makeDiscrete(values, thresholds)
@@ -173,7 +172,7 @@ toOrdinal <- function(values, levels = 5, equidistant = TRUE) {
 simulate_response <- function(
   nlevels = c(4,3), within = c(1, 1), n = 1,
   coeffs = c(X1=0, X2=0, X1X2=0),
-  family = c("normal","binomial","poisson","exponential","lognormal","cauchy", "ordinal"),
+  family = c("norm","binom","poisson","exp","lnorm","cauchy", "likert"),
   params
 ) {
   family <- match.arg(family)
@@ -183,7 +182,7 @@ simulate_response <- function(
   # Create design with correct within/between logic
   # -------------------------------------------------
   design <- make_design(nlevels, within, n)
-print(coeffs)
+
   # -------------------------------------------------
   # Build effects based on number of factors
   # -------------------------------------------------
@@ -200,13 +199,13 @@ print(coeffs)
   # Mean centering (mu) from GLM mu-functions
   # -------------------------------------------------
   mu <- switch(family,
-    normal     = 0,
-    ordinal    = 0, 
-    cauchy     = 0,
-    lognormal  = mu_lognormal(effects, sigma_s, params$sigma_e, params$mean_target),
-    exponential= mu_exponential(effects, sigma_s, params$mean_target),
-    poisson    = mu_poisson(effects, sigma_s, params$mean_target),
-    binomial   = mu_binomial(effects, sigma_s, params$p_target, params$size)
+    norm     = 0,
+    likert   = 0, 
+    cauchy   = 0,
+    lnorm    = mu_lognormal(effects, sigma_s, params$sigma_e, params$mean_target),
+    exp      = mu_exponential(effects, sigma_s, params$mean_target),
+    poisson  = mu_poisson(effects, sigma_s, params$mean_target),
+    binom    = mu_binomial(effects, sigma_s, params$p_target, params$size)
   )
 
   # -------------------------------------------------
@@ -225,13 +224,13 @@ print(coeffs)
   # Generate Y
   # -------------------------------------------------
   Y <- switch(family,
-    normal     = eta + rnorm(length(eta), 0, params$sigma_e),
-    ordinal    = toOrdinal(eta + rnorm(length(eta), 0, params$sigma_e), levels = params$levels, equidistant = params$equidistant),
-    poisson    = rpois(length(eta), exp(eta)),
-    exponential= rexp(length(eta), rate = 1/exp(eta)),
-    lognormal  = rlnorm(length(eta), eta, params$sigma_e),
-    binomial   = rbinom(length(eta), size=params$size, prob=plogis(eta)),
-    cauchy     = rcauchy(length(eta), location = eta, scale = params$gamma)
+    norm     = eta + rnorm(length(eta), 0, params$sigma_e),
+    likert   = toOrdinal(eta + rnorm(length(eta), 0, params$sigma_e), levels = params$levels, flexible = params$flexible),
+    poisson  = rpois(length(eta), exp(eta)),
+    exp      = rexp(length(eta), rate = 1/exp(eta)),
+    lnorm    = rlnorm(length(eta), eta, params$sigma_e),
+    binom    = rbinom(length(eta), size=params$size, prob=plogis(eta)),
+    cauchy   = rcauchy(length(eta), location = eta, scale = params$gamma)
   )
 
   # Ensure that categorical variables and the random effect are coded as factors

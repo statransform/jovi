@@ -68,7 +68,7 @@ repeat_test <- function(
   within = c(1,1),
   n=20, 
   coeffs=c("X1"=0, "X2"=0, "X1:X2"=0),
-  family="normal",
+  family="norm",
   params_function,
   formula,
   vars,
@@ -77,7 +77,11 @@ repeat_test <- function(
   results <- foreach(rid = 1:iterations, .combine=rbind) %dopar% {
     tryCatch(
       {
-        compare_p_values(simulate_response(nlevels, within, n, coeffs, family, params_function(family)), formula, vars)
+        compare_p_values(simulate_response(nlevels, within, n, coeffs, 
+          # For ordinal data, the family name also includes the levels and threshold type: "ordonal-5-flex", "ordinal-7", ... 
+          sub("_.*", "", family), 
+          params_function(family)), 
+          formula, vars)
       }, 
       error = function(cond) {
         # do nothing

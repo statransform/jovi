@@ -5,35 +5,35 @@ source("utils-analysis.R")
 
 
 # Distribution parameters used in simulation
-params_normal <- list(sigma_s = 0.4, sigma_e = 1)
-params_ordinal <- list(sigma_s = 0.4, sigma_e = 1, levels = 5, equidistant = FALSE)
-params_lognormal <- list(sigma_s = 0.4, sigma_e = 1, mean_target = 1)
+params_norm   <- list(sigma_s = 0.4, sigma_e = 1)
+params_likert <- list(sigma_s = 0.4, sigma_e = 1, levels = 5, flexible = TRUE)
+params_lnorm  <- list(sigma_s = 0.4, sigma_e = 1, mean_target = 1)
 params_cauchy <- list(sigma_s = 0.4, gamma = 1)
-params_exponential <- list(sigma_s = 0.3, mean_target = 0.5)
+params_exp    <- list(sigma_s = 0.3, mean_target = 0.5)
 params_poisson <- list(sigma_s = 0.3, mean_target = 3)
-params_binomial <- list(sigma_s = 0.3, size = 10, p_target = 0.1)
+params_binom  <- list(sigma_s = 0.3, size = 10, p_target = 0.1)
 
 nlevels = c(4, 3)
 within = c(1, 1)
 n = 20
-coeffs <- c(X1=2, X2=0, X1X2=0) # a1, a2, a12
+coeffs <- c("X1"=2, "X2"=0, "X1:X2"=0) # a1, a2, a12
 
 df_normal <- simulate_response(
   nlevels, within, n, coeffs,
-  family = "normal",
-  params = params_normal
+  family = "norm",
+  params = params_norm
 )
 
 df_ordinal <- simulate_response(
   nlevels, within, n, coeffs,
-  family = "ordinal",
-  params = params_ordinal
+  family = "likert",
+  params = params_likert
 )
 
 df_lognormal <- simulate_response(
   nlevels, within, n, coeffs,
-  family = "lognormal",
-  params = params_lognormal
+  family = "lnorm",
+  params = params_lnorm
 )
 
 df_cauchy <- simulate_response(
@@ -44,8 +44,8 @@ df_cauchy <- simulate_response(
 
 df_exp <- simulate_response(
   nlevels, within, n, coeffs,
-  family = "exponential",
-  params = params_exponential
+  family = "exp",
+  params = params_exp
 )
 
 df_poisson <- simulate_response(
@@ -56,8 +56,8 @@ df_poisson <- simulate_response(
 
 df_binom <- simulate_response(
   nlevels, within, n, coeffs,
-  family = "binomial",
-  params = params_binomial
+  family = "binom",
+  params = params_binom
 )
 
 printResults <- function(family, res){

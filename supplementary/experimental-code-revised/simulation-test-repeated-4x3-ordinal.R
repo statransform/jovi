@@ -10,21 +10,21 @@ source("utils-analysis.R")
 
 ################################
 # Distribution parameters used in simulation
-params_normal <- list(sigma_s = 0.3, sigma_e = 1)
-params_lognormal <- list(sigma_s = 0.3, sigma_e = 1, mean_target = 1)
-params_cauchy <- list(sigma_s = 0.3, gamma = 1)
-params_exponential <- list(sigma_s = 0.3, mean_target = 0.5)
-params_poisson <- list(sigma_s = 0.3, mean_target = 3)
-params_binomial <- list(sigma_s = 0.3, size = 10, p_target = 0.1)
+params_likert_5       <- list(sigma_s = 0.3, sigma_e = 1, levels = 5, flexible=FALSE)
+params_likert_5_flex  <- list(sigma_s = 0.3, sigma_e = 1, levels = 5, flexible=TRUE)
+params_likert_7       <- list(sigma_s = 0.3, sigma_e = 1, levels = 7, flexible=FALSE)
+params_likert_7_flex  <- list(sigma_s = 0.3, sigma_e = 1, levels = 7, flexible=TRUE)
+params_likert_11      <- list(sigma_s = 0.3, sigma_e = 1, levels = 11, flexible=FALSE)
+params_likert_11_flex <- list(sigma_s = 0.3, sigma_e = 1, levels = 11, flexible=TRUE)
 
 use_parameters <- function(family){
   params <- switch(family, 
-    normal = params_normal, 
-    lognormal = params_lognormal, 
-    cauchy = params_cauchy, 
-    exponential = params_exponential, 
-    poisson = params_poisson, 
-    binomial = params_binomial
+    likert_5      = params_likert_5, 
+    likert_5_flex = params_likert_5_flex, 
+    likert_7      = params_likert_7, 
+    likert_5_flex = params_likert_7_flex,
+    likert_11     = params_likert_11, 
+    likert_11_flex = params_likert_11_flex, 
   )
 
   # Choose a random standard deviation for the random subject effect between 0.1 and 0.5
@@ -40,9 +40,9 @@ formula = Y ~ X1*X2 + Error(factor(subject))
 vars = c("X1", "X2", "X1:X2") 
 
 # C. Continuous distributions (equal variance, full) and discrete distribution: binom (size = 10, prob = 0.1) and Poisson
-distributions <- c("normal", "lognormal", "exponential", "cauchy", "binomial", "poisson")
+distributions <- c("likert_5", "likert_5_flex", "likert_7", "likert_7_flex", "likert_11", "likert_11_flex")
 
-distributions <- c("lognormal", "binomial")
+distributions <- c("likert_5", "likert_5_flex")
 
 # D. Various combinations of effects
 effects <- matrix(c(0, 0, 0,
@@ -70,9 +70,9 @@ colnames(effects) <- vars
 Ns <- c(20) 
 
 # 5000 iterations
-R <- 400
+R <- 300
 
-filename = "1_test_4x3_Ratio"
+filename = "1_test_4x3_Ordinal"
 
 # Set the seed for reproducibility
 #set.seed(1234)
