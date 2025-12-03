@@ -1,5 +1,7 @@
 library(lmerTest)
 library(ARTool)
+library("emmeans")
+
 library(broom)
 library(dplyr)
 
@@ -60,6 +62,47 @@ compare_p_values <- function(df,
     INT = suppressMessages(get_p_values(model_int, vars, is_aov))
   )
 }
+
+# Contrasts ###########################################################
+# P-values for contrasts, where expr can be ~ X2 if we are interested in contrasts for the second factor 
+get_p_values_contrasts <- function(model, expr) {
+  if(is.null(names(model)) || is.null(model$formula)) {
+      as.data.frame(suppressMessages(contrast(emmeans(model, expr), method="pairwise", interaction=TRUE)))$p.value
+  } 
+  else { # This is the case of ART
+    as.data.frame(suppressMessages(art.con(model, expr, interaction=TRUE)))$p.value
+  }
+}
+
+# Returns a vector with all p-values for all methods
+compare_p_values_contrasts <- function(df, 
+  formula = Y ~ X1*X2 + (1|subject), 
+  expr = ~X2 # Specify the contrasts of interest
+){  
+  is_aov <- "Error" %in% all.names(formula) # Identifies if it should use lmer or aov
+ 
+  if(is_aov) { # Use aov
+    # See: https://stackoverflow.com/questions/78664364/why-do-i-need-to-hardcode-the-formula-in-emmeans-instead-of-dynamically-extrac
+    model_par <- suppressMessages(do.call(aov, list(formula, df))) # Parametric
+    model_art <- suppressMessages(art(formula, df)) # ARTool
+    model_rnk <- suppressMessages(do.call(aov, list(update(formula, rank(.) ~ .), df))) # RNK
+    model_int <- suppressMessages(do.call(aov, list(update(formula, INT(.) ~ .), df))) # INT
+  } 
+  else { # Use lmer
+    model_par <- suppressMessages(lmer(formula, data=df)) # Parametric
+    model_art <- suppressMessages(art(formula, data=df)) # ARTool
+    model_rnk <- suppressMessages(lmer(update(formula, rank(.) ~ .), data=df)) # RNK
+    model_int <- suppressMessages(lmer(update(formula, INT(.) ~ .), data=df)) # INT
+  }
+
+  c(PAR = suppressMessages(get_p_values_contrasts(model_par, expr)), 
+    ART = suppressMessages(get_p_values_contrasts(model_art, expr)), 
+    RNK = suppressMessages(get_p_values_contrasts(model_rnk, expr)), 
+    INT = suppressMessages(get_p_values_contrasts(model_int, expr))
+  )
+}
+################################################################
+
 
 # This the iterative simulation process
 # generationFunction: This is the data generation function that knows how to choose the various distributions parameters

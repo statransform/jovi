@@ -171,7 +171,7 @@ toOrdinal <- function(values, levels = 5, flexible = TRUE) {
 ##############################################################
 simulate_response <- function(
   nlevels = c(4,3), within = c(1, 1), n = 1,
-  coeffs = c(X1=0, X2=0, X1X2=0),
+  coeffs = c("X1"=0, "X2"=0, "X1:X2"=0),
   family = c("norm","binom","poisson","exp","lnorm","cauchy", "likert"),
   params
 ) {
@@ -235,5 +235,85 @@ simulate_response <- function(
 
   # Ensure that categorical variables and the random effect are coded as factors
   data.frame(design, eta = eta, Y = Y, stringsAsFactors = TRUE)
+}
+
+##############################################################################
+# Specialized reponse generation function for heteroscedastic and missing data 
+##############################################################################
+
+# Generate different sds such that the average is sd_mean and the ratio of max/min is max_ratio
+generate_sigmas <- function(nlevels = 4, max_ratio = 1.5, sd_mean = 1){
+  ratios <- c(1, max_ratio, 1 + runif(nlevels - 2)*(max_ratio - 1))
+  s <- sd_mean*nlevels/sum(ratios)
+
+  sample(s*ratios, replace=FALSE)
+}
+
+simulate_heteroscedastic_response <- function(
+  nlevels = c(4,3), within = c(1, 1), n = 1,
+  coeffs = c("X1"=0, "X2"=0, "X1:X2"=0),
+  family = c("norm","likert"),
+  ratio_sd = 2, # Ratio of min and max standard deviations across the levels of the first factor X1
+  params
+) {
+  family <- match.arg(family)
+  sigma_s <- params$sigma_s
+
+  # -------------------------------------------------
+  # Create design with correct within/between logic
+  # -------------------------------------------------
+  design <- make_design(nlevels, within, n)
+
+  # -------------------------------------------------
+  # Generate the sigma_e to be different across X1's levels
+  # -------------------------------------------------
+  ids = as.numeric(gsub("[^0-9]", " ", design[,"X1"])) # Indices for the levels of X1
+  sigmas_e = generate_sigmas(nlevels[1], ratio_sd, params$sigma_e)[ids]
+
+  # -------------------------------------------------
+  # Build effects based on number of factors
+  # -------------------------------------------------
+  k <- length(nlevels)
+  # Currently supporting up to three factors
+  effects <- switch(
+    k,
+    with(design, coeffs["X1"]*x1),
+    with(design, coeffs["X1"]*x1 + coeffs["X2"]*x2 + coeffs["X1:X2"]*x1*x2),
+    with(design, coeffs["X1"]*x1 + coeffs["X2"]*x2 + coeffs["X3"]*x3 + coeffs["X1:X2"]*x1*x2)
+  )
+
+  # -------------------------------------------------
+  # Mean centering (mu) from GLM mu-functions
+  # -------------------------------------------------
+  mu <- 0
+
+  # -------------------------------------------------
+  # Random subject effects
+  # -------------------------------------------------
+  subjects <- unique(design$subject)
+  s <- rnorm(length(subjects), 0, sigma_s)
+  design$s_eff <- s[ match(design$subject, subjects) ]
+
+  # -------------------------------------------------
+  # Linear predictor
+  # -------------------------------------------------
+  eta <- mu + effects + design$s_eff
+
+  # -------------------------------------------------
+  # Generate Y
+  # -------------------------------------------------
+  Y <- eta + sapply(1:length(eta), function(i){ rnorm(1,0, sigmas_e[i]) })
+  if(family == "likert") {
+    Y <- toOrdinal(Y, levels = params$levels, flexible = params$flexible)
+  }
+
+  # Ensure that categorical variables and the random effect are coded as factors
+  data.frame(design, eta = eta, Y = Y, stringsAsFactors = TRUE)
+}
+
+# This is to simulate missing data, where percentage (0 - 1) represents the portion of missing data  
+removeCells <- function(data, percentage = 0) {
+  if(percentage > 0) data[-sample(1:nrow(data), round(percentage*nrow(data))),]
+  else data
 }
 
