@@ -20,7 +20,7 @@ get_p_values <- function(model, vars, is_aov = TRUE) {
     summary_object <- summary(model)
     if(length(summary_object) == 1){ # This occurs when there are only between-subjects factors
       res <- tidy(summary_object[[1]][[1]])
-      } 
+    } 
     else { # When there is at list a within-subjects factor
       res <- bind_rows(tidy(summary_object[[1]][[1]]), tidy(summary_object[[2]][[1]])) 
     }
@@ -44,16 +44,16 @@ compare_p_values <- function(df,
   is_aov <- "Error" %in% all.names(formula) # Identifies if it should use lmer or aov
 
   if(is_aov) { # Use aov
-    model_par <- suppressMessages(aov(formula, data=df)) # Parametric
-    model_art <- suppressMessages(art(formula, data=df)) # ARTool
-    model_rnk <- suppressMessages(aov(update(formula, rank(.) ~ .), data=df)) # RNK
-    model_int <- suppressMessages(aov(update(formula, INT(.) ~ .), data=df)) # INT
+    model_par <- suppressMessages(do.call(aov, list(formula, df))) # Parametric
+    model_art <- suppressMessages(do.call(art, list(formula, df))) # ARTool
+    model_rnk <- suppressMessages(do.call(aov, list(update(formula, rank(.) ~ .), df))) # RNK
+    model_int <- suppressMessages(do.call(aov, list(update(formula, INT(.) ~ .), df))) # INT
   } 
   else { # Use lmer
-    model_par <- suppressMessages(lmer(formula, data=df)) # Parametric
-    model_art <- suppressMessages(art(formula, data=df)) # ARTool
-    model_rnk <- suppressMessages(lmer(update(formula, rank(.) ~ .), data=df)) # RNK
-    model_int <- suppressMessages(lmer(update(formula, INT(.) ~ .), data=df)) # INT
+    model_par <- suppressMessages(do.call(lmer, list(formula, data=df))) # Parametric
+    model_art <- suppressMessages(do.call(art, list(formula, data=df))) # ARTool
+    model_rnk <- suppressMessages(do.call(lmer, list(update(formula, rank(.) ~ .), data=df))) # RNK
+    model_int <- suppressMessages(do.call(lmer, list(update(formula, INT(.) ~ .), data=df))) # INT
   }
 
   c(PAR = suppressMessages(get_p_values(model_par, vars, is_aov)), 
@@ -84,15 +84,15 @@ compare_p_values_contrasts <- function(df,
   if(is_aov) { # Use aov
     # See: https://stackoverflow.com/questions/78664364/why-do-i-need-to-hardcode-the-formula-in-emmeans-instead-of-dynamically-extrac
     model_par <- suppressMessages(do.call(aov, list(formula, df))) # Parametric
-    model_art <- suppressMessages(art(formula, df)) # ARTool
+    model_art <- suppressMessages(do.call(art, list(formula, df))) # ARTool
     model_rnk <- suppressMessages(do.call(aov, list(update(formula, rank(.) ~ .), df))) # RNK
     model_int <- suppressMessages(do.call(aov, list(update(formula, INT(.) ~ .), df))) # INT
   } 
   else { # Use lmer
-    model_par <- suppressMessages(lmer(formula, data=df)) # Parametric
-    model_art <- suppressMessages(art(formula, data=df)) # ARTool
-    model_rnk <- suppressMessages(lmer(update(formula, rank(.) ~ .), data=df)) # RNK
-    model_int <- suppressMessages(lmer(update(formula, INT(.) ~ .), data=df)) # INT
+    model_par <- suppressMessages(do.call(lmer, list(formula, data=df))) # Parametric
+    model_art <- suppressMessages(do.call(art, list(formula, data=df))) # ARTool
+    model_rnk <- suppressMessages(do.call(lmer, list(update(formula, rank(.) ~ .), data=df))) # RNK
+    model_int <- suppressMessages(do.call(lmer, list(update(formula, INT(.) ~ .), data=df))) # INT
   }
 
   c(PAR = suppressMessages(get_p_values_contrasts(model_par, expr)), 
@@ -115,13 +115,13 @@ repeat_test <- function(
   params_function,
   formula,
   vars,
-  iterations = 1000 
+  iterations = 1000
 ) {
   results <- foreach(rid = 1:iterations, .combine=rbind) %dopar% {
     tryCatch(
       {
         compare_p_values(simulate_response(nlevels, within, n, coeffs, 
-          # For ordinal data, the family name also includes the levels and threshold type: "ordonal-5-flex", "ordinal-7", ... 
+          # For ordinal data, the family name also includes the levels and threshold type: "likert-5-flex", "likert-7", ... 
           sub("_.*", "", family), 
           params_function(family)), 
           formula, vars)
@@ -140,17 +140,19 @@ repeat_test <- function(
 
   designStr <- paste(nlevels, collapse="x")
 
+  ndummies <- length(vars) - length(res.05)/4
+  dummies <- rep(0, ndummies) # Complete with zeros irrelevant rate results
   # Split the results into separate rows 
   return(tribble(~n, ~design, ~family, ~method, ~alpha, ~effect, ~rate,
-      n, designStr, family, "PAR", 0.05, coeffs, res.05[grep("PAR", names(res.05))],   
-      n, designStr, family, "RNK", 0.05, coeffs, res.05[grep("RNK", names(res.05))],   
-      n, designStr, family, "ART", 0.05, coeffs, res.05[grep("ART", names(res.05))],
-      n, designStr, family, "INT", 0.05, coeffs, res.05[grep("INT", names(res.05))],
+      n, designStr, family, "PAR", 0.05, coeffs, c(res.05[grep("PAR", names(res.05))], dummies),
+      n, designStr, family, "RNK", 0.05, coeffs, c(res.05[grep("RNK", names(res.05))], dummies),  
+      n, designStr, family, "ART", 0.05, coeffs, c(res.05[grep("ART", names(res.05))], dummies),
+      n, designStr, family, "INT", 0.05, coeffs, c(res.05[grep("INT", names(res.05))], dummies),
 
-      n, designStr, family, "PAR", 0.01, coeffs, res.01[grep("PAR", names(res.01))],   
-      n, designStr, family, "RNK", 0.01, coeffs, res.01[grep("RNK", names(res.01))],   
-      n, designStr, family, "ART", 0.01, coeffs, res.01[grep("ART", names(res.01))],
-      n, designStr, family, "INT", 0.01, coeffs, res.01[grep("INT", names(res.01))]
+      n, designStr, family, "PAR", 0.01, coeffs, c(res.01[grep("PAR", names(res.01))], dummies),  
+      n, designStr, family, "RNK", 0.01, coeffs, c(res.01[grep("RNK", names(res.01))], dummies),  
+      n, designStr, family, "ART", 0.01, coeffs, c(res.01[grep("ART", names(res.01))], dummies),
+      n, designStr, family, "INT", 0.01, coeffs, c(res.01[grep("INT", names(res.01))], dummies)
     )
   )
 }

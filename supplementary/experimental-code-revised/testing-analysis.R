@@ -87,13 +87,4 @@ printResults("Exp: ", compare_p_values(df_exp, formula, vars))
 printResults("Poisson: ", compare_p_values(df_poisson, formula, vars))
 printResults("Binom: ", compare_p_values(df_poisson, formula, vars))
 
-##library(microbenchmark)
-##bench <- microbenchmark(
-## lmer = analysis_lmer(df_normal),
-##  aov = analysis_aov(df_normal),
-##  art = analysis_art(df_normal),
-##  art_aov = analysis_art_aov(df_normal),
-##  times = 1
-##)
-##print(bench)
 

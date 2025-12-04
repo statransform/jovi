@@ -22,7 +22,7 @@ use_parameters <- function(family){
     likert_5      = params_likert_5, 
     likert_5_flex = params_likert_5_flex, 
     likert_7      = params_likert_7, 
-    likert_5_flex = params_likert_7_flex,
+    likert_7_flex = params_likert_7_flex,
     likert_11     = params_likert_11, 
     likert_11_flex = params_likert_11_flex, 
   )
@@ -33,46 +33,33 @@ use_parameters <- function(family){
   params
 }
 
-# B. 4 x 3 repeated measures
+# Design configuration
 design = c(4,3)
 within = c(1,1) # Both factors are within-subjects
-formula = Y ~ X1*X2 + Error(factor(subject)) 
+formula = Y ~ X1*X2 + Error(factor(subject))
+formula_lmer = Y ~ X1*X2 + (1|subject) # For large samples, aov becomes particularly slow, we use LMER
 vars = c("X1", "X2", "X1:X2") 
 
-# C. Continuous distributions (equal variance, full) and discrete distribution: binom (size = 10, prob = 0.1) and Poisson
+# Ordinal scales of 5, 7, and 11 levels, with equidistant or flexible thresholds
 distributions <- c("likert_5", "likert_5_flex", "likert_7", "likert_7_flex", "likert_11", "likert_11_flex")
+#distributions <- c("likert_7_flex")
 
-distributions <- c("likert_5", "likert_5_flex")
-
-# D. Various combinations of effects
-effects <- matrix(c(0, 0, 0,
-            0.5, 0.5, 0,
-            1, 1, 0,
-            2, 2, 0,
-            4, 4, 0,
-            8, 8, 0,
-            0.5, 0, 0,
-            1, 0, 0,
-            2, 0, 0,
-            4, 0, 0,
-            8, 0, 0), 
-           ncol = 3, byrow = TRUE)
-
+# Applying only effect on X1
 effects <- matrix(c(
-            1, 0, 0,
-            2, 0, 0), 
+            0, 0, 0), 
             ncol = 3, byrow = TRUE)
 
 colnames(effects) <- vars
 
 # E. Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
-#Ns <- c(10, 20, 30) 
-Ns <- c(20) 
+Ns <- c(32, 64, 128, 256, 512)
+# For larger samples, we use lmer as aov becomes quite slow. However, results are nearly identical
+formulas <- c(formula, formula, formula, formula_lmer, formula_lmer) 
 
 # 5000 iterations
-R <- 300
+R <- 5000
 
-filename = "1_test_4x3_Ordinal"
+filename = "TypeI_4x3_ordinal_large_samples"
 
 # Set the seed for reproducibility
 #set.seed(1234)
@@ -83,17 +70,17 @@ registerDoParallel(CoresNum)  # use multicore, set to the number of our cores
 
 time <- system.time({ 
     results <- foreach(family = distributions, .combine=rbind) %do% {
-      foreach(n = Ns, .combine=rbind) %do% {
+      foreach(ni = 1:length(Ns), .combine=rbind) %do% {
         foreach(effId = 1:nrow(effects), .combine=rbind) %do% {
           # The test function is parallelized (using multiple cores)
           repeat_test(
             nlevels=design, 
             within=within, 
-            n=n, 
+            n=Ns[ni], 
             coeffs=effects[effId,],
             family=family,
             params_function=use_parameters,
-            formula=formula,
+            formula=formulas[[ni]],
             vars=vars,
             iterations = R
           )
