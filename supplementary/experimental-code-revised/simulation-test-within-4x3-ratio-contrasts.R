@@ -38,11 +38,12 @@ design = c(4,3)
 within = c(1,1) # Both factors are within-subjects
 formula = Y ~ X1*X2 + Error(factor(subject)) 
 vars = c("X1", "X2", "X1:X2") 
+expr = ~X2
 
 # C. Continuous distributions (equal variance, full) and discrete distribution: binom (size = 10, prob = 0.1) and Poisson
 distributions <- c("norm", "lnorm", "exp", "cauchy", "binom", "poisson")
 
-distributions <- c("lnorm", "binom")
+distributions <- c("lnorm")
 
 # D. Various combinations of effects
 effects <- matrix(c(0, 0, 0,
@@ -59,7 +60,6 @@ effects <- matrix(c(0, 0, 0,
            ncol = 3, byrow = TRUE)
 
 effects <- matrix(c(
-            1, 0, 0,
             2, 0, 0), 
             ncol = 3, byrow = TRUE)
 
@@ -70,9 +70,9 @@ colnames(effects) <- vars
 Ns <- c(20) 
 
 # 5000 iterations
-R <- 400
+R <- 300
 
-filename = "1_test_4x3_Ratio"
+filename = "1_test_4x3_Ratio_Contrasts"
 
 # Set the seed for reproducibility
 #set.seed(1234)
@@ -86,7 +86,7 @@ time <- system.time({
       foreach(n = Ns, .combine=rbind) %do% {
         foreach(effId = 1:nrow(effects), .combine=rbind) %do% {
           # The test function is parallelized (using multiple cores)
-          repeat_test(
+          repeat_test_contrasts(
             nlevels=design, 
             within=within, 
             n=n, 
@@ -94,7 +94,7 @@ time <- system.time({
             family=family,
             params_function=use_parameters,
             formula=formula,
-            vars=vars,
+            expr=expr,
             iterations = R
           )
         }
@@ -102,11 +102,11 @@ time <- system.time({
     }
 })
 
-# split the effects and rates columns (currently vectors) into individual columns
+# split the effects into individual columns and rename
 res <- results %>% unnest_wider(effect, names_sep = "_") %>% 
-  mutate(rate = lapply(rate, function(x) setNames(as.numeric(x), vars))) %>%
-  unnest_wider(rate, names_sep = "_")  %>%
+  rename_with(~paste("rate", all.vars(expr), sep=""), rate) %>%
   rename_with(~ gsub("[:_]", "", .x)) # Just rename the columns by erasing the "_" and ":""
+
 
 # Store the results
 csvfile <- paste("logs/", filename, format(Sys.time(), "_%s"), ".csv", sep="")

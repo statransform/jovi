@@ -105,7 +105,7 @@ compare_p_values_contrasts <- function(df,
 
 
 # This the iterative simulation process
-# generationFunction: This is the data generation function that knows how to choose the various distributions parameters
+# params_function: This is the function for acessing the various distribution parameters
 repeat_test <- function(
   nlevels=c(4,3), 
   within = c(1,1),
@@ -151,6 +151,63 @@ repeat_test <- function(
       n, designStr, family, "RNK", 0.01, coeffs, res.01[grep("RNK", names(res.01))],   
       n, designStr, family, "ART", 0.01, coeffs, res.01[grep("ART", names(res.01))],
       n, designStr, family, "INT", 0.01, coeffs, res.01[grep("INT", names(res.01))]
+    )
+  )
+}
+
+
+# This is just a variation that conducts contrast tests 
+# params_function: This is the function for acessing the various distribution parameters
+repeat_test_contrasts <- function(
+  nlevels=c(4,3), 
+  within = c(1,1),
+  n=20, 
+  coeffs=c("X1"=0, "X2"=0, "X1:X2"=0),
+  family="norm",
+  params_function,
+  formula,
+  expr=~X2,
+  iterations = 1000 
+) {
+  results <- foreach(rid = 1:iterations, .combine=rbind) %dopar% {
+    tryCatch(
+      {
+        compare_p_values_contrasts(simulate_response(nlevels, within, n, coeffs, 
+          # For ordinal data, the family name also includes the levels and threshold type: "ordonal-5-flex", "ordinal-7", ... 
+          sub("_.*", "", family), 
+          params_function(family)), 
+          formula, expr)
+      }, 
+      error = function(cond) {
+        # do nothing
+      }, finally = {
+        # do nothing
+      }
+    )
+  }
+
+  # From p-values to positive rates that represent (depending on whether there is a true effect) either Type I error rates (false positives) or power (true positives) 
+  res.05 <- colMeans(results<.05, na.rm = TRUE) # alpha = .05 
+  res.01 <- colMeans(results<.01, na.rm = TRUE) # alpha = .01
+
+  designStr <- paste(nlevels, collapse="x")
+
+  meanround <- function(values){
+    round(mean(values), digits = 4) 
+  } 
+
+  # Split the results into separate rows 
+ # I take the average rates across pairwise contrasts 
+  return(tribble(~n, ~design, ~family, ~method, ~alpha, ~effect, ~rate,
+      n, designStr, family, "PAR", 0.05, coeffs, meanround(res.05[grep("PAR", names(res.05))]),   
+      n, designStr, family, "RNK", 0.05, coeffs, meanround(res.05[grep("RNK", names(res.05))]),   
+      n, designStr, family, "ART", 0.05, coeffs, meanround(res.05[grep("ART", names(res.05))]),
+      n, designStr, family, "INT", 0.05, coeffs, meanround(res.05[grep("INT", names(res.05))]),
+
+      n, designStr, family, "PAR", 0.01, coeffs, meanround(res.01[grep("PAR", names(res.01))]),   
+      n, designStr, family, "RNK", 0.01, coeffs, meanround(res.01[grep("RNK", names(res.01))]),   
+      n, designStr, family, "ART", 0.01, coeffs, meanround(res.01[grep("ART", names(res.01))]),
+      n, designStr, family, "INT", 0.01, coeffs, meanround(res.01[grep("INT", names(res.01))])
     )
   )
 }
