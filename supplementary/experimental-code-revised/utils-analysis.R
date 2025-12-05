@@ -1,3 +1,6 @@
+# Functions for analysis and simulation
+# Author: Theophanis Tsandilas, Dec 2025
+
 library(lmerTest)
 library(ARTool)
 library("emmeans")
@@ -101,11 +104,14 @@ compare_p_values_contrasts <- function(df,
     INT = suppressMessages(get_p_values_contrasts(model_int, expr))
   )
 }
+
+
 ################################################################
-
-
-# This the iterative simulation process
-# params_function: This is the function for acessing the various distribution parameters
+# Tests over a large number of iterations 
+################################################################
+# This the most common simulation process
+# simulate_function: simulation function
+# params_function: function for accessing the various distribution parameters
 repeat_test <- function(
   nlevels=c(4,3), 
   within = c(1,1),
@@ -115,16 +121,20 @@ repeat_test <- function(
   params_function,
   formula,
   vars,
-  iterations = 1000
+  iterations = 1000,
+  ratio_sd = NA,  # maximum ratio of standard deviations across levels of factor X1
+  ratio_missing = NA # pecentage of missing values
 ) {
   results <- foreach(rid = 1:iterations, .combine=rbind) %dopar% {
     tryCatch(
       {
-        compare_p_values(simulate_response(nlevels, within, n, coeffs, 
-          # For ordinal data, the family name also includes the levels and threshold type: "likert-5-flex", "likert-7", ... 
-          sub("_.*", "", family), 
-          params_function(family)), 
-          formula, vars)
+        data <- {
+         # For ordinal data, the family name also includes the levels and threshold type: "likert-5-flex", "likert-7", ... 
+          if(is.na(ratio_sd)) compare_p_values(simulate_response(nlevels, within, n, coeffs, sub("_.*", "", family), params_function(family)), formula, vars)
+          else compare_p_values(simulate_heteroscedastic_response(nlevels, within, n, coeffs, sub("_.*", "", family), ratio_sd, params_function(family)), formula, vars)
+        }
+        if(is.na(ratio_missing)) data
+        else removeCells(data, ratio_missing)
       }, 
       error = function(cond) {
         # do nothing
@@ -141,7 +151,7 @@ repeat_test <- function(
   designStr <- paste(nlevels, collapse="x")
 
   ndummies <- length(vars) - length(res.05)/4
-  dummies <- rep(0, ndummies) # Complete with zeros irrelevant rate results
+  dummies <- rep(0, ndummies) # Complete with zeros irrelevant rate results. Useful when producing results for multiple designs with different numbers of factors
   # Split the results into separate rows 
   return(tribble(~n, ~design, ~family, ~method, ~alpha, ~effect, ~rate,
       n, designStr, family, "PAR", 0.05, coeffs, c(res.05[grep("PAR", names(res.05))], dummies),
@@ -153,12 +163,14 @@ repeat_test <- function(
       n, designStr, family, "RNK", 0.01, coeffs, c(res.01[grep("RNK", names(res.01))], dummies),  
       n, designStr, family, "ART", 0.01, coeffs, c(res.01[grep("ART", names(res.01))], dummies),
       n, designStr, family, "INT", 0.01, coeffs, c(res.01[grep("INT", names(res.01))], dummies)
-    )
+    ) %>% 
+      {if(!is.na(ratio_sd)) mutate(., sd_ratio=ratio_sd, .before=4) else .} %>% # Adding column for heterscedastic data (if relevant)
+      {if(!is.na(ratio_missing)) mutate(., missing_ratio=ratio_missing, .before=5) else .} # Adding column for missing data (if relevant)
   )
 }
 
 
-# This is just a variation that conducts contrast tests 
+# Variation of the simulation function that conducts contrast tests 
 # params_function: This is the function for acessing the various distribution parameters
 repeat_test_contrasts <- function(
   nlevels=c(4,3), 
@@ -213,4 +225,3 @@ repeat_test_contrasts <- function(
     )
   )
 }
-

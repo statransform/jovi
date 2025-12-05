@@ -70,7 +70,7 @@ colnames(effects) <- vars
 Ns <- c(20) 
 
 # 5000 iterations
-R <- 400
+R <- 200
 
 filename = "1_test_4x3_Ratio"
 
