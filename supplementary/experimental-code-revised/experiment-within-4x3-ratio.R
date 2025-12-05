@@ -42,7 +42,7 @@ vars = c("X1", "X2", "X1:X2")
 # C. Continuous distributions (equal variance, full) and discrete distribution: binom (size = 10, prob = 0.1) and Poisson
 distributions <- c("norm", "lnorm", "exp", "cauchy", "binom", "poisson")
 
-distributions <- c("lnorm", "binom")
+distributions <- c("lnorm", "exp")
 
 # D. Various combinations of effects
 effects <- matrix(c(0, 0, 0,
@@ -59,8 +59,9 @@ effects <- matrix(c(0, 0, 0,
            ncol = 3, byrow = TRUE)
 
 effects <- matrix(c(
-            1, 0, 0,
-            2, 0, 0), 
+            2, 2, 0,
+            4, 4, 0,
+            8, 8, 0), 
             ncol = 3, byrow = TRUE)
 
 colnames(effects) <- vars

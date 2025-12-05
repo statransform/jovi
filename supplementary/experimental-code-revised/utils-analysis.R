@@ -129,12 +129,14 @@ repeat_test <- function(
     tryCatch(
       {
         data <- {
-         # For ordinal data, the family name also includes the levels and threshold type: "likert-5-flex", "likert-7", ... 
-          if(is.na(ratio_sd)) compare_p_values(simulate_response(nlevels, within, n, coeffs, sub("_.*", "", family), params_function(family)), formula, vars)
-          else compare_p_values(simulate_heteroscedastic_response(nlevels, within, n, coeffs, sub("_.*", "", family), ratio_sd, params_function(family)), formula, vars)
+          if(is.na(ratio_sd)) simulate_response(nlevels, within, n, coeffs, sub("_.*", "", family), params_function(family))
+          else simulate_heteroscedastic_response(nlevels, within, n, coeffs, sub("_.*", "", family), ratio_sd, params_function(family))
+        } 
+        if(!is.na(ratio_missing)) {
+          data <- removeCells(data, ratio_missing)
         }
-        if(is.na(ratio_missing)) data
-        else removeCells(data, ratio_missing)
+        
+        compare_p_values(data, formula, vars)
       }, 
       error = function(cond) {
         # do nothing
@@ -163,9 +165,8 @@ repeat_test <- function(
       n, designStr, family, "RNK", 0.01, coeffs, c(res.01[grep("RNK", names(res.01))], dummies),  
       n, designStr, family, "ART", 0.01, coeffs, c(res.01[grep("ART", names(res.01))], dummies),
       n, designStr, family, "INT", 0.01, coeffs, c(res.01[grep("INT", names(res.01))], dummies)
-    ) %>% 
-      {if(!is.na(ratio_sd)) mutate(., sd_ratio=ratio_sd, .before=4) else .} %>% # Adding column for heterscedastic data (if relevant)
-      {if(!is.na(ratio_missing)) mutate(., missing_ratio=ratio_missing, .before=5) else .} # Adding column for missing data (if relevant)
+    ) %>% {if(!is.na(ratio_sd)) mutate(., sd_ratio=ratio_sd, .before=4) else .} %>% # Adding column for heterscedastic data (if relevant)
+      {if(!is.na(ratio_missing)) mutate(., missing_ratio=ratio_missing, .before=4) else .} # Adding column for missing data (if relevant)
   )
 }
 
