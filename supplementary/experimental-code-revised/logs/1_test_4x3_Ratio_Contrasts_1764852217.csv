@@ -1,9 +1,0 @@
-n,design,family,method,alpha,effectX1,effectX2,effectX1X2,rateX2
-20,4x3,lnorm,PAR,0.05,2,0,0,0.0422
-20,4x3,lnorm,RNK,0.05,2,0,0,0.0522
-20,4x3,lnorm,ART,0.05,2,0,0,0.3656
-20,4x3,lnorm,INT,0.05,2,0,0,0.0511
-20,4x3,lnorm,PAR,0.01,2,0,0,0.0078
-20,4x3,lnorm,RNK,0.01,2,0,0,0.0211
-20,4x3,lnorm,ART,0.01,2,0,0,0.2389
-20,4x3,lnorm,INT,0.01,2,0,0,0.02

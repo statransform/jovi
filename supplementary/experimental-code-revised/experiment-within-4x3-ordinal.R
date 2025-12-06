@@ -10,12 +10,12 @@ source("utils-analysis.R")
 
 ################################
 # Distribution parameters used in simulation
-params_likert_5       <- list(sigma_s = 0.3, sigma_e = 1, levels = 5, flexible=FALSE)
-params_likert_5_flex  <- list(sigma_s = 0.3, sigma_e = 1, levels = 5, flexible=TRUE)
-params_likert_7       <- list(sigma_s = 0.3, sigma_e = 1, levels = 7, flexible=FALSE)
-params_likert_7_flex  <- list(sigma_s = 0.3, sigma_e = 1, levels = 7, flexible=TRUE)
-params_likert_11      <- list(sigma_s = 0.3, sigma_e = 1, levels = 11, flexible=FALSE)
-params_likert_11_flex <- list(sigma_s = 0.3, sigma_e = 1, levels = 11, flexible=TRUE)
+params_likert_5       <- list(sigma_e = 1, levels = 5, flexible=FALSE)
+params_likert_5_flex  <- list(sigma_e = 1, levels = 5, flexible=TRUE)
+params_likert_7       <- list(sigma_e = 1, levels = 7, flexible=FALSE)
+params_likert_7_flex  <- list(sigma_e = 1, levels = 7, flexible=TRUE)
+params_likert_11      <- list(sigma_e = 1, levels = 11, flexible=FALSE)
+params_likert_11_flex <- list(sigma_e = 1, levels = 11, flexible=TRUE)
 
 use_parameters <- function(family){
   params <- switch(family, 
@@ -28,7 +28,7 @@ use_parameters <- function(family){
   )
 
   # Choose a random standard deviation for the random subject effect between 0.1 and 0.5
-  params$sigma_s <- runif(1, min = 0.1, max = 0.5)
+  params$sigma_s <- c(0.1, 0.5) # Specifies the min and max of a uniform range
 
   params
 }
@@ -56,21 +56,15 @@ effects <- matrix(c(0, 0, 0,
             8, 0, 0), 
            ncol = 3, byrow = TRUE)
 
-effects <- matrix(c(
-            1, 0, 0,
-            2, 0, 0), 
-            ncol = 3, byrow = TRUE)
-
 colnames(effects) <- vars
 
 # Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
-#Ns <- c(10, 20, 30) 
-Ns <- c(20) 
+Ns <- c(10, 20, 30) 
 
 # 5000 iterations
 R <- 300
 
-filename = "1_test_4x3_Ordinal"
+filename = "Type_I_ordinal"
 
 # Set the seed for reproducibility
 #set.seed(1234)
@@ -90,7 +84,7 @@ time <- system.time({
             n=n, 
             coeffs=effects[effId,],
             family=family,
-            params_function=use_parameters,
+            params=use_parameters(family),
             formula=formula,
             vars=vars,
             iterations = R

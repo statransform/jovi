@@ -1,11 +1,9 @@
 # Author: Theophanis Tsandilas, 2025
 # Inria & Université Paris-Saclay
 
-# Experiment evaluating the Power of PAR, ART, RNK, and INT for a range of experimental designs:
-# 4x3 within-subjects, 2x3 between-subjects, 2x4 mixed-subjects
-
-# By default, this code will generate a data file for n = 20 with 5000 iteration.
-# You can edit the experimental parameters in the code to test different conditions.
+# Experiment evaluating the Type I error rates of PAR, ART, RNK, and INT for a range of distributions and experimental designs
+# when there is a non-null interaction effect. 
+# Note that the interpretation of main effects in the presence of interactions is ambiguous for non-normal distributions.
 
 rm(list=ls())
 
@@ -44,9 +42,9 @@ use_parameters <- function(family){
   params
 }
 
-# (1) 4 x 3 within-subjects, (2) 2 x 3 between-subjects, (3) 2 x 4 mixed design (one between-subjects and one repeated-measures factor)
-designs <- list(c(4,3), c(2,3), c(2,4))
-within <- list(c(1,1), c(0,0), c(0,1))
+# 2 x 2 mixed design (Fully-symmetric design)
+designs <- list(c(2,2))
+within <- list(c(1,1))
 
 formula = Y ~ X1*X2 + Error(factor(subject)) 
 vars = c("X1", "X2", "X1:X2") 
@@ -55,31 +53,28 @@ vars = c("X1", "X2", "X1:X2")
 distributions <- c("norm", "lnorm", "exp", "binom", "poisson", "likert")
 
 # Various combinations of effects
-effects <- matrix(c(
-          0, 0, 0.5,
-          0, 0, 1,
-          0, 0, 1.5,
-          0, 0, 2,
-          0.2, 0, 0,
-          0.4, 0, 0,
-          0.6, 0, 0,
-          0.8, 0, 0,
-          0, 0.2, 0,
-          0, 0.4, 0,
-          0, 0.6, 0,
-          0, 0.8, 0), 
-          ncol = 3, byrow = TRUE)
+effects <- matrix(c(0, 0, 0,
+            0, 0, 0.5,
+            0, 0, 1,
+            0, 0, 2,
+            0, 0, 4,
+            0, 0, 8,
+            0.5, 0, 0.5,
+            1, 0, 1,
+            2, 0, 2,
+            4, 0, 4,
+            8, 0, 8), 
+           ncol = 3, byrow = TRUE)
 
 colnames(effects) <- vars[1:ncol(effects)]
 
-# E. Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
-#Ns <- c(10, 20, 30) 
-Ns <- c(20) 
+# Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
+Ns <- c(10, 20, 30) 
 
 # 5000 iterations
-R <- 1000
+R <- 100
 
-filename = "Power"
+filename = "Type_I_non_null_interaction"
 
 # Set the seed for reproducibility
 #set.seed(1234)

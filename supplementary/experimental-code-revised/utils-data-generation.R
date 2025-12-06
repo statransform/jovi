@@ -176,7 +176,7 @@ simulate_response <- function(
   params
 ) {
   family <- match.arg(family)
-  sigma_s <- params$sigma_s
+  sigma_s <- runif(1, min = params$sigma_s[1], max = params$sigma_s[length(params$sigma_s)])
 
   # -------------------------------------------------
   # Create design with correct within/between logic
@@ -194,6 +194,13 @@ simulate_response <- function(
     with(design, coeffs["X1"]*x1 + coeffs["X2"]*x2 + coeffs["X1:X2"]*x1*x2),
     with(design, coeffs["X1"]*x1 + coeffs["X2"]*x2 + coeffs["X3"]*x3 + coeffs["X1:X2"]*x1*x2)
   )
+
+  # This is for lognormal distributions to evaluate lognormal distributions with lower variances
+  # while keeping the effect size at the normal space (after logging) constant
+  if(!is.null(params$normalize) && params$normalize){ 
+    effects <- effects * params$sigma_e
+    sigma_s <- sigma_s * params$sigma_e
+  }
 
   # -------------------------------------------------
   # Mean centering (mu) from GLM mu-functions
@@ -253,11 +260,10 @@ simulate_heteroscedastic_response <- function(
   nlevels = c(4,3), within = c(1, 1), n = 1,
   coeffs = c("X1"=0, "X2"=0, "X1:X2"=0),
   family = c("norm","likert"),
-  ratio_sd = 2, # Ratio of min and max standard deviations across the levels of the first factor X1
   params
 ) {
   family <- match.arg(family)
-  sigma_s <- params$sigma_s
+  sigma_s <- runif(1, min = params$sigma_s[1], max = params$sigma_s[length(params$sigma_s)])
 
   # -------------------------------------------------
   # Create design with correct within/between logic
@@ -268,7 +274,7 @@ simulate_heteroscedastic_response <- function(
   # Generate the sigma_e to be different across X1's levels
   # -------------------------------------------------
   ids = as.numeric(gsub("[^0-9]", " ", design[,"X1"])) # Indices for the levels of X1
-  sigmas_e = generate_sigmas(nlevels[1], ratio_sd, params$sigma_e)[ids]
+  sigmas_e = generate_sigmas(nlevels[1], params$ratio_sd, params$sigma_e)[ids]
 
   # -------------------------------------------------
   # Build effects based on number of factors

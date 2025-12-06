@@ -10,12 +10,12 @@ source("utils-analysis.R")
 
 ################################
 # Distribution parameters used in simulation
-params_likert_5       <- list(sigma_s = 0.3, sigma_e = 1, levels = 5, flexible=FALSE)
-params_likert_5_flex  <- list(sigma_s = 0.3, sigma_e = 1, levels = 5, flexible=TRUE)
-params_likert_7       <- list(sigma_s = 0.3, sigma_e = 1, levels = 7, flexible=FALSE)
-params_likert_7_flex  <- list(sigma_s = 0.3, sigma_e = 1, levels = 7, flexible=TRUE)
-params_likert_11      <- list(sigma_s = 0.3, sigma_e = 1, levels = 11, flexible=FALSE)
-params_likert_11_flex <- list(sigma_s = 0.3, sigma_e = 1, levels = 11, flexible=TRUE)
+params_likert_5       <- list(sigma_e = 1, levels = 5, flexible=FALSE)
+params_likert_5_flex  <- list(sigma_e = 1, levels = 5, flexible=TRUE)
+params_likert_7       <- list(sigma_e = 1, levels = 7, flexible=FALSE)
+params_likert_7_flex  <- list(sigma_e = 1, levels = 7, flexible=TRUE)
+params_likert_11      <- list(sigma_e = 1, levels = 11, flexible=FALSE)
+params_likert_11_flex <- list(sigma_e = 1, levels = 11, flexible=TRUE)
 
 use_parameters <- function(family){
   params <- switch(family, 
@@ -28,7 +28,7 @@ use_parameters <- function(family){
   )
 
   # Choose a random standard deviation for the random subject effect between 0.1 and 0.5
-  params$sigma_s <- runif(1, min = 0.1, max = 0.5)
+  params$sigma_s <- c(0.1, 0.5) # Specifies the min and max of a uniform range
 
   params
 }
@@ -79,7 +79,7 @@ time <- system.time({
             n=Ns[ni], 
             coeffs=effects[effId,],
             family=family,
-            params_function=use_parameters,
+            params=use_parameters(family),
             formula=formulas[[ni]],
             vars=vars,
             iterations = R

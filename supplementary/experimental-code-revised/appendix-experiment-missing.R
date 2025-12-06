@@ -10,15 +10,18 @@ source("utils-analysis.R")
 
 ################################
 # Distribution parameters used in simulation
-params_norm   <- list(sigma_s = 0.3, sigma_e = 1)
+params_norm   <- list(sigma_e = 1)
 
-use_parameters <- function(family){
+use_parameters <- function(family, ratio_sd, ratio_missing){
   params <- switch(family, 
     norm          = params_norm, 
   )
 
   # Choose a random standard deviation for the random subject effect between 0.1 and 0.5
-  params$sigma_s <- runif(1, min = 0.1, max = 0.5)
+  params$sigma_s <- c(0.1, 0.5) #Specifies the min and max of a uniform range
+  
+  params$ratio_missing = ratio_missing
+  params$ratio_sd = ratio_sd
 
   params
 }
@@ -57,7 +60,7 @@ Ns <- c(20)
 # 5000 iterations
 R <- 200
 
-filename = "Type_I_Missing"
+filename = "Type_I_missing"
 
 # Set the seed for reproducibility
 #set.seed(1234)
@@ -80,12 +83,10 @@ time <- system.time({
                   n=n, 
                   coeffs=effects[effId,],
                   family=family,
-                  params_function=use_parameters,
+                  params=use_parameters(family, ratio_sd, ratio_mis),
                   formula=formula,
                   vars=vars,
-                  iterations = R,
-                  ratio_sd = ratio_sd,
-                  ratio_missing = ratio_mis
+                  iterations = R
                 )
               }
             }

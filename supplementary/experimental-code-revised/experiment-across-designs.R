@@ -20,12 +20,12 @@ source("utils-analysis.R")
 
 ################################
 # Distribution parameters used in simulation
-params_norm   <- list(sigma_s = 0.3, sigma_e = 1)
-params_lnorm  <- list(sigma_s = 0.3, sigma_e = 1, mean_target = 1)
-params_exp    <- list(sigma_s = 0.3, mean_target = 0.5)
-params_poisson <- list(sigma_s = 0.3, mean_target = 3)
-params_binom  <- list(sigma_s = 0.3, size = 10, p_target = 0.1)
-params_likert <- list(sigma_s = 0.3, sigma_e = 1, levels = 5, flexible=TRUE)
+params_norm   <- list(sigma_e = 1)
+params_lnorm  <- list(sigma_e = 1, mean_target = 1)
+params_exp    <- list(mean_target = 0.5)
+params_poisson <- list(mean_target = 3)
+params_binom  <- list(size = 10, p_target = 0.1)
+params_likert <- list(sigma_e = 1, levels = 5, flexible=TRUE)
 
 
 use_parameters <- function(family){
@@ -40,7 +40,7 @@ use_parameters <- function(family){
   )
 
   # Choose a random standard deviation for the random subject effect between 0.1 and 0.5
-  params$sigma_s <- runif(1, min = 0.1, max = 0.5)
+  params$sigma_s <- c(0.1, 0.5) # Specifies the min and max of a uniform range
 
   params
 }
@@ -60,7 +60,7 @@ distributions <- c("norm", "lnorm", "exp", "binom", "poisson", "likert")
 
 #distributions <- c("lnorm", "likert")
 
-# D. Various combinations of effects
+# Various combinations of effects
 effects <- matrix(c(0, 0, 0, 0,
             0.5, 0.5, 0, 0,
             1, 1, 0, 0,
@@ -74,20 +74,16 @@ effects <- matrix(c(0, 0, 0, 0,
             8, 0, 0, 0), 
            ncol = 4, byrow = TRUE)
 
-effects <- matrix(c(
-            2, 0, 0, 0), 
-            ncol = 4, byrow = TRUE)
-
 colnames(effects) <- vars[1:ncol(effects)]
 
-# E. Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
+# Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
 #Ns <- c(10, 20, 30) 
 Ns <- c(20) 
 
 # 5000 iterations
 R <- 20
 
-filename = "test_designs"
+filename = "Type_I_designs"
 
 # Set the seed for reproducibility
 #set.seed(1234)
@@ -108,7 +104,7 @@ time <- system.time({
               n=n, 
               coeffs=effects[effId,],
               family=family,
-              params_function=use_parameters,
+              params=use_parameters(family),
               formula=formulas[[desId]],
               vars=vars,
               iterations = R

@@ -118,22 +118,20 @@ repeat_test <- function(
   n=20, 
   coeffs=c("X1"=0, "X2"=0, "X1:X2"=0),
   family="norm",
-  params_function,
+  params,
   formula,
   vars,
-  iterations = 1000,
-  ratio_sd = NA,  # maximum ratio of standard deviations across levels of factor X1
-  ratio_missing = NA # pecentage of missing values
+  iterations = 1000
 ) {
   results <- foreach(rid = 1:iterations, .combine=rbind) %dopar% {
     tryCatch(
       {
-        data <- {
-          if(is.na(ratio_sd)) simulate_response(nlevels, within, n, coeffs, sub("_.*", "", family), params_function(family))
-          else simulate_heteroscedastic_response(nlevels, within, n, coeffs, sub("_.*", "", family), ratio_sd, params_function(family))
+        data <- { # Check if variances are equal
+          if(is.null(params$ratio_sd)) simulate_response(nlevels, within, n, coeffs, sub("_.*", "", family), params)
+          else simulate_heteroscedastic_response(nlevels, within, n, coeffs, sub("_.*", "", family), params)
         } 
-        if(!is.na(ratio_missing)) {
-          data <- removeCells(data, ratio_missing)
+        if(!is.null(params$ratio_missing)) { # Are there missing data?
+          data <- removeCells(data, params$ratio_missing)
         }
         
         compare_p_values(data, formula, vars)
@@ -165,8 +163,8 @@ repeat_test <- function(
       n, designStr, family, "RNK", 0.01, coeffs, c(res.01[grep("RNK", names(res.01))], dummies),  
       n, designStr, family, "ART", 0.01, coeffs, c(res.01[grep("ART", names(res.01))], dummies),
       n, designStr, family, "INT", 0.01, coeffs, c(res.01[grep("INT", names(res.01))], dummies)
-    ) %>% {if(!is.na(ratio_sd)) mutate(., sd_ratio=ratio_sd, .before=4) else .} %>% # Adding column for heterscedastic data (if relevant)
-      {if(!is.na(ratio_missing)) mutate(., missing_ratio=ratio_missing, .before=4) else .} # Adding column for missing data (if relevant)
+    ) %>% {if(!is.null(params$ratio_sd)) mutate(., sd_ratio=params$ratio_sd, .before=4) else .} %>% # Adding column for heterscedastic data (if relevant)
+      {if(!is.null(params$ratio_missing)) mutate(., missing_ratio=params$ratio_missing, .before=4) else .} # Adding column for missing data (if relevant)
   )
 }
 
@@ -179,7 +177,7 @@ repeat_test_contrasts <- function(
   n=20, 
   coeffs=c("X1"=0, "X2"=0, "X1:X2"=0),
   family="norm",
-  params_function,
+  params,
   formula,
   expr=~X2,
   iterations = 1000 
@@ -188,10 +186,10 @@ repeat_test_contrasts <- function(
     tryCatch(
       {
         compare_p_values_contrasts(simulate_response(nlevels, within, n, coeffs, 
-          # For ordinal data, the family name also includes the levels and threshold type: "ordonal-5-flex", "ordinal-7", ... 
-          sub("_.*", "", family), 
-          params_function(family)), 
-          formula, expr)
+            # For ordinal data, the family name also includes the levels and threshold type: "ordonal-5-flex", "ordinal-7", ... 
+            sub("_.*", "", family), params), 
+          formula, expr
+        )
       }, 
       error = function(cond) {
         # do nothing

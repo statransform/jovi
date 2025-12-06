@@ -10,15 +10,15 @@ source("utils-analysis.R")
 
 ################################
 # Distribution parameters used in simulation
-params_norm   <- list(sigma_s = 0.3, sigma_e = 1)
-params_likert_5       <- list(sigma_s = 0.3, sigma_e = 1, levels = 5, flexible=FALSE)
-params_likert_5_flex  <- list(sigma_s = 0.3, sigma_e = 1, levels = 5, flexible=TRUE)
-params_likert_7       <- list(sigma_s = 0.3, sigma_e = 1, levels = 7, flexible=FALSE)
-params_likert_7_flex  <- list(sigma_s = 0.3, sigma_e = 1, levels = 7, flexible=TRUE)
-params_likert_11      <- list(sigma_s = 0.3, sigma_e = 1, levels = 11, flexible=FALSE)
-params_likert_11_flex <- list(sigma_s = 0.3, sigma_e = 1, levels = 11, flexible=TRUE)
+params_norm   <- list(sigma_e = 1)
+params_likert_5       <- list(sigma_e = 1, levels = 5, flexible=FALSE)
+params_likert_5_flex  <- list(sigma_e = 1, levels = 5, flexible=TRUE)
+params_likert_7       <- list(sigma_e = 1, levels = 7, flexible=FALSE)
+params_likert_7_flex  <- list(sigma_e = 1, levels = 7, flexible=TRUE)
+params_likert_11      <- list(sigma_e = 1, levels = 11, flexible=FALSE)
+params_likert_11_flex <- list(sigma_e = 1, levels = 11, flexible=TRUE)
 
-use_parameters <- function(family){
+use_parameters <- function(family, ratio){
   params <- switch(family, 
     norm          = params_norm, 
     likert_5      = params_likert_5, 
@@ -30,7 +30,8 @@ use_parameters <- function(family){
   )
 
   # Choose a random standard deviation for the random subject effect between 0.1 and 0.5
-  params$sigma_s <- runif(1, min = 0.1, max = 0.5)
+  params$sigma_s <- c(0.1, 0.5) # Specifies the min and max of a uniform range
+  params$ratios_sd = ratio
 
   params
 }
@@ -44,8 +45,6 @@ vars = c("X1", "X2", "X1:X2")
 
 # Normal distribution + some ordinal scales
 distributions <- c("norm", "likert_5", "likert_5_flex", "likert_7", "likert_7_flex")
-
-distributions <- c("norm", "likert_5_flex")
 
 ratios_sd <- c(1, 1.5, 2, 2.5, 3)  # max SD ratios (unequal variances)
 
@@ -62,7 +61,7 @@ Ns <- c(20)
 # 5000 iterations
 R <- 100
 
-filename = "Type_I_Heteroscedacity"
+filename = "Type_I_heteroscedacity"
 
 # Set the seed for reproducibility
 #set.seed(1234)
@@ -84,11 +83,10 @@ time <- system.time({
                 n=n, 
                 coeffs=effects[effId,],
                 family=family,
-                params_function=use_parameters,
+                params=use_parameters(family, ratio),
                 formula=formula,
                 vars=vars,
-                iterations = R,
-                ratio_sd = ratio
+                iterations = R
               )
             }
           }

@@ -10,12 +10,12 @@ source("utils-analysis.R")
 
 ################################
 # Distribution parameters used in simulation
-params_norm   <- list(sigma_s = 0.3, sigma_e = 1)
-params_lnorm  <- list(sigma_s = 0.3, sigma_e = 1, mean_target = 1)
-params_cauchy <- list(sigma_s = 0.3, gamma = 1)
-params_exp    <- list(sigma_s = 0.3, mean_target = 0.5)
-params_poisson <- list(sigma_s = 0.3, mean_target = 3)
-params_binom  <- list(sigma_s = 0.3, size = 10, p_target = 0.1)
+params_norm   <- list(sigma_e = 1)
+params_lnorm  <- list(sigma_e = 1, mean_target = 1)
+params_cauchy <- list(gamma = 1)
+params_exp    <- list(mean_target = 0.5)
+params_poisson <- list(mean_target = 3)
+params_binom  <- list(size = 10, p_target = 0.1)
 
 use_parameters <- function(family){
   params <- switch(family, 
@@ -28,7 +28,7 @@ use_parameters <- function(family){
   )
 
   # Choose a random standard deviation for the random subject effect between 0.1 and 0.5
-  params$sigma_s <- runif(1, min = 0.1, max = 0.5)
+  params$sigma_s <- c(0.1, 0.5) # Specifies the min and max of a uniform range
 
   params
 }
@@ -42,8 +42,6 @@ vars = c("X1", "X2", "X1:X2")
 
 # Continuous distributions (equal variance, full) and discrete distribution: binom (size = 10, prob = 0.1) and Poisson
 distributions <- c("norm", "lnorm", "exp", "cauchy", "binom", "poisson")
-
-distributions <- c("lnorm")
 
 # Applying only effect on X1
 effects <- matrix(c(
@@ -60,7 +58,7 @@ formulas <- c(formula, formula, formula, formula_lmer, formula_lmer)
 # 5000 iterations
 R <- 300
 
-filename = "TypeI_4x3_ratio_large_samples"
+filename = "Type_I_4x3_ratio_large_samples"
 
 # Set the seed for reproducibility
 #set.seed(1234)
@@ -80,7 +78,7 @@ time <- system.time({
             n=Ns[ni], 
             coeffs=effects[effId,],
             family=family,
-            params_function=use_parameters,
+            params=use_parameters(family),
             formula=formulas[[ni]],
             vars=vars,
             iterations = R
@@ -99,5 +97,4 @@ res <- results %>% unnest_wider(effect, names_sep = "_") %>%
 # Store the results
 csvfile <- paste("logs/", filename, format(Sys.time(), "_%s"), ".csv", sep="")
 write.csv(res, file = csvfile, row.names=FALSE, quote=F)
-
 

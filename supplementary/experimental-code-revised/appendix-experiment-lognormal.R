@@ -1,12 +1,3 @@
-# Author: Theophanis Tsandilas, 2025
-# Inria & Université Paris-Saclay
-
-# Experiment evaluating the Power of PAR, ART, RNK, and INT for a range of experimental designs:
-# 4x3 within-subjects, 2x3 between-subjects, 2x4 mixed-subjects
-
-# By default, this code will generate a data file for n = 20 with 5000 iteration.
-# You can edit the experimental parameters in the code to test different conditions.
-
 rm(list=ls())
 
 # Parallel computation
@@ -19,67 +10,57 @@ source("utils-analysis.R")
 
 ################################
 # Distribution parameters used in simulation
-params_norm   <- list(sigma_e = 1)
-params_lnorm  <- list(sigma_e = 1, mean_target = 1)
-params_exp    <- list(mean_target = 0.5)
-params_poisson <- list(mean_target = 3)
-params_binom  <- list(size = 10, p_target = 0.1)
-params_likert <- list(sigma_e = 1, levels = 5, flexible=TRUE)
-
-
 use_parameters <- function(family){
-  params <- switch(family, 
-    norm    = params_norm, 
-    lnorm   = params_lnorm, 
-    cauchy  = params_cauchy, 
-    exp     = params_exp, 
-    poisson = params_poisson, 
-    binom   = params_binom,
-    likert  = params_likert
-  )
+  # Add the normalization parameter to normalize the effects at the latent space
+  params  <- list(sigma_e = 1, mean_target = 1, normalize = TRUE) 
 
   # Choose a random standard deviation for the random subject effect between 0.1 and 0.5
-  params$sigma_s <- c(0.1, 0.5) # Specifies the min and max of a uniform range
+  params$sigma_s <- c(0.1, 0.5) #Specifies the min and max of a uniform range
+
+  params$sigma_e <- switch(family, 
+    lnorm_0.2  = 0.2,
+    lnorm_0.4  = 0.4,
+    lnorm_0.6  = 0.6,
+    lnorm_0.8  = 0.8,
+    lnorm_1.0  = 1.0,
+    lnorm_1.2  = 1.2
+  )
 
   params
 }
 
-# (1) 4 x 3 within-subjects, (2) 2 x 3 between-subjects, (3) 2 x 4 mixed design (one between-subjects and one repeated-measures factor)
+# (1) 4 x 3 within-subjects, (2) 2 x 3 between-subjects, (3) 2 x 4 mixed design
 designs <- list(c(4,3), c(2,3), c(2,4))
 within <- list(c(1,1), c(0,0), c(0,1))
 
 formula = Y ~ X1*X2 + Error(factor(subject)) 
 vars = c("X1", "X2", "X1:X2") 
 
-# Continuous distributions (equal variance, full) and discrete distribution: binom (size = 10, prob = 0.1) and Poisson
-distributions <- c("norm", "lnorm", "exp", "binom", "poisson", "likert")
+# Log-normal distributions
+distributions <- c("lnorm_0.2", "lnorm_0.4", "lnorm_0.6", "lnorm_0.8", "lnorm_1.0", "lnorm_1.2")
 
-# Various combinations of effects
-effects <- matrix(c(
-          0, 0, 0.5,
-          0, 0, 1,
-          0, 0, 1.5,
-          0, 0, 2,
-          0.2, 0, 0,
-          0.4, 0, 0,
-          0.6, 0, 0,
-          0.8, 0, 0,
-          0, 0.2, 0,
-          0, 0.4, 0,
-          0, 0.6, 0,
-          0, 0.8, 0), 
-          ncol = 3, byrow = TRUE)
+effects <- matrix(c(0, 0, 0,
+            0.5, 0.5, 0,
+            1, 1, 0,
+            2, 2, 0,
+            4, 4, 0,
+            8, 8, 0,
+            0.5, 0, 0,
+            1, 0, 0,
+            2, 0, 0,
+            4, 0, 0,
+            8, 0, 0), 
+           ncol = 3, byrow = TRUE)
 
-colnames(effects) <- vars[1:ncol(effects)]
+colnames(effects) <- vars
 
-# E. Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
-#Ns <- c(10, 20, 30) 
+# Cell sizes (n in the paper)
 Ns <- c(20) 
 
 # 5000 iterations
-R <- 1000
+R <- 200
 
-filename = "Power"
+filename = "Type_I_lognormal"
 
 # Set the seed for reproducibility
 #set.seed(1234)
