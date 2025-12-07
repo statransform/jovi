@@ -1,8 +1,6 @@
 # Code for generating experimental designs (within-, between-subjects, and mixed) and respones for a range of distributions
 # Author: Theophanis Tsandilas, Dec 2025
 
-require("statmod")
-
 ##################################################################################
 # Encodes the 1:nlevels to numerical values
 # It ensures a fixed distance between the two extreme levels (equal to 1) and random distances in between

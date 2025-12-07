@@ -1,3 +1,8 @@
+# Author: Theophanis Tsandilas, Dec 2025
+# Inria & Université Paris-Saclay
+
+# Experiment evaluating the Type I error rates of PAR, ART, RNK, and INT on ratio scales (distributions below) for a 4x3 within-subjects design
+
 rm(list=ls())
 
 # Parallel computation
@@ -44,16 +49,16 @@ distributions <- c("norm", "lnorm", "exp", "cauchy", "binom", "poisson")
 
 # Various combinations of effects
 effects <- matrix(c(0, 0, 0,
-            0.5, 0.5, 0,
-            1, 1, 0,
-            2, 2, 0,
-            4, 4, 0,
-            8, 8, 0,
             0.5, 0, 0,
             1, 0, 0,
             2, 0, 0,
             4, 0, 0,
-            8, 0, 0), 
+            8, 0, 0,
+            0.5, 0.5, 0,
+            1, 1, 0,
+            2, 2, 0,
+            4, 4, 0,
+            8, 8, 0), 
            ncol = 3, byrow = TRUE)
 
 colnames(effects) <- vars
@@ -62,7 +67,7 @@ colnames(effects) <- vars
 Ns <- c(10, 20, 30) 
 
 # 5000 iterations
-R <- 200
+R <- 5000
 
 filename = "Type_I_4x3_ratio"
 

@@ -1,3 +1,9 @@
+# Author: Theophanis Tsandilas, Dec 2025
+# Inria & Université Paris-Saclay
+
+# Experiment evaluating the Type I error rates of PAR, ART, RNK, and INT on ordinal scales (with 5, 7, and 11 levels) for a 4x3 within-subjects design
+# We evaluate both flexible and equidistant thresholds for increasing effect sizes up to n=512 will null effects across all factors
+
 rm(list=ls())
 
 # Parallel computation
@@ -62,7 +68,7 @@ R <- 5000
 filename = "TypeI_4x3_ordinal_large_samples"
 
 # Set the seed for reproducibility
-#set.seed(1234)
+set.seed(6233)
 
 #Parallel: https://nceas.github.io/oss-lessons/parallel-computing-in-r/parallel-computing-in-r.html
 CoresNum <- 4

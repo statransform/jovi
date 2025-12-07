@@ -1,8 +1,7 @@
 # Author: Theophanis Tsandilas, Dec 2025
 # Inria & Université Paris-Saclay
 
-# Experiment evaluating the Type I error rates of PAR, ART, RNK, and INT on ordinal scales (with 5, 7, and 11 levels) for a 4x3 within-subjects design
-# We evaluate both flexible and equidistant thresholds
+# Experiment evaluating the Type I error rates of PAR, ART, RNK, and INT on ratio scales (distributions below) for a 4x3 within-subjects design
 
 rm(list=ls())
 
@@ -12,25 +11,19 @@ library(doParallel)
 library(tidyr)
 
 source("utils-data-generation.R")
-source("utils-analysis.R")
+source("utils-effect-size.R")
 
 ################################
 # Distribution parameters used in simulation
-params_likert_5       <- list(sigma_e = 1, levels = 5, flexible=FALSE)
-params_likert_5_flex  <- list(sigma_e = 1, levels = 5, flexible=TRUE)
-params_likert_7       <- list(sigma_e = 1, levels = 7, flexible=FALSE)
-params_likert_7_flex  <- list(sigma_e = 1, levels = 7, flexible=TRUE)
-params_likert_11      <- list(sigma_e = 1, levels = 11, flexible=FALSE)
-params_likert_11_flex <- list(sigma_e = 1, levels = 11, flexible=TRUE)
+params_norm   <- list(sigma_e = 1)
+params_lnorm  <- list(sigma_e = 1, mean_target = 1)
+params_likert  <- list(sigma_e = 1, levels = 5, flexible=TRUE)
 
 use_parameters <- function(family){
   params <- switch(family, 
-    likert_5      = params_likert_5, 
-    likert_5_flex = params_likert_5_flex, 
-    likert_7      = params_likert_7, 
-    likert_7_flex = params_likert_7_flex,
-    likert_11     = params_likert_11, 
-    likert_11_flex = params_likert_11_flex, 
+    norm    = params_norm, 
+    lnorm   = params_lnorm, 
+    likert  = params_likert
   )
 
   # Choose a random standard deviation for the random subject effect between 0.1 and 0.5
@@ -45,8 +38,8 @@ within = c(1,1) # Both factors are within-subjects
 formula = Y ~ X1*X2 + Error(factor(subject)) 
 vars = c("X1", "X2", "X1:X2") 
 
-# Ordinal scales of 5, 7, and 11 levels, with equidistant or flexible thresholds
-distributions <- c("likert_5", "likert_5_flex", "likert_7", "likert_7_flex", "likert_11", "likert_11_flex")
+# Continuous distributions (equal variance, full) and discrete distribution: binom (size = 10, prob = 0.1) and Poisson
+distributions <- c("norm", "lnorm", "likert")
 
 # Various combinations of effects
 effects <- matrix(c(0, 0, 0,
@@ -65,15 +58,15 @@ effects <- matrix(c(0, 0, 0,
 colnames(effects) <- vars
 
 # Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
-Ns <- c(10, 20, 30) 
+Ns <- c(20) 
 
-# 5000 iterations
-R <- 5000
+# 300 iterations
+R <- 300
 
-filename = "Type_I_ordinal"
+filename = "Effect_Sizes"
 
 # Set the seed for reproducibility
-set.seed(5224)
+set.seed(4567)
 
 #Parallel: https://nceas.github.io/oss-lessons/parallel-computing-in-r/parallel-computing-in-r.html
 CoresNum <- 4
@@ -84,7 +77,7 @@ time <- system.time({
       foreach(n = Ns, .combine=rbind) %do% {
         foreach(effId = 1:nrow(effects), .combine=rbind) %do% {
           # The test function is parallelized (using multiple cores)
-          repeat_test(
+          repeat_test_effect_size(
             nlevels=design, 
             within=within, 
             n=n, 
@@ -93,6 +86,7 @@ time <- system.time({
             params=use_parameters(family),
             formula=formula,
             vars=vars,
+            measure="eta",
             iterations = R
           )
         }
@@ -101,10 +95,10 @@ time <- system.time({
 })
 
 # split the effects and rates columns (currently vectors) into individual columns
-res <- results %>% unnest_wider(effect, names_sep = "_") %>% 
-  mutate(rate = lapply(rate, function(x) setNames(as.numeric(x), vars))) %>%
-  unnest_wider(rate, names_sep = "_")  %>%
-  rename_with(~ gsub("[:_]", "", .x)) # Just rename the columns by erasing the "_" and ":""
+res <- results %>% #unnest_wider(effect, names_sep = "_") %>% 
+  #mutate(rate = lapply(rate, function(x) setNames(as.numeric(x), vars))) %>%
+  #unnest_wider(rate, names_sep = "_")  %>%
+  rename_with(~ gsub("[(.|:)_]", "", .x)) # Just rename the columns by erasing the "_" and ":""
 
 # Store the results
 csvfile <- paste("logs/", filename, format(Sys.time(), "_%s"), ".csv", sep="")

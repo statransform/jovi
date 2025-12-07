@@ -1,3 +1,10 @@
+# Author: Theophanis Tsandilas, Dec 2025
+# Inria & Université Paris-Saclay
+
+# Experiment evaluating the Type I error rates of PAR, ART, RNK, and INT on ratio scales (distributions below) for a 4x3 within-subjects design
+# Evaluation for growing sample sizes (up to n=512) and a fixed effect on the first factor
+
+
 rm(list=ls())
 
 # Parallel computation
@@ -50,18 +57,18 @@ effects <- matrix(c(
 
 colnames(effects) <- vars
 
-# E. Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
+# Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
 Ns <- c(32, 64, 128, 256, 512)
 # For larger samples, we use lmer as aov becomes quite slow. However, results are nearly identical
 formulas <- c(formula, formula, formula, formula_lmer, formula_lmer) 
 
 # 5000 iterations
-R <- 300
+R <- 5000
 
 filename = "Type_I_4x3_ratio_large_samples"
 
 # Set the seed for reproducibility
-#set.seed(1234)
+set.seed(2234)
 
 #Parallel: https://nceas.github.io/oss-lessons/parallel-computing-in-r/parallel-computing-in-r.html
 CoresNum <- 4

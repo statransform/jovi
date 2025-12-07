@@ -1,12 +1,9 @@
-# Author: Theophanis Tsandilas, 2025
+# Author: Theophanis Tsandilas, Dec 2025
 # Inria & Université Paris-Saclay
 
 # Experiment evaluating the Type I error rates of PAR, ART, RNK, and INT for a range of experimental designs:
 # 2x3 between-subjects, 2x4 mixed-subjects, 2x2x2 within-subjects, and 3x3x3 within-subjects
-# See Fig. 17, Fig. 19, Fig. 20
-
-# By default, this code will generate a data file for n = 20 with 5000 iteration.
-# You can edit the experimental parameters in the code to test different conditions.
+# We fix n=20
 
 rm(list=ls())
 
@@ -58,8 +55,6 @@ vars = c("X1", "X2", "X1:X2", "X3", "X1:X3", "X2:X3", "X1:X2:X3")
 # Continuous distributions (equal variance, full) and discrete distribution: binom (size = 10, prob = 0.1) and Poisson
 distributions <- c("norm", "lnorm", "exp", "binom", "poisson", "likert")
 
-#distributions <- c("lnorm", "likert")
-
 # Various combinations of effects
 effects <- matrix(c(0, 0, 0, 0,
             0.5, 0.5, 0, 0,
@@ -81,12 +76,12 @@ colnames(effects) <- vars[1:ncol(effects)]
 Ns <- c(20) 
 
 # 5000 iterations
-R <- 20
+R <- 5000
 
 filename = "Type_I_designs"
 
 # Set the seed for reproducibility
-#set.seed(1234)
+set.seed(3377)
 
 #Parallel: https://nceas.github.io/oss-lessons/parallel-computing-in-r/parallel-computing-in-r.html
 CoresNum <- 4
