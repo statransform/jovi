@@ -65,7 +65,7 @@ formulas <- c(formula, formula, formula, formula_lmer, formula_lmer)
 # 5000 iterations
 R <- 5000
 
-filename = "TypeI_4x3_ordinal_large_samples"
+filename = "Type_I_4x3_ordinal_large_samples"
 
 # Set the seed for reproducibility
 set.seed(6233)

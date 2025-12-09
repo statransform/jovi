@@ -1,3 +1,10 @@
+# Author: Theophanis Tsandilas, Dec 2025
+# Inria & Université Paris-Saclay
+
+# Experiment evaluating the Type I error rates of PAR, ART, RNK, and INT under unequal variances for normal and ordinal data
+# The ratio_sd is the maximum ratio of standard deviations of levels of the first factor
+# 4x3 within-subjects, 2x3 between-subjects, 2x4 mixed-subjects
+
 rm(list=ls())
 
 # Parallel computation
@@ -31,7 +38,7 @@ use_parameters <- function(family, ratio){
 
   # Choose a random standard deviation for the random subject effect between 0.1 and 0.5
   params$sigma_s <- c(0.1, 0.5) # Specifies the min and max of a uniform range
-  params$ratios_sd = ratio
+  params$ratio_sd = ratio
 
   params
 }
@@ -55,16 +62,15 @@ effects <- matrix(c(
 colnames(effects) <- vars
 
 # Cell sizes (n in the paper)
-#Ns <- c(10, 20, 30) 
 Ns <- c(20) 
 
 # 5000 iterations
-R <- 100
+R <- 5000
 
 filename = "Type_I_heteroscedacity"
 
 # Set the seed for reproducibility
-#set.seed(1234)
+set.seed(9234)
 
 #Parallel: https://nceas.github.io/oss-lessons/parallel-computing-in-r/parallel-computing-in-r.html
 CoresNum <- 4

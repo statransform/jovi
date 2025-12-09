@@ -1,9 +1,8 @@
-# Author: Theophanis Tsandilas, 2025
+# Author: Theophanis Tsandilas, Dec 2025
 # Inria & Université Paris-Saclay
 
-# Experiment evaluating the Type I error rates of PAR, ART, RNK, and INT for a range of distributions and experimental designs
-# when there is a non-null interaction effect. 
-# Note that the interpretation of main effects in the presence of interactions is ambiguous for non-normal distributions.
+# Experiment evaluating the Type I error rates of PAR, ART, RNK, and INT on various binomial distributions (varying p and size) 
+# for a 4x3 within-subjects design
 
 rm(list=ls())
 
@@ -17,67 +16,54 @@ source("utils-analysis.R")
 
 ################################
 # Distribution parameters used in simulation
-params_norm   <- list(sigma_e = 1)
-params_lnorm  <- list(sigma_e = 1, mean_target = 1)
-params_exp    <- list(mean_target = 0.5)
-params_poisson <- list(mean_target = 3)
-params_binom  <- list(size = 10, p_target = 0.1)
-params_likert <- list(sigma_e = 1, levels = 5, flexible=TRUE)
-
-
 use_parameters <- function(family){
-  params <- switch(family, 
-    norm    = params_norm, 
-    lnorm   = params_lnorm, 
-    cauchy  = params_cauchy, 
-    exp     = params_exp, 
-    poisson = params_poisson, 
-    binom   = params_binom,
-    likert  = params_likert
-  )
+  # Add the normalization parameter to normalize the effects at the latent space
+  params  <- list(sigma_e = 1, mean_target = 1) 
 
-  # Choose a random standard deviation for the random subject effect between 0.1 and 0.5
-  params$sigma_s <- c(0.1, 0.5) # Specifies the min and max of a uniform range
+  # infer the size and probability from the family name
+  subfix = sub("binom_", "", family)
+  size = as.numeric(sub("_.*", "", subfix))
+  p = as.numeric(paste("0.", sub(".*_", "", subfix), sep=""))
 
-  params
+  list(size = size, p_target = p, sigma_s = c(0.1, 0.5))
 }
 
-# 2 x 2 mixed design (Fully-symmetric design)
-designs <- list(c(2,2))
-within <- list(c(1,1))
+# (1) 4 x 3 within-subjects, (2) 2 x 3 between-subjects, (3) 2 x 4 mixed design
+designs <- list(c(4,3), c(2,3), c(2,4))
+within <- list(c(1,1), c(0,0), c(0,1))
 
 formula = Y ~ X1*X2 + Error(factor(subject)) 
 vars = c("X1", "X2", "X1:X2") 
 
-# Continuous distributions (equal variance, full) and discrete distribution: binom (size = 10, prob = 0.1) and Poisson
-distributions <- c("norm", "lnorm", "exp", "binom", "poisson", "likert")
+# Bionomial distributions with different k (5 and 10) and p (5%, 10, and 20%) parameters
+distributions <- c("binom_5_05", "binom_5_10", "binom_5_20", "binom_10_05", "binom_10_10", "binom_10_20")
 
 # Various combinations of effects
 effects <- matrix(c(0, 0, 0,
-            0, 0, 0.5,
-            0, 0, 1,
-            0, 0, 2,
-            0, 0, 4,
-            0, 0, 8,
-            0.5, 0, 0.5,
-            1, 0, 1,
-            2, 0, 2,
-            4, 0, 4,
-            8, 0, 8), 
+            0.5, 0, 0,
+            1, 0, 0,
+            2, 0, 0,
+            4, 0, 0,
+            8, 0, 0,
+            0.5, 0.5, 0,
+            1, 1, 0,
+            2, 2, 0,
+            4, 4, 0,
+            8, 8, 0), 
            ncol = 3, byrow = TRUE)
 
-colnames(effects) <- vars[1:ncol(effects)]
+colnames(effects) <- vars
 
-# Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
-Ns <- c(10, 20, 30) 
+# Cell sizes (n in the paper)
+Ns <- c(20) 
 
 # 5000 iterations
-R <- 100
+R <- 5000
 
-filename = "Type_I_non_null_interaction"
+filename = "Type_I_binomial"
 
 # Set the seed for reproducibility
-#set.seed(1234)
+set.seed(8206)
 
 #Parallel: https://nceas.github.io/oss-lessons/parallel-computing-in-r/parallel-computing-in-r.html
 CoresNum <- 4

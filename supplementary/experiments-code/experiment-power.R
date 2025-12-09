@@ -1,11 +1,8 @@
-# Author: Theophanis Tsandilas, 2025
+# Author: Theophanis Tsandilas, Dec 2025
 # Inria & Université Paris-Saclay
 
 # Experiment evaluating the Power of PAR, ART, RNK, and INT for a range of experimental designs:
 # 4x3 within-subjects, 2x3 between-subjects, 2x4 mixed-subjects
-
-# By default, this code will generate a data file for n = 20 with 5000 iteration.
-# You can edit the experimental parameters in the code to test different conditions.
 
 rm(list=ls())
 
@@ -72,17 +69,16 @@ effects <- matrix(c(
 
 colnames(effects) <- vars[1:ncol(effects)]
 
-# E. Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
-#Ns <- c(10, 20, 30) 
+# Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
 Ns <- c(20) 
 
 # 5000 iterations
-R <- 1000
+R <- 5000
 
 filename = "Power"
 
 # Set the seed for reproducibility
-#set.seed(1234)
+set.seed(7003)
 
 #Parallel: https://nceas.github.io/oss-lessons/parallel-computing-in-r/parallel-computing-in-r.html
 CoresNum <- 4
