@@ -1,6 +1,6 @@
-```         
 ---
 title: "The illusory promise of the Aligned Rank Transform"
+subtitle: "A systematic study of rank transformations"
 author: 
   - name: Theophanis Tsandilas
     orcid: 0000-0002-0158-228X
@@ -10,6 +10,7 @@ author:
         country: France
   - name: Géry Casiez
     orcid: 0000-0003-1905-815X
+    email: gery.casiezuniv-lille.fr
     affiliations:
       - name: Univ. Lille, CNRS, Inria, Centrale Lille, UMR 9189 CRIStAL
         country: France
@@ -18,13 +19,6 @@ csl: canadian-journal-of-philosophy.csl
 
 tbl-cap-location: top
 ---
-```
-
-::: {.callout-important appearance="simple"}
-## Under Review {.unnumbered}
-
-This paper is [under review](https://www.journalovi.org/under-review.html) on the experimental track of the [Journal of Visualization and Interaction](https://www.journalovi.org/). See the [reviewing process](https://github.com/journalovi/2024-tsandilas-ranktransforms/issues).
-:::
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 # Useful libraries
@@ -36,15 +30,6 @@ library(tidyverse)
 library(plotly)
 ```
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-# Source code for reading data from experimental results and for plotting
-source("dataReaders.R")
-source("plotting.R")
-source("plotlying.R")
-source("effects_plot.R")
-source("interactions_plot.R")
-```
-
 ```{=html}
 <style>
 .math.inline .MathJax  {
@@ -53,4 +38,121 @@ source("interactions_plot.R")
 </style>
 ```
 
-Hello!
+::: {#fig-ratio-main}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+library(dplyr)
+library(tidyverse)
+source("utils-data-reading.R")
+source("utils-plotlying.R")
+```
+:::
+
+::: {#fig-power-main-1}
+<div id="plot-power-1.1">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "Power"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+data <- read_data(prefix, alpha = .05, effectType = 3, distributions)
+df <- reshape_by_design(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX1", max = 104,  ytitle = 'Power (%)')
+```
+</div>
+
+<div id="plot-power-1.2">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- data %>% arrange(design,family,effectX1,rateX1)  %>% group_by(design,family,effectX1) %>% mutate(rank = rank(rateX1))
+df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_power_by_design(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX1", xvar = "effectX1", max = 4.2, ytitle = 'Power - ranking')
+```
+</div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-1.2").classList.add("hidden"); }); </script>
+
+<button id="btn1" style="background-color: #f0f0f0; border: 1px solid #ccc; color: #333; font-size: 0.9em;
+    padding: 4px 10px; border-radius: 6px; cursor: pointer; float: right;"
+  onclick="const plot = document.getElementById('plot-power-1.1');
+  plot.classList.toggle('hidden');
+  document.getElementById('plot-power-1.2').classList.toggle('hidden');
+  btn1.innerText = plot.classList.contains('hidden') ? 'show percent' : 'show ranking';
+">
+  show ranking
+</button>
+
+Power ($\alpha = .05$) for detecting the **main effect of $X_1$** as a function of its magnitude $a_1$, where $n=20$.
+:::
+
+
+@fig-power-main-2 presents our results for $X_2$. Given the different number of levels for this factor, we now assess a different range of power for each design. Nevertheless, we observe similar patterns. INT stands out as the most powerful method. Although ART surpasses PAR under the log-normal and exponential distributions, it does not demonstrate any other notable advantages compared to the other methods.  
+
+
+::: {#fig-power-main-2}
+<div id="plot-power-2.1">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+data <- read_data(prefix, alpha=.05, effectType = 4, distributions) # CHANGE n TO 20
+
+df <- reshape_by_design(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX2", max = 104,  ytitle = 'Power (%)')
+```
+</div>
+
+<div id="plot-power-2.2">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- data %>% arrange(design,family,effectX2,rateX2)  %>% group_by(design,family,effectX2) %>% mutate(rank = rank(rateX2))
+df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+#df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_power_by_design(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX2", xvar = "effectX2", max = 4.2, ytitle = 'Power - ranking')
+```
+</div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-2.2").classList.add("hidden"); }); </script>
+
+<button id="btn2" style="background-color: #f0f0f0; border: 1px solid #ccc; color: #333; font-size: 0.9em;
+    padding: 4px 10px; border-radius: 6px; cursor: pointer; float: right;"
+  onclick="const plot = document.getElementById('plot-power-2.1');
+  plot.classList.toggle('hidden');
+  document.getElementById('plot-power-2.2').classList.toggle('hidden');
+  btn2.innerText = plot.classList.contains('hidden') ? 'show percent' : 'show ranking';
+">
+  show ranking
+</button>
+
+Power ($\alpha = .05$) for detecting the **main effect of $X_2$** as a function of its magnitude $a_2$, where $n=20$. 
+:::
+
+
+**Interaction effects**. We also vary the magnitude of the interaction effect $X_1 \times X_2$ by manipulating the parameter $a_{12}$ across the range of $0.5$ to $2.0$. We then measure the power to detect this interaction effect. Our results are summarized in @fig-power-interaction, aligning with findings for main effects. ART's relative advantage diminishes later under the binomial and ordinal distributions. Once again, the method's inflated Type I error rates could account for this observed trend.
+
+::: {#fig-power-interaction}
+<div id="plot-power-3.1">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+data <- read_data(prefix, alpha=.05, effectType = 5, distributions)
+
+df <- reshape_by_design(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "magnitude of interaction effect", var = "rateX1X2", xvar = "effectX1X2", max = 104,  ytitle = 'Power (%)')
+```
+</div>
+
+<div id="plot-power-3.2">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- data %>% arrange(design,family,effectX1X2,rateX1X2)  %>% group_by(design,family,effectX1X2) %>% mutate(rank = rank(rateX1X2))
+df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+#df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_power_by_design(df, xlab = "magnitude of interaction effect", var = "rank", hovervar = "rateX1X2", xvar = "effectX1X2", max = 4.2, ytitle = 'Power - ranking')
+```
+</div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-3.2").classList.add("hidden"); }); </script>
+
+<button id="btn3" style="background-color: #f0f0f0; border: 1px solid #ccc; color: #333; font-size: 0.9em;
+    padding: 4px 10px; border-radius: 6px; cursor: pointer; float: right;"
+  onclick="const plot = document.getElementById('plot-power-3.1');
+  plot.classList.toggle('hidden');
+  document.getElementById('plot-power-3.2').classList.toggle('hidden');
+  btn3.innerText = plot.classList.contains('hidden') ? 'show percent' : 'show ranking';
+">
+  show ranking
+</button>
+
+Power ($\alpha = .05$) for detecting the **interaction effect $X_1 \times X_2$** as a function of its magnitude $a_{12}$, where $n=20$.
+:::
+
+
+

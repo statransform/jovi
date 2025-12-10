@@ -5,38 +5,25 @@ We investigate the generalizability of the aforementioned results to other exper
 
 ::: {#fig-designs-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "3_test-Designs"
+prefix <- "Type_I_designs"
 alpha = 0.05
 
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert")
 dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 
-df <- readData(prefix, n = 20, alpha, effectType = 1, distributions)
-df <- reshapeByDesign(df, dnames)
+df <- read_data(prefix, alpha, effectType = 1, distributions)
+df <- reshape_by_design(df, dnames)
 
-plotlyErrorByDesign(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 62)
+plotly_error_by_design(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 101)
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
-:::
-
-We provide additional results for the between-subjects design in @fig-2x3-main, where we vary the effect of $X_2$ and measure Type I error rates on $X_1$. ART's error rates for the three discrete distributions appear higher than those observed in @fig-designs-main, indicating a potential dependence on the number of levels of the factors. Again, we observe a consistent trend where error rates in all discrete distributions increase with the sample size.
-
-::: {#fig-2x3-main}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix2 <- "3_test-Designs_2x3"
-
-df2x3 <- readlyData2(prefix2, alpha, effectType = 2, distributions, dnames)
-
-plotlyError(df2x3, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX2", max = 62)
-```
-Additional results for the $2 \times 3$ between-subjects design, where we measure Type I error rates ($\alpha = .05$) for the **main effect of $X_1$.** We now vary the magnitude $a_2$ of the main effect of $X_2$.
 :::
 
 **Interaction effects**. @fig-designs-interaction-1 displays Type I error rates for the interaction effect $X_1 \times X_2$ while varying the effect of $X_1$ ($n = 20$). We observe consistent trends in line with our previous findings. For additional insights, we direct readers to our raw experimental data, which demonstrate that these trends persist across other interaction terms, namely $X_1 \times X_3$, $X_2 \times X_3$, and $X_1 \times X_2 \times X_3$, within the two 3-factor designs.
 
 ::: {#fig-designs-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-plotlyErrorByDesign(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 62)
+plotly_error_by_design(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 101)
 ```
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$) 
 :::

@@ -5,6 +5,8 @@ library(lmerTest)
 library(ARTool)
 library(effectsize) # Effect size functions
 
+library(broom)
+library(dplyr)
 
 # Implementation of the Inverse Normal Transformation
 INT = function(x){
@@ -57,6 +59,30 @@ compare_effect_sizes <- function(df,
   )
 }
 
+# This is to add the results of groundtruth method-simple anova over the correct data
+get_groundtruth_effect_sizes <- function(df,
+    formula = Y ~ X1*X2 + (1|subject), 
+    vars = c("X1", "X2", "X1:X2"), # Specify the terms of interest. P-values will be returned with the specified order
+    measure = c("eta", "cohens")
+  ){
+    
+  measure <- match.arg(measure)
+  effect_size_function <- {
+    if(measure == "eta") eta_values
+    else cohensf_values 
+  }
+
+  is_aov <- "Error" %in% all.names(formula) # Identifies if it should use lmer or aov
+  if(is_aov) { # Use aov
+    model <- suppressMessages(do.call(aov, list(formula, df))) 
+  } 
+  else { # Use lmer
+    model <- suppressMessages(do.call(lmer, list(formula, data=df))) 
+  }
+
+  c(GRT = suppressMessages(effect_size_function(model, vars)))
+}
+
 ################################################################
 # Tests over a large number of iterations 
 ################################################################
@@ -68,13 +94,16 @@ repeat_test_effect_size <- function(
   within = c(1,1),
   n=20, 
   coeffs=c("X1"=0, "X2"=0, "X1:X2"=0),
-  family="norm",
+  family=c("norm", "lnorm", "likert"),
   params,
   formula,
   vars,
   measure = "eta",
-  iterations = 1000
+  iterations = 100
 ) {
+  
+  family <- match.arg(family)
+
   results <- foreach(rid = 1:iterations, .combine=rbind) %dopar% {
     tryCatch(
       {
@@ -86,7 +115,21 @@ repeat_test_effect_size <- function(
           data <- removeCells(data, params$ratio_missing)
         }
         
-        compare_effect_sizes(data, formula, vars, measure)
+        eff_sizes <- compare_effect_sizes(data, formula, vars, measure)
+        if(family=="norm") { # The ground truth is the PAR
+          groundtruth <- eff_sizes[startsWith(names(eff_sizes), "PAR")]
+          names(groundtruth) <- paste0("GRT", seq_along(vars))  
+        }
+        else if(family=="lnorm") {
+          data$Y <- log(data$Y)
+          groundtruth <- get_groundtruth_effect_sizes(data, formula, vars, measure)
+        } 
+        else if(family=="likert") {
+          data$Y <- data$eta
+          groundtruth <- get_groundtruth_effect_sizes(data, formula, vars, measure)
+        }
+
+        c(eff_sizes, groundtruth)
       }, 
       error = function(cond) {
         # do nothing
@@ -98,7 +141,7 @@ repeat_test_effect_size <- function(
 
   designStr <- paste(nlevels, collapse="x")
 
-  colnames(results) <- c(paste0("par", vars), paste0("rnk", vars), paste0("art", vars), paste0("int", vars)) 
+  colnames(results) <- c(paste0("par", vars), paste0("rnk", vars), paste0("art", vars), paste0("int", vars), paste0("grt", vars)) 
   coeffs_prefixed <- setNames(coeffs, paste0("effect", names(coeffs)))
 
   cbind(n = n, designStr=designStr, family = family, as.data.frame(as.list(coeffs_prefixed)), round(results,digits=4))

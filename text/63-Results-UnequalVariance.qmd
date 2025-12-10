@@ -18,13 +18,13 @@ Varying the ratio $r_{sd}$ of standard deviations between the levels of $X_1$. T
 
 ::: {#fig-unequal-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "4_test_Unequal_Variances"
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+prefix <- "Type_I_heteroscedacity"
+distributions = c("norm", "likert_5", "likert_5_flex", "likert_7", "likert_7_flex")
+dnames = c("Normal", "Equidistant (5 levels)", "Flexible (5 levels)", "Equidistant (7 levels)", "Flexible (7 levels)")
 
-df <- readData(prefix, n = 20, alpha, effectType = 1, distributions)
-df <- reshapeByDesign(df, dnames, effectvars = c("sd_ratio", "effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX1", xvar = "sd_ratio", max = 82, ytitle = 'Positives (%)')
+df <- read_data(prefix, alpha = 0.05, effectType = 1, distributions)
+df <- reshape_by_design(df, dnames, effectvars = c("sdratio", "effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX1", xvar = "sdratio", max = 41)
 ```
 The percentage of positives (i.e., rejecting the null hypothesis) for the **main effect of $X_1$** as the ratio of standard deviations $r_{sd}$ on $X_1$ increases ($n=20$). Depending on the hypothesis of interest, these percentages can be interpreted as Type I error rates ($\alpha = .05$).
 :::
@@ -35,7 +35,7 @@ We also investigate the influence of unequal variances among the levels of $X_1$
 
 ::: {#fig-unequal-main-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-plotlyErrorByDesign2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX2", xvar = "sd_ratio", max = 52)
+plotly_error_by_design_2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX2", xvar = "sdratio", max = 41)
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as the ratio of standard deviations $r_{sd}$ on $X_1$ increases ($n=20$)
 :::
@@ -44,7 +44,7 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as the rati
 
 ::: {#fig-unequal-interaction}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-plotlyErrorByDesign2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX1X2", xvar = "sd_ratio", max = 52)
+plotly_error_by_design_2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX1X2", xvar = "sdratio", max = 42)
 ```
 Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2$** as the ratio of standard deviations $r_{sd}$ on $X_1$ increases ($n=20$)
 :::

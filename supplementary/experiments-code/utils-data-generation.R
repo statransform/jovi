@@ -230,7 +230,10 @@ simulate_response <- function(
   # -------------------------------------------------
   Y <- switch(family,
     norm     = eta + rnorm(length(eta), 0, params$sigma_e),
-    likert   = toOrdinal(eta + rnorm(length(eta), 0, params$sigma_e), levels = params$levels, flexible = params$flexible),
+    likert   = { # For ordinal, I need eta to store the latent values (that include the trial error)
+      eta = eta + rnorm(length(eta), 0, params$sigma_e)
+      toOrdinal(eta, levels = params$levels, flexible = params$flexible)
+    },
     poisson  = rpois(length(eta), exp(eta)),
     exp      = rexp(length(eta), rate = 1/exp(eta)),
     lnorm    = rlnorm(length(eta), eta, params$sigma_e),
@@ -306,9 +309,11 @@ simulate_heteroscedastic_response <- function(
   # -------------------------------------------------
   # Generate Y
   # -------------------------------------------------
-  Y <- eta + sapply(1:length(eta), function(i){ rnorm(1,0, sigmas_e[i]) })
+  eta <- eta + sapply(1:length(eta), function(i){ rnorm(1,0, sigmas_e[i]) })
   if(family == "likert") {
-    Y <- toOrdinal(Y, levels = params$levels, flexible = params$flexible)
+    Y <- toOrdinal(eta, levels = params$levels, flexible = params$flexible)
+  } else {
+    Y <- eta
   }
 
   # Ensure that categorical variables and the random effect are coded as factors

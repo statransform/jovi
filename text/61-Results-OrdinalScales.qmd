@@ -12,16 +12,17 @@ The four vertical lines in each plot represent thresholds defining 5-level ordin
 
 ::: {#fig-ordinal-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "2_test_4x3_Ordinal"
+prefix <- "Type_I_ordinal"
 
-distributions <- c("likert5", "likert5B", "likert7", "likert7B", "likert11", "likert11B")
+distributions <- c("likert_5", "likert_5_flex", "likert_7", "likert_7_flex", "likert_11", "likert_11_flex")
 dnames <- c("5 - equidistant", "5 - flexible", "7 - equidistant", "7 - flexible", "11 - equidistant", "11 - flexible")
-df <- readlyData(prefix, alpha, 1, distributions, dnames)
+df <- readly_data(prefix, alpha, 1, distributions, dnames)
 
-plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 52)
+plotly_error(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 60)
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$
 :::
+
 
 Our results indicate that PAR, RNK, and INT consistently maintain error rates close to $5\%$ across all tested ordinal scales. In contrast, ART exhibits a significant inflation of error rates, although this issue becomes less severe when the number of levels increases. Notably, error rates are more pronounced for flexible thresholds and tend to increase with sample size. 
 
@@ -30,7 +31,7 @@ Our results indicate that PAR, RNK, and INT consistently maintain error rates cl
 ::: {#fig-ordinal-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 
-plotlyError(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 45)
+plotly_error(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 50)
 ```
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
@@ -39,15 +40,10 @@ Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as 
 
 ::: {#fig-ordinal-large-samples}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "2_test_4x3_Ordinal_sample_size"
+prefix <- "Type_I_4x3_ordinal_large_samples"
 
-distributions <- c("likert5", "likert5B", "likert7", "likert7B", "likert11", "likert11B")
-dnames <- c("5 - equidistant", "5 - flexible", "7 - equidistant", "7 - flexible", "11 - equidistant", "11 - flexible")
-
-df <- readlyData1(prefix, alpha, 0, distributions, dnames)
-plotlyErrorByEffect(df, xlab = "n", max = 100)
+df <- readly_data_1(prefix, alpha, 0, distributions, dnames)
+plotly_error_by_effect_2(df, xlab = "n", max = 100)
 ```
 Type I error rates ($\alpha = .05$) as a function of the size $n$ of the sample, where all population effects are null.
 :::
-
-We will observe similar trends if we test other discrete distributions, such as binomial distributions. These results confirm that ART is inappropriate for discrete data.

@@ -21,15 +21,19 @@ Specifically for the log-normal and binomial distributions, we present results f
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 library(dplyr)
 library(tidyverse)
+source("utils-data-reading.R")
+source("utils-plotlying.R")
+
+# To remote those: 
 source("dataReaders.R")
 source("plotlying.R")
 
-prefix <- "1_test_4x3_Ratio"
+prefix <- "Type_I_4x3_ratio"
 alpha <- .05
 distributions <- c("norm", "lnorm", "exp", "cauchy", "poisson", "binom")
 dnames <- c("Normal", "Log-normal", "Exponential", "Cauchy", "Poisson", "Binomial")
-df <- readlyData(prefix, alpha, 1, distributions, dnames)
-plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 64)
+df <- readly_data(prefix, alpha, 1, distributions, dnames)
+plotly_error(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 102)
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$
 :::
@@ -40,10 +44,10 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a functi
 
 ::: {#fig-ratio-contrasts}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "1_test_4x3_Contrasts"
+prefix <- "Type_I_4x3_ratio_contrasts"
 
-df <- readlyData(prefix, alpha, 1, distributions, dnames)
-plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 52)
+df <- readly_data(prefix, alpha, 1, distributions, dnames)
+plotly_error(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 101)
 ```
 Average Type I error rates ($\alpha = .05$) for **contrasts on factor $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
@@ -52,12 +56,28 @@ Average Type I error rates ($\alpha = .05$) for **contrasts on factor $X_2$** as
 
 ::: {#fig-ratio-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "1_test_4x3_Ratio"
-df <- readlyData(prefix, alpha, 1, distributions, dnames)
+prefix <- "Type_I_4x3_ratio"
+df <- readly_data(prefix, alpha, 1, distributions, dnames)
 
-plotlyError(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 52)
+plotly_error(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 100)
 ```
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
 
 The scenarios above do not capture the failure cases of the rank transformation discussed earlier (see @fig-interactions-rank), as those arise only when both coefficients $a_1$ and $a_2$ are non-zero. Since there can be different possible definitions of an interaction effect in these cases, we address them in a separate subsection.
+
+**Analysis for large samples.** Let us further explore ART's error rates when sample sizes become larger.
+
+::: {#fig-ratio-large-samples}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "Type_I_4x3_ratio_large_samples"
+
+distributions <- c("norm", "lnorm", "exp", "cauchy", "poisson", "binom")
+dnames <- c("Normal", "Log-normal", "Exponential", "Cauchy", "Poisson", "Binomial")
+
+df <- readly_data_1(prefix, alpha, 1, distributions, dnames)
+plotly_error_by_effect_1(df, xlab = "n", max = 86)
+```
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** and the **interaction** $X_1 \times X_2$ as a function of the size $n$ of the sample. The effect on $X_1$ is non-null, where we set $a_1 = 1$.
+:::
+

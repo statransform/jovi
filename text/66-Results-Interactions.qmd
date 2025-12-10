@@ -8,11 +8,11 @@ Let us now examine interaction effects when both coefficients $a_1$ and $a_2$ in
 distributions <- c("norm", "lnorm", "exp", "cauchy", "poisson", "binom")
 dnames <- c("Normal", "Log-normal", "Exponential", "Cauchy", "Poisson", "Binomial")
 alpha <- .05
-prefix <- "1_test_4x3_Ratio"
-df <- readlyData(prefix, alpha, 0, distributions, dnames)
+prefix <- "Type_I_4x3_ratio"
+df <- readly_data(prefix, alpha, 0, distributions, dnames)
 
 #xlab <- TeX("\\text{main effect of factors }X_1\\text{ and }X_2\\text{ }(a_1 = a_2)")
-plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
+plotly_error(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
 ```
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$. *Note: Type I errors are defined based on the null hypothesis $a_{12} = 0$. A different definition may lead to different results.* 
 :::
@@ -31,13 +31,12 @@ Error rates become exceptionally high in some cases, reaching up to 100%. Howeve
 
 ::: {#fig-ordinal-interaction-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "2_test_4x3_Ordinal"
-distributions <- c("likert5", "likert5B", "likert7", "likert7B", "likert11", "likert11B")
+prefix <- "Type_I_ordinal"
+distributions <- c("likert_5", "likert_5_flex", "likert_7", "likert_7_flex", "likert_11", "likert_11_flex")
 dnames <- c("5 - equidistant", "5 - flexible", "7 - equidistant", "7 - flexible", "11 - equidistant", "11 - flexible")
 
-df <- readlyData(prefix, alpha, 0, distributions, dnames)
-plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
-
+df <- readly_data(prefix, alpha, 0, distributions, dnames)
+plotly_error(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
 ```
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$. *Note: Type I errors are defined based on the null hypothesis $a_{12} = 0$. A different definition may lead to different results.*
 :::
@@ -46,13 +45,13 @@ Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as 
 
 ::: {#fig-designs-interaction-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "3_test-Designs"
-distributions <- c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+prefix <- "Type_I_designs"
+distributions <- c("norm", "lnorm", "exp", "poisson", "binom", "likert")
 dnames <- c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 
-df <- readData(prefix, n = 20, alpha, effectType = 0, distributions)
-df <- reshapeByDesign(df, dnames)
-plotlyErrorByDesign(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
+df <- read_data(prefix, alpha, effectType = 0, distributions)
+df <- reshape_by_design(df, dnames)
+plotly_error_by_design(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
 ```
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$  ($n = 20$). *Note: Type I errors are defined based on the null hypothesis $a_{12} = 0$. A different definition may lead to different results.*
 :::
