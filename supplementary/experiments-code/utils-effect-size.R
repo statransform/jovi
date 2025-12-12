@@ -144,6 +144,6 @@ repeat_test_effect_size <- function(
   colnames(results) <- c(paste0("par", vars), paste0("rnk", vars), paste0("art", vars), paste0("int", vars), paste0("grt", vars)) 
   coeffs_prefixed <- setNames(coeffs, paste0("effect", names(coeffs)))
 
-  cbind(n = n, designStr=designStr, family = family, as.data.frame(as.list(coeffs_prefixed)), round(results,digits=4))
+  cbind(n = n, design=designStr, family = family, as.data.frame(as.list(coeffs_prefixed)), round(results,digits=4))
 }
 

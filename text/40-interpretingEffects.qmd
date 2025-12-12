@@ -166,7 +166,7 @@ $${#eq-glm}
 
 where $g^{-1}$ is the inverse of the link function.
 
-Statistical procedures based on GLMs define interaction in terms of the interaction coefficient $a_{12}$ in the linear component of the model. That is, the null hypothesis should be rejected when the coefficient is non-zero. However, there is no consensus among researchers on this approach. We clarify the debate and explain how we address it.
+Statistical procedures based on GLMs define effects in terms of the coefficients $a_{1}$, $a_{2}$, and $a_{12}$ in the linear component of the model. That is, the null hypothesis should be rejected when the corresponding coefficient (e.g., the coefficient $a_{12}$ for the interaction) is non-zero. However, there is no consensus among researchers on this approach. We clarify the debate and explain how we address it.
 
 **Defining interactions on the scale of the response variable.** @Ai:2003 and, more recently, @McCabe:2022 show that the interaction coefficient alone is not sufficient to describe the actual interaction trend on the natural scale of the response variable. They argue that an interaction effect should instead be defined as the observed change in the marginal effect of $x_1$ as a function of $x_2$. Thus, the trends shown in @fig-interactions do represent interactions, since the difference between *Tech* A and *Tech B* changes as a function of *Difficulty* on the original reponse scale (time or perceived performance). 
 
@@ -181,18 +181,21 @@ For continuous predictors, this can be formalized as the second-order cross part
 
 Our position is fully aligned with Greene's argument. As our earlier example (see @fig-interactions) demonstrates, interactions assessed on the scale of the response variable can be misleading about the true underlying effects that generated the data. How meaningful is it to declare interaction effects that arise solely from parallel main effects and lack any theoretical interpretation? It is worth noting that @Ai:2003, as well as @McCabe:2022, overlook Loftus' [-@Loftus:1978] critique of uninterpretable interactions. 
 
-**When the interpretation of effects becomes ambiguous.** Issues with interpreting interaction effects arise only when there are parallel main effects --- that is, when the coefficients of all interacting factors are non-zero. Interpretation issues may also extend to main effects when the interaction coefficient $a_{12}$ is non-zero. In such cases, we may observe a change in the marginal effect of a factor (e.g., $x_1$), even if its associated model coefficient (e.g., $a_1$) is zero. We discuss such scenarios in more depth in the [appendix](appendix.html#removable-main).
+Nevertheless, in most of our experiments we select scenarios that avoid these interpretational complications, ensuring that the Type I error rates of the methods we compare do not depend on how one defines interactions. We clarify this point below. 
 
-By contrast, interpretation is unambiguous in these situations:
+**Clarifying when the interpretation of effects becomes ambiguous.** Ambiguities in interpreting interaction effects arise only when all relevant main effects are present --- that is, when the coefficients of all interacting factors are non-zero. Interpretation issues may also extend to main effects when the interaction coefficient $a_{12}$ is non-zero. In such cases, we may observe changes in the marginal effect of a factor (e.g., $x_1$), even if its associated model coefficient (e.g., $a_1$) is zero. We discuss such scenarios in more detail in the [appendix](appendix.html#removable-main).
+
+By contrast, interpretation is unambiguous in the following situations:
 
 1. *Main effects*: when the interaction coefficient $a_{12}$ is zero.
 
 2. *Interaction effect*: when either $a_{1}$ or $a_{2}$ is zero.    
 
-For example, the divergence in ART's results in our illustrative example (see @fig-example) cannot be attributed to interpretation issues, since the sample was drawn from a population with no effect of *Technique* ($a_{1} = 0$) and no interaction ($a_{12}=0$). 
+In these cases, error rates (Type I or Type II) are comparable across all methods, regardless of whether the null hypothesis is defined in terms of the coefficients of the linear model or the observed effects on the response variable $Y$. For example, the divergence in ART's results in our illustrative example (see @fig-example) cannot be attributed to interpretation issues, since the sample was drawn from a population with no effect of *Technique* ($a_{1} = 0$) and no interaction ($a_{12}=0$). 
 
 Throughout the remainder of the article, we make every effort to clarify when the interpretation of an effect is ambiguous. Because different methods may rely on different assumptions about the null hypothesis, we analyze such situations separately. However, it is important to note that the existing literature offers no guidance on how ART is expected to interpret main and interaction effects under these conditions. Early evaluations of ART did not consider nonlinear models, and therefore this issue was not raised. While @elkin:2021 do examine such models, they do not address interpretation issues.
 
+<!--
 ### Our approach {#approach}
 Responses in a generalized linear model can follow arbitrary distributions. A key challenge is how to simulate such distributions while maintaining control over the parameters of the linear submodel. We address this by adopting a latent variable modeling approach, in which a normally distributed latent variable is transformed into the observed response variable.
 
@@ -245,3 +248,5 @@ As discussed earlier, we make clear distinction between the following two scenar
 2. The definition of the null hypothesis changes with the scale: a null effect on the latent variable $\mathcal{Y}$ may not remain null when evaluated on the response variable $Y$. 
 
 Unless we explicitely mention interpretation issues, we focus on the first scenario. Note that in the case of discrete response variables, the function $\mathcal{T}$ is monotonic but not *strictly* monotonic, since it involves a loss of information. Consequently, an effect on the latent variable may not be observable in the responses, or the observed magnitude of the effect may appear reduced.
+
+-->

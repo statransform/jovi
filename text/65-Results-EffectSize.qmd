@@ -6,7 +6,8 @@ We expect that discrepancies in the *p*-values produced by different methods wil
 
 ::: {#fig-eta-squared}
 ```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
-data <- read.csv("data/effect-sizes-lognormal.csv", sep=",", header=TRUE, strip.white=TRUE)
+data <- read.csv("results/eta_squared.csv", sep=",", header=TRUE, strip.white=TRUE)
+data <- data[data$family == "lnorm", ]
 data$effectX2 <- factor(data$effectX2)
 
 ylab = "X1 - partial eta squared"
@@ -18,7 +19,7 @@ cbPalette2 = c("#8888ff88", "#88888888", "#E69F0088", "#009E7388", "#FF5E0088")
 
 df <- data[data$effectX1 == 0,]
 
-fig1 <- plot_ly(df, x = ~effectX2, y = ~X1, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
+fig1 <- plot_ly(df, x = ~effectX2, y = ~grtX1, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
 fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
 fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
 fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
@@ -45,7 +46,7 @@ ART is the only method whose effect size estimates for $X_1$ are affected by the
 ```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
 df <- data[data$effectX1 == 1,]
 
-fig1 <- plot_ly(df, x = ~effectX2, y = ~X1, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
+fig1 <- plot_ly(df, x = ~effectX2, y = ~grtX1, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
 fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
 fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
 fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
@@ -107,8 +108,9 @@ In the case of ordinal data, all methods yield highly variable estimates. This v
 
 ::: {#fig-eta-squared-interaction}
 ```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
-data <- read.csv("data/effect-sizes-normal-interactions.csv", sep=",", header=TRUE, strip.white=TRUE)
-data$effectX2 <- factor(data$effectX2)
+data <- read.csv("results/eta_squared.csv", sep=",", header=TRUE, strip.white=TRUE)
+df <- data[data$family == "norm" & data$effectX1 == data$effectX2, ]
+df$effectX2 <- factor(df$effectX2)
 
 ylab = "interaction - partial eta squared"
 xlab = "magnitude of main effects: a1 and a2"
@@ -117,9 +119,7 @@ margins <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
 cbPalette = c("#8888ff", "#888888", "#E69F00", "#009E73", "#FF5E00")
 cbPalette2 = c("#8888ff88", "#88888888", "#E69F0088", "#009E7388", "#FF5E0088")
 
-df <- data
-
-fig1 <- plot_ly(df, x = ~effectX2, y = ~X1X2, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
+fig1 <- plot_ly(df, x = ~effectX2, y = ~grtX1X2, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
 fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1X2, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
 fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
 fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
@@ -141,8 +141,8 @@ If the data take a discrete form, effect size estimates become even more distort
 
 ::: {#fig-eta-squared-ordinal}
 ```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
-data <- read.csv("data/effect-sizes-ordinal-interactions.csv", sep=",", header=TRUE, strip.white=TRUE)
-data$effectX2 <- factor(data$effectX2)
+df <- data[data$family == "likert" & data$effectX1 == data$effectX2, ]
+df$effectX2 <- factor(df$effectX2)
 
 ylab = "interaction - partial eta squared"
 xlab = "magnitude of main effects: a1 and a2"
@@ -151,10 +151,7 @@ margins <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
 cbPalette = c("#8888ff", "#888888", "#E69F00", "#009E73", "#FF5E00")
 cbPalette2 = c("#8888ff88", "#88888888", "#E69F0088", "#009E7388", "#FF5E0088")
 
-df <- data
-#df <- data[data$effectX1 == 0,]
-
-fig1 <- plot_ly(df, x = ~effectX2, y = ~X1X2, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
+fig1 <- plot_ly(df, x = ~effectX2, y = ~grtX1X2, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
 fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1X2, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
 fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
 fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
