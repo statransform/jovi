@@ -21,54 +21,58 @@ tbl-cap-location: top
 ---
 
 ## Comparing Type I error rates under non-linear models
-Consider again the general equation that connects the expected value of a response variable $Y$, which may follow a non-normal distribution, to the predictors in an experimental design with two factors $x_1$ and $x_2$:  
+Consider again the general relationship between the expected value of a response variable $Y$, which may follow a non-normal distribution, and the predictors in an experimental design with two independent variables $x_1$ and $x_2$:  
 
 $$
 E(Y|x_1, x_2) = g^{-1}(a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2)
 $$
 where $g^{-1}$ is the inverse link function.
 
-We explain why in the main scenarios in this article, the interpretation of effects is not affected by the way the null hypothesis is defined. Our analysis is largely based on related analyses by @Ai:2003, @Greene:2010, and @McCabe:2022. 
+We show that, in the main scenarios considered in this article, the interpretation of effects is not affected by whether the null hypothesis is defined on the coefficient scale or on the response-mean scale. Our analysis follows related discussions in @Ai:2003, @Greene:2010, and @McCabe:2022.
 
-To simplify our analysis, we use $\eta(x_1, x_2)$ to denote the linear part of the model:
-
+For clarity, let
 $$
 \eta(x_1, x_2) = a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2
 $$
-
-We also use $\mu(x_1, x_2)$ to denote the expected value as a function of $x_1$ and $x_2$:
-
+denote the linear predictor, and
 $$
 \mu(x_1, x_2) = E(Y|x_1, x_2) = g^{-1}(\eta(x_1, x_2))
 $$
+denote the expected value (or mean) as a function of $x_1$ and $x_2$.
 
 ### Main effects
 We first show that there is no ambiguity in the interpretation of main effects when $a_{12}=0$. 
 
-Without loss of generality, we assume that $a_1$ is non-zero and focus on the observed effect on the second factor $x_2$ when $a_2 = 0$. Then: 
+Without loss of generality, assume that $a_1 \neq 0$ an examine the effect on the second factor $x_2$ when $a_2 = 0$. In that case,
 $$
 \begin{aligned}
 \eta(x_1, x_2) = a_0 + a_1 x_1, \qquad
 \mu(x_1, x_2) = g^{-1}(a_0 + a_1 x_1)
 \end{aligned}
 $$
+so $\mu$ is a function of $x_1$ only.
 
-We consider two different situations:
+We consider two situations:
 
-(a) *Continuous $x_2$ --- partial-derivative definition of the effect*. In this case, we can define the effect of $x_2$ on the response as the partial derivative $\frac{\partial \mu}{\partial x_2}$. This becomes:
+**(a) Continuous $x_2$: effect defined by a partial derivative**
+
+The effect of $x_2$ on the response can be defined as $\frac{\partial \mu}{\partial x_2}$. Because the argument of $g^{-1}$ contains no $x_2$:
 $$\frac{\partial \mu(x_1, x_2)}{\partial x_2}  = \frac{\partial}{\partial x_2} g^{-1}(a_0 + a_1 x_1) = 0$$
-since the term $a_0 + a_1 x_1$ does not contain $x_2$. Thus, $x_2$ has no effect on the responses.  
+Thus, $x_2$ has no effect on the mean response.  
 
-(b) *Categorical $x_2$ --- contrast definition of the effect*. This case is closer to the scenarios we consider in our simulations, where all independent variables are categorical. Let $L_2$ be the categorical levels of $x_2$. Then, the effect of $x_2$ can be defined as the difference in means across its levels for a fixed $x_1$:
-$$\Delta_{u,\upsilon}E(Y|x_1, x_2) = \mu(x_1, u) - \mu(x_1, \upsilon) = g^{-1}(a_0 + a_1 x_1) - g^{-1}(a_0 + a_1 x_1) = 0$$
-for any two levels $u, \upsilon \in L_2$.
+**(b) Categorical $x_2$: effect defined by contrasts**
 
-**Conclusion:** Let $a_{12} = 0$. If $a_2 = 0$ then the effect on the mean of responses is also zero. Thus, whether we define Type I errors in terms of the coefficient $a_2$ or in terms of the means of the responses, results should not change. We emphasize that this result **is not specific to means**. If $Y$ depends on $x_1$, $x_2$ only through the predictor $\eta(x_1, x_2)$ --- that is, variances or other distribution shape parameters do not depend on these variables --- then no effect of $x_2$ can appear on the mean, the median, or any other quantile of the distribution when both $a_{12}$ and $a_2$ are zero.
+This is the setting relevant to our simulations. Let $L_2$ denote the levels of $x_2$. For any two levels $u, \nu \in L_2$, the contrast is:
+$$\Delta_{u,\upsilon}\mu(x_1, x_2) = \mu(x_1, u) - \mu(x_1, \upsilon) = g^{-1}(a_0 + a_1 x_1) - g^{-1}(a_0 + a_1 x_1) = 0.$$
 
-**Special note:** However, if $a_{12}$ is non-zero, it is possible to observe an effect of $x_2$ on responses even if $a_2 = 0$. 
+#### Conclusion (main effects)
+
+If $a_{12} = 0$ and $a_2 = 0$, then $x_2$ has no effect on the mean of the responses. Thus, whether Type I error is defined in terms of the coefficient $a_2$ or in terms of the equality of observed means across levels of $x_2$ makes no difference.
+
+This conclusion **is not limited to means**. If the distribution of $Y | (x_1, x_2)$ depends on $x_1$, $x_2$ only through the predictor $\eta(x_1, x_2)$ --- that is, if scale or shape parameters do not depend on the factors --- then no effect of $x_2$ can appear on the mean, the median, or any other quantile of the distribution whenever $a_{12}=0$ and $a_2=0$.
 
 ### Interactions
-We similarly show that there is no ambiguity in the interpretation of the interaction effect when either $a_1 = 0$ or $a_2 =0$. Without loss of generality, we assume below that $a_2 = 0$ while $a_1$ is non-zero. For $a_{12}=0$: 
+Similarly, we show that there is no ambiguity in the interpretation of interaction effects when either $a_1 = 0$ or $a_2 =0$. Without loss of generality, assume $a_2 = 0$ and $a_1 \neq 0$. When $a_{12}=0$, 
 $$
 \begin{aligned}
 \eta(x_1, x_2) = a_0 + a_1 x_1, \qquad
@@ -76,18 +80,40 @@ $$
 \end{aligned}
 $$
 
-A common definition of interaction on the response scale [@Ai:2003] is that the *marginal effect* of $x_1$ depends on $x_2$. Again, we consider two situations:
+A common definition of interaction on the response scale [@Ai:2003] is that the marginal effect of $x_1$ depends on $x_2$. We examine two situations:
 
-(a) *Continuous $x_1$ and $x_2$ --- definition of interaction through second-order cross-partial derivative*. For continuous $x_1$, this is expressed by the second-order cross-partial derivative $\frac{\partial^2 \mu}{\partial x_2 \partial x_1}$, which becomes:
- $$\frac{\partial^2 \mu(x_1, x_2)}{\partial x_2 \partial x_1}  = \frac{\partial}{\partial x_2} [\dot{g}^{-1}(\eta(x_1, x_2)) \cdot a_1] = \ddot{g}^{-1}(\eta(x_1, x_2)) \cdot \frac{\partial \eta(x_1, x_2)}{\partial x_2} \cdot a_1$$ 
- based on the rule of chain, where $\dot{g}^{-1}$ and $\ddot{g}^{-1}$ are the first and second derivatives of the inverse link function (assuming that $g^{-1}$ is twice differentiable). But we have:
- $$\frac{\partial \eta(x_1, x_2)}{\partial x_2} = a_2 + a_{12}x_1 = 0$$ because $a_2$ and $a_{12}$ are both zero. Thus, $\frac{\partial^2 \mu}{\partial x_2 \partial x_1}$ becomes zero, which means that the marginal effect (slope) of $x_1$ does not change with $x_2$ (and vice versa). There is therefore no interaction on the response scale. 
+**(a) Continuous predictors: interaction defined by a cross-partial derivative.**
 
-(b) *Categorical $x_1$ and $x_2$ --- definition of interaction through double discrete difference*. Let $L_1$ and $L_2$ be the categorical levels of $x_1$ and $x_2$, respectively. Then, the interaction effect can be defined as the double difference in means across all combinations of levels in $L_1$ and $L_2$:
-$$\Delta_{u_1, \upsilon_1} \Delta_{u_2, \upsilon_2}E(Y|x_1, x_2) = [\mu(u_1,u_2) - \mu(u_1, \upsilon_2)] - [\mu(\upsilon_1,u_2) - \mu(\upsilon_1, \upsilon_2)] $$
-for any levels $u_1, \upsilon_1 \in L_1$ and $u_2, \upsilon_2 \in L_2$.
+Assuming $g^{-1}$ is twice differentiable, an interaction is present if $\frac{\partial^2 \mu}{\partial x_2 \partial x_1} \neq 0$. 
 
-**Conclusion:** Let $a_{12} = 0$. If $a_2 = 0$ then the effect on the mean of responses is also zero. Thus, whether we define Type I errors in terms of the coefficient $a_2$ or in terms of the means of the responses, results should not change.
+We compute:
+$$\frac{\partial \mu}{\partial x_1} = \dot{g}^{-1}(\eta) \cdot a_1$$
+
+and 
+
+$$\frac{\partial^2 \mu}{\partial x_2 \partial x_1} = \ddot{g}^{-1}(\eta) \cdot \frac{\partial \eta}{\partial x_2} \cdot a_1$$
+
+But for our settings ($a_2=a_{12}=0$)
+
+$$\frac{\partial \eta}{\partial x_2} = a_2 + a_{12}x_1 = 0$$
+
+and therefore
+
+$$\frac{\partial^2 \mu}{\partial x_2 \partial x_1} = 0$$
+
+ Thus the marginal effect of $x_1$ does not vary with $x_2$, and there is no interaction.
+  
+**(b) Categorical predictors: interaction defined by double discrete differences** 
+
+Let $L_1$ and $L_2$ be the levels of $x_1$ and $x_2$, respectively. The categorical analogue of a cross-partial derivative is the double difference:
+
+$$\Delta_{u_1, \nu_1} \Delta_{u_2, \nu_2}\mu(x_1, x_2) = [\mu(u_1,u_2) - \mu(u_1, \nu_2)] - [\mu(\nu_1,u_2) - \mu(\nu_1, \nu_2)]$$
+
+But when $a_2 = a_{12} = 0$, $\mu(u_1,u_2) = \mu(u_1,\nu_2)$ and $\mu(\nu_1,u_2) = \mu(\nu_1,\nu_2)$, so the double difference is always zero for any levels $u_1, \nu_1 \in L_1$ and $u_2, \nu_2 \in L_2$.  
+
+#### Conclusion (interaction effects)
+
+If either $a_1 = 0$ or $a_2 = 0$ and $a_{12} = 0$, then no interaction can be observed on the response scale. Thus Type I error definitions based on the coefficient $a_{12}$ or on observed interaction contrasts are equivalent in these settings.
 
 ## References {.unnumbered}
 
