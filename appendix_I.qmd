@@ -1,6 +1,6 @@
 ---
 title: "The illusory promise of the Aligned Rank Transform"
-subtitle: "Appendix I. Mathematical explanations and proofs"
+subtitle: "Appendix I. Analytical derivations and mathematical proofs"
 author: 
   - name: Theophanis Tsandilas
     orcid: 0000-0002-0158-228X
@@ -20,100 +20,114 @@ csl: canadian-journal-of-philosophy.csl
 tbl-cap-location: top
 ---
 
-## Comparing Type I error rates under non-linear models
-Consider again the general relationship between the expected value of a response variable $Y$, which may follow a non-normal distribution, and the predictors in an experimental design with two independent variables $x_1$ and $x_2$:  
-
-$$
-E(Y|x_1, x_2) = g^{-1}(a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2)
-$$
-where $g^{-1}$ is the inverse link function.
-
-We show that, in the main scenarios considered in this article, the interpretation of effects is not affected by whether the null hypothesis is defined on the coefficient scale or on the response-mean scale. Our analysis follows related discussions in @Ai:2003, @Greene:2010, and @McCabe:2022.
-
-For clarity, let
+## Absence of spurious effects when $a_2=0$ and $a_{12} = 0${#spurious-absence}
+Let $x_1$ and $x_2$ be two independent variables, and suppose the conditional distribution of the response $Y | (x_1, x_2)$ depends on these variables only through the linear predictor:
 $$
 \eta(x_1, x_2) = a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2
 $$
-denote the linear predictor, and
+
+Assume that the conditional mean can be written as:
 $$
-\mu(x_1, x_2) = E(Y|x_1, x_2) = g^{-1}(\eta(x_1, x_2))
+\mu(x_1, x_2) = E(Y|x_1, x_2) = h(\eta(x_1, x_2))
 $$
-denote the expected value (or mean) as a function of $x_1$ and $x_2$.
+where $h$ is a monotone function. This function may coincide with the inverse link function $g^{-1}$ in a GLM, but it may also arise from other frameworks, including transformation models or latent-variable constructions. Thus it does not necessarily need to be smooth or invertible; for example, this assumption is not required for the ordinal example discussed later.
 
-### Main effects
-We first show that there is no ambiguity in the interpretation of main effects when $a_{12}=0$. 
+Suppose $a_2 = 0$ and $a_{12} = 0$. Then:
 
-Without loss of generality, assume that $a_1 \neq 0$ an examine the effect on the second factor $x_2$ when $a_2 = 0$. In that case,
-$$
-\begin{aligned}
-\eta(x_1, x_2) = a_0 + a_1 x_1, \qquad
-\mu(x_1, x_2) = g^{-1}(a_0 + a_1 x_1)
-\end{aligned}
-$$
-so $\mu$ is a function of $x_1$ only.
+1. The independent variable $x_2$ has no effect on the response scale.
+2. There is no interaction between $x_1$ and $x_2$ on the response scale.
 
-We consider two situations:
+Thus, whether Type I errors are defined in terms of the model coefficients $a_2$ (when $a_{12} = 0$) or $a_{12}$ (when $a_2 = 0$) or in terms of the patterns of observed means (and alternatively medians or other quantiles) on the response scale makes no difference.
 
-**(a) Continuous $x_2$: effect defined by a partial derivative**
+### Proof
+Under $a_2 = a_{12} = 0$, the linear predictor reduces to
 
-The effect of $x_2$ on the response can be defined as $\frac{\partial \mu}{\partial x_2}$. Because the argument of $g^{-1}$ contains no $x_2$:
-$$\frac{\partial \mu(x_1, x_2)}{\partial x_2}  = \frac{\partial}{\partial x_2} g^{-1}(a_0 + a_1 x_1) = 0$$
-Thus, $x_2$ has no effect on the mean response.  
+$$\eta(x_1, x_2) = a_0 + a_1x_1$$
 
-**(b) Categorical $x_2$: effect defined by contrasts**
+which does not depend on $x_2$. Hence, the conditional distribution $Y | (x_1, x_2)$, including its mean, median, and all quantiles, is invariant to $x_2$. This establishes the absence of a main effect of $x_2$ or an effect of its interaction $x_2$. 
 
-This is the setting relevant to our simulations. Let $L_2$ denote the levels of $x_2$. For any two levels $u, \nu \in L_2$, the contrast is:
-$$\Delta_{u,\upsilon}\mu(x_1, x_2) = \mu(x_1, u) - \mu(x_1, \upsilon) = g^{-1}(a_0 + a_1 x_1) - g^{-1}(a_0 + a_1 x_1) = 0.$$
+We further explain this results for special cases, where we largely rely on the relevant discussions of @Ai:2003, @Greene:2010, and @McCabe:2022.
 
-#### Conclusion (main effects)
+#### Main effect of $x_2$
+If $x_2$ is continuous and $h$ is differentiable, the effect of $x_2$ on the response can be defined as:
 
-If $a_{12} = 0$ and $a_2 = 0$, then $x_2$ has no effect on the mean of the responses. Thus, whether Type I error is defined in terms of the coefficient $a_2$ or in terms of the equality of observed means across levels of $x_2$ makes no difference.
+$$\frac{\partial \mu(x_1, x_2)}{\partial x_2}  = h'(\eta) \frac{\partial \eta}{\partial x_2} = 0$$
+where $h'$ denotes the first derivative of $h$.
 
-This conclusion **is not limited to means**. If the distribution of $Y | (x_1, x_2)$ depends on $x_1$, $x_2$ only through the predictor $\eta(x_1, x_2)$ --- that is, if scale or shape parameters do not depend on the factors --- then no effect of $x_2$ can appear on the mean, the median, or any other quantile of the distribution whenever $a_{12}=0$ and $a_2=0$.
+If $x_2$ is categorical, all contrasts across its levels are zero because the mean response is identical at each level:
+$$\Delta_{u,\nu}\mu(x_1, x_2) = \mu(x_1, u) - \mu(x_1, \nu) = h(a_0 + a_1 x_1) - h(a_0 + a_1 x_1) = 0$$
+where $u, \nu$ are any two levels of $x_2$.
 
-### Interactions
-Similarly, we show that there is no ambiguity in the interpretation of interaction effects when either $a_1 = 0$ or $a_2 =0$. Without loss of generality, assume $a_2 = 0$ and $a_1 \neq 0$. When $a_{12}=0$, 
-$$
-\begin{aligned}
-\eta(x_1, x_2) = a_0 + a_1 x_1, \qquad
-\mu(x_1, x_2) = g^{-1}(a_0 + a_1 x_1)
-\end{aligned}
-$$
+#### Interaction between $x_1$ and $x_2$
+An interaction on the response scale is present if the marginal effect of $x_1$ depends on $x_2$. For continuous predictors and assuming that $h$ is twice differentiable, this is characterized by the mixed partial derivative $\frac{\partial^2 \mu}{\partial x_2 \partial x_1}$.
 
-A common definition of interaction on the response scale [@Ai:2003] is that the marginal effect of $x_1$ depends on $x_2$. We examine two situations:
+Using the chain rule:
 
-**(a) Continuous predictors: interaction defined by a cross-partial derivative.**
+$$\frac{\partial^2 \mu(x_1, x_2)}{\partial x_2 \partial x_1} = h''(\eta) \frac{\partial \eta}{\partial x_2} \frac{\partial \eta}{\partial x_1} + h'(\eta)\frac{\partial^2\eta}{\partial x_2 \partial x_1} = 0$$
 
-Assuming $g^{-1}$ is twice differentiable, an interaction is present if $\frac{\partial^2 \mu}{\partial x_2 \partial x_1} \neq 0$. 
-
-We compute:
-$$\frac{\partial \mu}{\partial x_1} = \dot{g}^{-1}(\eta) \cdot a_1$$
-
-and 
-
-$$\frac{\partial^2 \mu}{\partial x_2 \partial x_1} = \ddot{g}^{-1}(\eta) \cdot \frac{\partial \eta}{\partial x_2} \cdot a_1$$
-
-But for our settings ($a_2=a_{12}=0$)
-
-$$\frac{\partial \eta}{\partial x_2} = a_2 + a_{12}x_1 = 0$$
-
-and therefore
-
-$$\frac{\partial^2 \mu}{\partial x_2 \partial x_1} = 0$$
-
- Thus the marginal effect of $x_1$ does not vary with $x_2$, and there is no interaction.
+Thus the marginal effect of $x_1$ does not vary with $x_2$, and there is no interaction.
   
-**(b) Categorical predictors: interaction defined by double discrete differences** 
+For categorical predictors, the analogue of a mixed partial derivative is the double difference:
 
-Let $L_1$ and $L_2$ be the levels of $x_1$ and $x_2$, respectively. The categorical analogue of a cross-partial derivative is the double difference:
+$$\Delta_{u_1, \nu_1} \Delta_{u_2, \nu_2}\mu(x_1, x_2) = [\mu(u_1,u_2) - \mu(u_1, \nu_2)] - [\mu(\nu_1,u_2) - \mu(\nu_1, \nu_2)]=$$ 
+$$= [h(a_0 + a_1 u_1) - h(a_0 + a_1 u_1)] - [h(a_0 + a_1 \nu_2) - h(a_0 + a_1 \nu_1)] = 0$$
 
-$$\Delta_{u_1, \nu_1} \Delta_{u_2, \nu_2}\mu(x_1, x_2) = [\mu(u_1,u_2) - \mu(u_1, \nu_2)] - [\mu(\nu_1,u_2) - \mu(\nu_1, \nu_2)]$$
+for any levels $u_1, \nu_1$ of $x_1$ and $u_2, \nu_2$ of $x_2$. Again, there is no observed interaction.
 
-But when $a_2 = a_{12} = 0$, $\mu(u_1,u_2) = \mu(u_1,\nu_2)$ and $\mu(\nu_1,u_2) = \mu(\nu_1,\nu_2)$, so the double difference is always zero for any levels $u_1, \nu_1 \in L_1$ and $u_2, \nu_2 \in L_2$.  
+### Illustrative examples
+We discuss two examples.
 
-#### Conclusion (interaction effects)
+#### Lognormal data
+Let $x_1$ and $x_2$ be two experimental factors. Suppose the true model of the data is
+$$
+\begin{aligned}
+log Y = a_0 + a_1 x_1 + \varepsilon, \qquad
+\varepsilon \sim \mathcal{N}(0, \sigma^2)
+\end{aligned} 
+$$
+so that 
+$$Y | (x_1, x_2) \sim Lognormal(a_0 + a_1 x_1, \sigma^2)$$
 
-If either $a_1 = 0$ or $a_2 = 0$ and $a_{12} = 0$, then no interaction can be observed on the response scale. Thus Type I error definitions based on the coefficient $a_{12}$ or on observed interaction contrasts are equivalent in these settings.
+Since the conditional distribution of $Y$ does not depend on $x_2$, there is no main effect of $x_2$ on the mean, median, or any quantile of the response distribution. In particular, the conditional mean
+$$\mu(x_1,x_2) = E(Y|x_1, x_2) = exp(a_0 + a_1 x_1 + \frac{1}{2}\sigma^2)$$
+remains identical across all levels of $x_2$. 
+
+For the same reasons, there is no interaction on the response scale.
+
+#### Ordinal responses
+Suppose there exists a latent continuous variable:
+
+$$Y^* = a_0 + a_1 x_1 + \varepsilon$$
+
+and the observed response $Y$ is obtained by applying fixed thresholds: 
+$$
+\begin{aligned}
+Y = k\ \ \text{if}\ \ \tau_{k-1} < Y^* \leq \tau_k, 
+\qquad k = 1,2 ... K
+\end{aligned} 
+$$ 
+Again, the conditional distribution $Y| (x_1, x_2)$ depends on the independent variables only through $\eta(x_1, x_2)=a_0+a_1 x_1$, and there is no effect of $x_2$ on either the latent or the observed ordinal scale. 
+
+In this case, the mapping from $\eta$ to the observed response is monotone but not strictly monotone and is therefore non-invertible. As a result, a true effect of $x_2$ on the latent variable (i.e., $a_2 \neq 0$) may be attenuated or entirely unobservable on the ordinal response scale. This does not affect Type I error rates, provided the null hypothesis is defined on the latent scale and the thresholds are fixed, because the absence of a latent effect implies the absence of an effect on the observed scale. However, power and effect sizes can be reduced when effects are assessed on the ordinal scale, reflecting the loss of information due to discretization.  
+
+<!--
+### Invariance under monotone transformations 
+Suppose we apply a monotone transformation $T$ directly to the observed responses---such as the rank transformation (RNK) or the inverse normal transformation (INT). Because $T$ is monotone, it preserves the ordering of observations within each condition. The transformed conditional distribution $T(Y) | (x_1, x_2)$ therefore depends on the independent variables only through $\eta(x_1, x_2) = a_0+a_1 x_1$. Consequently, the mean, median, and all quantiles of $T(Y) | (x_1, x_2)$ remain invariant to $x_2$, and marginal effects of $x_1$ do not depend on $x_2$. 
+
+In conclusion, $T$ does not introduce a main effect of $x_2$ or an interaction between $x_1$ and $x_2$ when $a_2=0$ and $a_{12}=0$.
+
+
+### ART introducing spurious effects 
+ART differs fundamentally from simple monotone transformations. Instead of transforming $Y$ directly, ART first constructs aligned responses by **subtracting and adding sample means on the response scale**, for example:
+
+$$Y^{(B)} = Y - \bar{Y}_{ij} + \bar{Y}_{.j} - \bar{Y}_{..}$$
+or analogous expressions for interactions, and only then applies ranking. The conditional distribution $Y^{(B)} | (x_1, x_2)$ now depends on $x_2$ through the arithmetic mean components even though $a_2 = 0$ and $a_{12}=0$. 
+
+These alignment terms can vary across levels of $x_2$ due to sampling variability alone, and depending on $h$, they can acquire systematic shifts across levels of $x_2$ or combinations of $(x_1, x_2)$, even when the true conditional distribution does not. in particular, the term $\bar{Y}_{.j} - \bar{Y}_{..}$ is constant within each level of $x_2$ and shifts all aligned observations for that level either upward or downward. 
+
+After ranking, observations from one level of $x_2$ tend to receive systematically higher or lower ranks. Our results confirm this problem.
+-->
+
 
 ## References {.unnumbered}
 

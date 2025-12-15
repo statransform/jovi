@@ -68,10 +68,10 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#comparing-type-i-error-rates-under-non-linear-models" id="toc-comparing-type-i-error-rates-under-non-linear-models" class="nav-link active" data-scroll-target="#comparing-type-i-error-rates-under-non-linear-models"><span class="header-section-number">1</span> Comparing Type I error rates under non-linear models</a>
+  <li><a href="#spurious-absence" id="toc-spurious-absence" class="nav-link active" data-scroll-target="#spurious-absence"><span class="header-section-number">1</span> Absence of spurious effects when <span class="math inline">\(a_2=0\)</span> and <span class="math inline">\(a_{12} = 0\)</span></a>
   <ul class="collapse">
-  <li><a href="#main-effects" id="toc-main-effects" class="nav-link" data-scroll-target="#main-effects">Main effects</a></li>
-  <li><a href="#interactions" id="toc-interactions" class="nav-link" data-scroll-target="#interactions">Interactions</a></li>
+  <li><a href="#proof" id="toc-proof" class="nav-link" data-scroll-target="#proof">Proof</a></li>
+  <li><a href="#illustrative-examples" id="toc-illustrative-examples" class="nav-link" data-scroll-target="#illustrative-examples">Illustrative examples</a></li>
   </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
@@ -82,7 +82,7 @@ div.csl-indent {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">The illusory promise of the Aligned Rank Transform</h1>
-<p class="subtitle lead">Appendix I. Mathematical explanations and proofs</p>
+<p class="subtitle lead">Appendix I. Analytical derivations and mathematical proofs</p>
 </div>
 
 
@@ -118,64 +118,85 @@ div.csl-indent {
 
 </header>
 
-<section id="comparing-type-i-error-rates-under-non-linear-models" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="comparing-type-i-error-rates-under-non-linear-models"><span class="header-section-number">1</span> Comparing Type I error rates under non-linear models</h2>
-<p>Consider again the general relationship between the expected value of a response variable <span class="math inline">\(Y\)</span>, which may follow a non-normal distribution, and the predictors in an experimental design with two independent variables <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>:</p>
-<p><span class="math display">\[
-E(Y|x_1, x_2) = g^{-1}(a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2)
-\]</span> where <span class="math inline">\(g^{-1}\)</span> is the inverse link function.</p>
-<p>We show that, in the main scenarios considered in this article, the interpretation of effects is not affected by whether the null hypothesis is defined on the coefficient scale or on the response-mean scale. Our analysis follows related discussions in <span class="citation" data-cites="Ai:2003">Ai and Norton (<a href="#ref-Ai:2003" role="doc-biblioref">2003</a>)</span>, <span class="citation" data-cites="Greene:2010">Greene (<a href="#ref-Greene:2010" role="doc-biblioref">2010</a>)</span>, and <span class="citation" data-cites="McCabe:2022">McCabe et al. (<a href="#ref-McCabe:2022" role="doc-biblioref">2022</a>)</span>.</p>
-<p>For clarity, let <span class="math display">\[
+<section id="spurious-absence" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="spurious-absence"><span class="header-section-number">1</span> Absence of spurious effects when <span class="math inline">\(a_2=0\)</span> and <span class="math inline">\(a_{12} = 0\)</span></h2>
+<p>Let <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> be two independent variables, and suppose the conditional distribution of the response <span class="math inline">\(Y | (x_1, x_2)\)</span> depends on these variables only through the linear predictor: <span class="math display">\[
 \eta(x_1, x_2) = a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2
-\]</span> denote the linear predictor, and <span class="math display">\[
-\mu(x_1, x_2) = E(Y|x_1, x_2) = g^{-1}(\eta(x_1, x_2))
-\]</span> denote the expected value (or mean) as a function of <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>.</p>
-<section id="main-effects" class="level3">
-<h3 class="anchored" data-anchor-id="main-effects">Main effects</h3>
-<p>We first show that there is no ambiguity in the interpretation of main effects when <span class="math inline">\(a_{12}=0\)</span>.</p>
-<p>Without loss of generality, assume that <span class="math inline">\(a_1 \neq 0\)</span> an examine the effect on the second factor <span class="math inline">\(x_2\)</span> when <span class="math inline">\(a_2 = 0\)</span>. In that case, <span class="math display">\[
-\begin{aligned}
-\eta(x_1, x_2) = a_0 + a_1 x_1, \qquad
-\mu(x_1, x_2) = g^{-1}(a_0 + a_1 x_1)
-\end{aligned}
-\]</span> so <span class="math inline">\(\mu\)</span> is a function of <span class="math inline">\(x_1\)</span> only.</p>
-<p>We consider two situations:</p>
-<p><strong>(a) Continuous <span class="math inline">\(x_2\)</span>: effect defined by a partial derivative</strong></p>
-<p>The effect of <span class="math inline">\(x_2\)</span> on the response can be defined as <span class="math inline">\(\frac{\partial \mu}{\partial x_2}\)</span>. Because the argument of <span class="math inline">\(g^{-1}\)</span> contains no <span class="math inline">\(x_2\)</span>: <span class="math display">\[\frac{\partial \mu(x_1, x_2)}{\partial x_2}  = \frac{\partial}{\partial x_2} g^{-1}(a_0 + a_1 x_1) = 0\]</span> Thus, <span class="math inline">\(x_2\)</span> has no effect on the mean response.</p>
-<p><strong>(b) Categorical <span class="math inline">\(x_2\)</span>: effect defined by contrasts</strong></p>
-<p>This is the setting relevant to our simulations. Let <span class="math inline">\(L_2\)</span> denote the levels of <span class="math inline">\(x_2\)</span>. For any two levels <span class="math inline">\(u, \nu \in L_2\)</span>, the contrast is: <span class="math display">\[\Delta_{u,\upsilon}\mu(x_1, x_2) = \mu(x_1, u) - \mu(x_1, \upsilon) = g^{-1}(a_0 + a_1 x_1) - g^{-1}(a_0 + a_1 x_1) = 0.\]</span></p>
-<section id="conclusion-main-effects" class="level4">
-<h4 class="anchored" data-anchor-id="conclusion-main-effects">Conclusion (main effects)</h4>
-<p>If <span class="math inline">\(a_{12} = 0\)</span> and <span class="math inline">\(a_2 = 0\)</span>, then <span class="math inline">\(x_2\)</span> has no effect on the mean of the responses. Thus, whether Type I error is defined in terms of the coefficient <span class="math inline">\(a_2\)</span> or in terms of the equality of observed means across levels of <span class="math inline">\(x_2\)</span> makes no difference.</p>
-<p>This conclusion <strong>is not limited to means</strong>. If the distribution of <span class="math inline">\(Y | (x_1, x_2)\)</span> depends on <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span> only through the predictor <span class="math inline">\(\eta(x_1, x_2)\)</span> — that is, if scale or shape parameters do not depend on the factors — then no effect of <span class="math inline">\(x_2\)</span> can appear on the mean, the median, or any other quantile of the distribution whenever <span class="math inline">\(a_{12}=0\)</span> and <span class="math inline">\(a_2=0\)</span>.</p>
-</section>
-</section>
-<section id="interactions" class="level3">
-<h3 class="anchored" data-anchor-id="interactions">Interactions</h3>
-<p>Similarly, we show that there is no ambiguity in the interpretation of interaction effects when either <span class="math inline">\(a_1 = 0\)</span> or <span class="math inline">\(a_2 =0\)</span>. Without loss of generality, assume <span class="math inline">\(a_2 = 0\)</span> and <span class="math inline">\(a_1 \neq 0\)</span>. When <span class="math inline">\(a_{12}=0\)</span>, <span class="math display">\[
-\begin{aligned}
-\eta(x_1, x_2) = a_0 + a_1 x_1, \qquad
-\mu(x_1, x_2) = g^{-1}(a_0 + a_1 x_1)
-\end{aligned}
 \]</span></p>
-<p>A common definition of interaction on the response scale <span class="citation" data-cites="Ai:2003">(<a href="#ref-Ai:2003" role="doc-biblioref">Ai and Norton 2003</a>)</span> is that the marginal effect of <span class="math inline">\(x_1\)</span> depends on <span class="math inline">\(x_2\)</span>. We examine two situations:</p>
-<p><strong>(a) Continuous predictors: interaction defined by a cross-partial derivative.</strong></p>
-<p>Assuming <span class="math inline">\(g^{-1}\)</span> is twice differentiable, an interaction is present if <span class="math inline">\(\frac{\partial^2 \mu}{\partial x_2 \partial x_1} \neq 0\)</span>.</p>
-<p>We compute: <span class="math display">\[\frac{\partial \mu}{\partial x_1} = \dot{g}^{-1}(\eta) \cdot a_1\]</span></p>
-<p>and</p>
-<p><span class="math display">\[\frac{\partial^2 \mu}{\partial x_2 \partial x_1} = \ddot{g}^{-1}(\eta) \cdot \frac{\partial \eta}{\partial x_2} \cdot a_1\]</span></p>
-<p>But for our settings (<span class="math inline">\(a_2=a_{12}=0\)</span>)</p>
-<p><span class="math display">\[\frac{\partial \eta}{\partial x_2} = a_2 + a_{12}x_1 = 0\]</span></p>
-<p>and therefore</p>
-<p><span class="math display">\[\frac{\partial^2 \mu}{\partial x_2 \partial x_1} = 0\]</span></p>
+<p>Assume that the conditional mean can be written as: <span class="math display">\[
+\mu(x_1, x_2) = E(Y|x_1, x_2) = h(\eta(x_1, x_2))
+\]</span> where <span class="math inline">\(h\)</span> is a monotone function. This function may coincide with the inverse link function <span class="math inline">\(g^{-1}\)</span> in a GLM, but it may also arise from other frameworks, including transformation models or latent-variable constructions. Thus it does not necessarily need to be smooth or invertible; for example, this assumption is not required for the ordinal example discussed later.</p>
+<p>Suppose <span class="math inline">\(a_2 = 0\)</span> and <span class="math inline">\(a_{12} = 0\)</span>. Then:</p>
+<ol type="1">
+<li>The independent variable <span class="math inline">\(x_2\)</span> has no effect on the response scale.</li>
+<li>There is no interaction between <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> on the response scale.</li>
+</ol>
+<p>Thus, whether Type I errors are defined in terms of the model coefficients <span class="math inline">\(a_2\)</span> (when <span class="math inline">\(a_{12} = 0\)</span>) or <span class="math inline">\(a_{12}\)</span> (when <span class="math inline">\(a_2 = 0\)</span>) or in terms of the patterns of observed means (and alternatively medians or other quantiles) on the response scale makes no difference.</p>
+<section id="proof" class="level3">
+<h3 class="anchored" data-anchor-id="proof">Proof</h3>
+<p>Under <span class="math inline">\(a_2 = a_{12} = 0\)</span>, the linear predictor reduces to</p>
+<p><span class="math display">\[\eta(x_1, x_2) = a_0 + a_1x_1\]</span></p>
+<p>which does not depend on <span class="math inline">\(x_2\)</span>. Hence, the conditional distribution <span class="math inline">\(Y | (x_1, x_2)\)</span>, including its mean, median, and all quantiles, is invariant to <span class="math inline">\(x_2\)</span>. This establishes the absence of a main effect of <span class="math inline">\(x_2\)</span> or an effect of its interaction <span class="math inline">\(x_2\)</span>.</p>
+<p>We further explain this results for special cases, where we largely rely on the relevant discussions of <span class="citation" data-cites="Ai:2003">Ai and Norton (<a href="#ref-Ai:2003" role="doc-biblioref">2003</a>)</span>, <span class="citation" data-cites="Greene:2010">Greene (<a href="#ref-Greene:2010" role="doc-biblioref">2010</a>)</span>, and <span class="citation" data-cites="McCabe:2022">McCabe et al. (<a href="#ref-McCabe:2022" role="doc-biblioref">2022</a>)</span>.</p>
+<section id="main-effect-of-x_2" class="level4">
+<h4 class="anchored" data-anchor-id="main-effect-of-x_2">Main effect of <span class="math inline">\(x_2\)</span></h4>
+<p>If <span class="math inline">\(x_2\)</span> is continuous and <span class="math inline">\(h\)</span> is differentiable, the effect of <span class="math inline">\(x_2\)</span> on the response can be defined as:</p>
+<p><span class="math display">\[\frac{\partial \mu(x_1, x_2)}{\partial x_2}  = h'(\eta) \frac{\partial \eta}{\partial x_2} = 0\]</span> where <span class="math inline">\(h'\)</span> denotes the first derivative of <span class="math inline">\(h\)</span>.</p>
+<p>If <span class="math inline">\(x_2\)</span> is categorical, all contrasts across its levels are zero because the mean response is identical at each level: <span class="math display">\[\Delta_{u,\nu}\mu(x_1, x_2) = \mu(x_1, u) - \mu(x_1, \nu) = h(a_0 + a_1 x_1) - h(a_0 + a_1 x_1) = 0\]</span> where <span class="math inline">\(u, \nu\)</span> are any two levels of <span class="math inline">\(x_2\)</span>.</p>
+</section>
+<section id="interaction-between-x_1-and-x_2" class="level4">
+<h4 class="anchored" data-anchor-id="interaction-between-x_1-and-x_2">Interaction between <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span></h4>
+<p>An interaction on the response scale is present if the marginal effect of <span class="math inline">\(x_1\)</span> depends on <span class="math inline">\(x_2\)</span>. For continuous predictors and assuming that <span class="math inline">\(h\)</span> is twice differentiable, this is characterized by the mixed partial derivative <span class="math inline">\(\frac{\partial^2 \mu}{\partial x_2 \partial x_1}\)</span>.</p>
+<p>Using the chain rule:</p>
+<p><span class="math display">\[\frac{\partial^2 \mu(x_1, x_2)}{\partial x_2 \partial x_1} = h''(\eta) \frac{\partial \eta}{\partial x_2} \frac{\partial \eta}{\partial x_1} + h'(\eta)\frac{\partial^2\eta}{\partial x_2 \partial x_1} = 0\]</span></p>
 <p>Thus the marginal effect of <span class="math inline">\(x_1\)</span> does not vary with <span class="math inline">\(x_2\)</span>, and there is no interaction.</p>
-<p><strong>(b) Categorical predictors: interaction defined by double discrete differences</strong></p>
-<p>Let <span class="math inline">\(L_1\)</span> and <span class="math inline">\(L_2\)</span> be the levels of <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>, respectively. The categorical analogue of a cross-partial derivative is the double difference:</p>
-<p><span class="math display">\[\Delta_{u_1, \nu_1} \Delta_{u_2, \nu_2}\mu(x_1, x_2) = [\mu(u_1,u_2) - \mu(u_1, \nu_2)] - [\mu(\nu_1,u_2) - \mu(\nu_1, \nu_2)]\]</span></p>
-<p>But when <span class="math inline">\(a_2 = a_{12} = 0\)</span>, <span class="math inline">\(\mu(u_1,u_2) = \mu(u_1,\nu_2)\)</span> and <span class="math inline">\(\mu(\nu_1,u_2) = \mu(\nu_1,\nu_2)\)</span>, so the double difference is always zero for any levels <span class="math inline">\(u_1, \nu_1 \in L_1\)</span> and <span class="math inline">\(u_2, \nu_2 \in L_2\)</span>.</p>
-<section id="conclusion-interaction-effects" class="level4">
-<h4 class="anchored" data-anchor-id="conclusion-interaction-effects">Conclusion (interaction effects)</h4>
-<p>If either <span class="math inline">\(a_1 = 0\)</span> or <span class="math inline">\(a_2 = 0\)</span> and <span class="math inline">\(a_{12} = 0\)</span>, then no interaction can be observed on the response scale. Thus Type I error definitions based on the coefficient <span class="math inline">\(a_{12}\)</span> or on observed interaction contrasts are equivalent in these settings.</p>
+<p>For categorical predictors, the analogue of a mixed partial derivative is the double difference:</p>
+<p><span class="math display">\[\Delta_{u_1, \nu_1} \Delta_{u_2, \nu_2}\mu(x_1, x_2) = [\mu(u_1,u_2) - \mu(u_1, \nu_2)] - [\mu(\nu_1,u_2) - \mu(\nu_1, \nu_2)]=\]</span> <span class="math display">\[= [h(a_0 + a_1 u_1) - h(a_0 + a_1 u_1)] - [h(a_0 + a_1 \nu_2) - h(a_0 + a_1 \nu_1)] = 0\]</span></p>
+<p>for any levels <span class="math inline">\(u_1, \nu_1\)</span> of <span class="math inline">\(x_1\)</span> and <span class="math inline">\(u_2, \nu_2\)</span> of <span class="math inline">\(x_2\)</span>. Again, there is no observed interaction.</p>
+</section>
+</section>
+<section id="illustrative-examples" class="level3">
+<h3 class="anchored" data-anchor-id="illustrative-examples">Illustrative examples</h3>
+<p>We discuss two examples.</p>
+<section id="lognormal-data" class="level4">
+<h4 class="anchored" data-anchor-id="lognormal-data">Lognormal data</h4>
+<p>Let <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> be two experimental factors. Suppose the true model of the data is <span class="math display">\[
+\begin{aligned}
+log Y = a_0 + a_1 x_1 + \varepsilon, \qquad
+\varepsilon \sim \mathcal{N}(0, \sigma^2)
+\end{aligned}
+\]</span> so that <span class="math display">\[Y | (x_1, x_2) \sim Lognormal(a_0 + a_1 x_1, \sigma^2)\]</span></p>
+<p>Since the conditional distribution of <span class="math inline">\(Y\)</span> does not depend on <span class="math inline">\(x_2\)</span>, there is no main effect of <span class="math inline">\(x_2\)</span> on the mean, median, or any quantile of the response distribution. In particular, the conditional mean <span class="math display">\[\mu(x_1,x_2) = E(Y|x_1, x_2) = exp(a_0 + a_1 x_1 + \frac{1}{2}\sigma^2)\]</span> remains identical across all levels of <span class="math inline">\(x_2\)</span>.</p>
+<p>For the same reasons, there is no interaction on the response scale.</p>
+</section>
+<section id="ordinal-responses" class="level4">
+<h4 class="anchored" data-anchor-id="ordinal-responses">Ordinal responses</h4>
+<p>Suppose there exists a latent continuous variable:</p>
+<p><span class="math display">\[Y^* = a_0 + a_1 x_1 + \varepsilon\]</span></p>
+<p>and the observed response <span class="math inline">\(Y\)</span> is obtained by applying fixed thresholds: <span class="math display">\[
+\begin{aligned}
+Y = k\ \ \text{if}\ \ \tau_{k-1} &lt; Y^* \leq \tau_k,
+\qquad k = 1,2 ... K
+\end{aligned}
+\]</span> Again, the conditional distribution <span class="math inline">\(Y| (x_1, x_2)\)</span> depends on the independent variables only through <span class="math inline">\(\eta(x_1, x_2)=a_0+a_1 x_1\)</span>, and there is no effect of <span class="math inline">\(x_2\)</span> on either the latent or the observed ordinal scale.</p>
+<p>In this case, the mapping from <span class="math inline">\(\eta\)</span> to the observed response is monotone but not strictly monotone and is therefore non-invertible. As a result, a true effect of <span class="math inline">\(x_2\)</span> on the latent variable (i.e., <span class="math inline">\(a_2 \neq 0\)</span>) may be attenuated or entirely unobservable on the ordinal response scale. This does not affect Type I error rates, provided the null hypothesis is defined on the latent scale and the thresholds are fixed, because the absence of a latent effect implies the absence of an effect on the observed scale. However, power and effect sizes can be reduced when effects are assessed on the ordinal scale, reflecting the loss of information due to discretization.</p>
+<!--
+### Invariance under monotone transformations 
+Suppose we apply a monotone transformation $T$ directly to the observed responses---such as the rank transformation (RNK) or the inverse normal transformation (INT). Because $T$ is monotone, it preserves the ordering of observations within each condition. The transformed conditional distribution $T(Y) | (x_1, x_2)$ therefore depends on the independent variables only through $\eta(x_1, x_2) = a_0+a_1 x_1$. Consequently, the mean, median, and all quantiles of $T(Y) | (x_1, x_2)$ remain invariant to $x_2$, and marginal effects of $x_1$ do not depend on $x_2$. 
+
+In conclusion, $T$ does not introduce a main effect of $x_2$ or an interaction between $x_1$ and $x_2$ when $a_2=0$ and $a_{12}=0$.
+
+
+### ART introducing spurious effects 
+ART differs fundamentally from simple monotone transformations. Instead of transforming $Y$ directly, ART first constructs aligned responses by **subtracting and adding sample means on the response scale**, for example:
+
+$$Y^{(B)} = Y - \bar{Y}_{ij} + \bar{Y}_{.j} - \bar{Y}_{..}$$
+or analogous expressions for interactions, and only then applies ranking. The conditional distribution $Y^{(B)} | (x_1, x_2)$ now depends on $x_2$ through the arithmetic mean components even though $a_2 = 0$ and $a_{12}=0$. 
+
+These alignment terms can vary across levels of $x_2$ due to sampling variability alone, and depending on $h$, they can acquire systematic shifts across levels of $x_2$ or combinations of $(x_1, x_2)$, even when the true conditional distribution does not. in particular, the term $\bar{Y}_{.j} - \bar{Y}_{..}$ is constant within each level of $x_2$ and shifts all aligned observations for that level either upward or downward. 
+
+After ranking, observations from one level of $x_2$ tend to receive systematically higher or lower ranks. Our results confirm this problem.
+-->
 </section>
 </section>
 </section>
