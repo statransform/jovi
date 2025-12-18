@@ -3,9 +3,9 @@ We can now detail our experimental method. We evaluate the standard parametric a
 
 1. We evaluate *ratio* and *ordinal* data. For ratio data, we examine four representative *continuous* distributions (normal, log-normal, exponential, and Cauchy distribution) and two *discrete* distributions (Poisson and binomial distribution). For ordinal data, we examine distributions for 5-level, 7-level, and 11-level Likert item responses.
 
-2. We present results for five experimental designs. To simplify our presentation, we start with a 4 $\times$ 3 repeated-measures factorial design. We then show how our conclusions generalize to four additional designs: (i) a 2 $\times$ 3 between-subjects design; (ii) a 2 $\times$ 4 mixed design, with a between-subjects factor and a repeated-measures factor; (iii) a 2 $\times$ 2 $\times$ 2 repeated-measures design, and (iv) a 3 $\times$ 3 $\times$ 3 repeated-measures design.
+2. We present results for five experimental designs. To simplify our presentation, we start with a 4 $\times$ 3 within-subjects factorial design. We then show how our conclusions generalize to four additional designs: (i) a 2 $\times$ 3 between-subjects design; (ii) a 2 $\times$ 4 mixed design, with a between-subjects factor and a within-subjects factor; (iii) a 2 $\times$ 2 $\times$ 2 within-subjects design, and (iv) a 3 $\times$ 3 $\times$ 3 within-subjects design.
 
-3. We focus on three sample sizes, $n=10$, $n=20$, and $n=30$, where $n$ represents the cell size in an experimental design. In within-subjects designs, where all factors are treated as repeated measures, $n$ corresponds to the number of subjects $N$ (commonly human participants in HCI research). In contrast, in a 2 $\times$ 3 between-subjects design, a cell size of $n = 20$, implies a total of $N = 120$ subjects. For ordinal data only, we also report results for a larger range of sample sizes, up to $n = 512$. 
+3. We focus on three sample sizes, $n=10$, $n=20$, and $n=30$, where $n$ represents the cell size in an experimental design. However, for certain scenarios, we also report results for larger sample sizes, up to $n = 512$. In within-subjects designs, where all factors are treated as repeated measures, $n$ corresponds to the number of subjects $N$ (commonly human participants in HCI research). In contrast, in a 2 $\times$ 3 between-subjects design, a cell size of $n = 20$, implies a total of $N = 120$ subjects. 
 
 4. We test the robustness of the methods when the variances on the latent variable are unequal. 
 
@@ -16,13 +16,13 @@ We can now detail our experimental method. We evaluate the standard parametric a
 <!--
 Furthermore, we assess how a growing interaction effect, either in isolation or in combination with a main effect, can affect the inference of main effects. -->
 
-Previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also examined unbalanced designs, where cell sizes vary across the levels of a factor. When combined with unequal variances, such designs often pose challenges for both parametric procedures [@blanca:2018] and rank transformation methods [@Beasley:2009; @luepsen:2018]. As noted earlier, we do not include unbalanced designs in our evaluation. However, we provide additional experimental results on missing data in the [appendix](appendix.html#missing).
+Previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also examined unbalanced designs, where cell sizes vary across the levels of a factor. When combined with unequal variances, such designs often pose challenges for both parametric procedures [@blanca:2018] and rank transformation methods [@Beasley:2009; @luepsen:2018]. As noted earlier, we do not consider unbalanced designs in our main article. However, we provide additional experimental results on missing data in [Appendix I](appendix_I.html#missing).
 
 ### Statistical modeling
 To model the latent variable $\mathcal{Y}$, we use a two-way (two factors) or a three-way (three factors) mixed-effects model. For simplicity, we explain here the model for two factors. Its extension to three factors is straightforward. The model has the following form:
 
 $$ 
-y_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j} + \epsilon_{ijk}
+y_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j} + \varepsilon_{ijk}
 $${#eq-linear-model}
 
  - $\mu$ is the grand mean
@@ -35,7 +35,7 @@ $${#eq-linear-model}
 
  - $a_1$, $a_2$, and $a_{12}$ express the magnitude of main and interaction effects 
 
- - $\epsilon_{ijk}$ is the experimental error effect
+ - $\varepsilon_{ijk}$ is the experimental error effect
 
 To encode the levels of the two factors $x_{1i} \in X_1$ and $x_{2j} \in X_2$ we proceed as follows: 
 
@@ -60,10 +60,10 @@ plotEffects()
 Varying $a_1$ or $a_2$ to control the magnitude of main effects. The plots show examples of population distributions on the latent variable $\mathcal{Y}$ for factors ($X_1$ or $X_2$) with two (top), three (middle), or four categorical levels (bottom).    
 :::
 
-We follow the approach of @DeBruine:2021 and use the R package *faux* v1.2.1 [@faux] to simulate data for our mixed-effects models. We assume that the distributions of random intercepts and errors are normal, or $s_k \sim N(0,\sigma_s)$ and $\epsilon_{ijk} \sim N(0,\sigma)$.
+We follow the approach of @DeBruine:2021 and use the R package *faux* v1.2.1 [@faux] to simulate data for our mixed-effects models. We assume that the distributions of random intercepts and errors are normal, or $s_k \sim N(0,\sigma_s)$ and $\varepsilon_{ijk} \sim N(0,\sigma)$.
 To simulate the observed variable $Y$, we then transform the response values $y_{ijk}$ as described in [Section 3](#approach). A key advantage of this method is that we can generate responses for any distribution, while we control effects on the latent variable in the exact same way.
 
-### Implementation of rank transformation methods 
+### Implementation of rank transformation methods
 For the aligned rank transformation (ART), we use the R implementation of ARTool v0.11.1 [@artool]. For the pure rank transformation (RNK), we use R's *rank()* function. We use the *Rankit* formulation [@Bliss:1956] for the inverse normal transformation (INT), as explained earlier. Unless explicitly mentioned otherwise, we use the formula ``Y' ~ X1*X2 + (1|S)`` with R's *lmer* function, except for the between-subjects design where we use the formula ``Y' ~ X1*X2 + Error(S)`` with R's *aov* function.
 
 ### Evaluation measures

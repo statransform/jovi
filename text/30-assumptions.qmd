@@ -2,10 +2,10 @@
 ART is often regarded as a nonparametric method, but its alignment mechanism relies on a set of strict assumptions. For a two-way experimental design with independent observation, @higgins:1990 assume the following model for the responses: 
 
 $$ 
-Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha \beta)_{ij} + \epsilon_{ijk}
+Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha \beta)_{ij} + \varepsilon_{ijk}
 $${#eq-higgins-model}
 
-where $\mu$ is the grand mean, $\alpha_i$ is the main effect of the first factor for level $i$, $\beta_j$ is the main effect of the second factor for level $j$, $(\alpha \beta)_{ij}$ is the interaction effect, and $\epsilon_{ijk}$ is the residual error term, assumed to have a common variance. The index $k = 1, ..., n$ denotes the subject number. 
+where $\mu$ is the grand mean, $\alpha_i$ is the main effect of the first factor for level $i$, $\beta_j$ is the main effect of the second factor for level $j$, $(\alpha \beta)_{ij}$ is the interaction effect, and $\varepsilon_{ijk}$ is the residual error term, assumed to have a common variance. The index $k = 1, ..., n$ denotes the subject number. 
 
 This formulation makes several key assumptions: 
 
@@ -102,17 +102,17 @@ Log-normal distributions produced using a generalized linear model. As the mean 
 In these distributions, the mean for hard tasks also increases, but this increase is not reflected as a simple global shift in the distribution. Instead, the overall shape of the distribution changes. The model we used to generate these distributions is structured as follows:
 
 $$ 
-log(Y_{ijk} - \theta) = \mu + \alpha_i + \beta_j + (\alpha \beta)_{ij} + \epsilon_{ijk}
+log(Y_{ijk} - \theta) = \mu + \alpha_i + \beta_j + (\alpha \beta)_{ij} + \varepsilon_{ijk}
 $${#eq-generalized-model}
 
-where $\epsilon_{ijk}$ is normally distributed, and $\theta$ represents a threshold below which response values cannot occur. Unfortunately, ART's alignment mechanism is not designed to handle such cases. The alignment calculations shown in @fig-ART-explained include various mean terms that are sensitive to distribution differences across the levels of factors. In particular, the values of a random sample that appear in the tail of the right distribution can disproportionately influence the within-cell mean. This, in turn, leads to the exaggeration of all ranks within that cell, causing the method --- as our results demonstrate --- to confound effects.
+where $\varepsilon_{ijk}$ is normally distributed, and $\theta$ represents a threshold below which response values cannot occur. Unfortunately, ART's alignment mechanism is not designed to handle such cases. The alignment calculations shown in @fig-ART-explained include various mean terms that are sensitive to distribution differences across the levels of factors. In particular, the values of a random sample that appear in the tail of the right distribution can disproportionately influence the within-cell mean. This, in turn, leads to the exaggeration of all ranks within that cell, causing the method --- as our results demonstrate --- to confound effects.
 
 We acknowledge that @elkin:2021 diverged from the modeling approach described by @higgins:1990 and @Mansouri:1995 and considered nonlinear models to evaluate ART. Yet, their experiments did not reveal that ART confounds effects, simply because they assessed Type I error rates only in scenarios where all main effects were null.
 
 ### Heteroscedasticity issues
 @myers2012 explain that *"if the underlying distribution of the response variable is not normal, but is a continuous, skewed distribution, such as the lognormal, gamma, or Weibull distribution, we often find that the constant variance assumption is violated,* and in such cases, *"the variance is a function of the mean"* (Pages 54-55). This pattern frequently occurs in studies measuring task-completion times, whether the task is visual, motor, or cognitive. As tasks become more difficult and prolonged, variance tends to increase. Similarly, slower participants generally exhibit greater variance across tasks compared to faster, more practiced users. This suggests that ART's assumption of constant variance in skewed distributions is largely unrealistic.
 
-@Wagenmakers:2007 conducted an analysis of nine independent experiments to empircally investigate this pattern in response time distributions. They confirmed that standard deviations were proportional to the mean. The model we presented earlier (see @eq-generalized-model) is in line with these observations. Even when the standard deviation of the error term $\epsilon_{ijk}$ is constant, the standard deviation of observed log-normal distributions increases linearly with their mean. @fig-example (right) shows this pattern in our illustrative example, where the standard deviation of time responses increases proportionally with task difficulty. 
+@Wagenmakers:2007 conducted an analysis of nine independent experiments to empircally investigate this pattern in response time distributions. They confirmed that standard deviations were proportional to the mean. The model we presented earlier (see @eq-generalized-model) is in line with these observations. Even when the standard deviation of the error term $\varepsilon_{ijk}$ is constant, the standard deviation of observed log-normal distributions increases linearly with their mean. @fig-example (right) shows this pattern in our illustrative example, where the standard deviation of time responses increases proportionally with task difficulty. 
 
 However, a question remains: Is ART’s failure in handling such models due solely to heteroscedasticity issues? For example, consider the two time distributions in @fig-homoscedastic-model, which --- despite having different shapes --- share the same standard deviation. Would ART perform correctly in this case? 
 
@@ -169,7 +169,7 @@ fig
 Log-normal distributions with equal variances but different means. Notice that their shapes are distinct. 
 :::
 
-While we do not directly address this question in the main paper, we include additional results in the [appendix](appendix.html#log-normal-distributions-with-equal-variances) showing that as long as distribution shapes differ across levels, ART tends to confound effects. Naturally, as the shapes become more similar, the problem diminishes. In conclusion, heteroscedasticity may exacerbate the problem, but it is not its sole cause.
+While we do not directly address this question in the main paper, we include additional results in [Appendix I](appendix_I.html#log-normal-distributions-with-equal-variances) showing that as long as distribution shapes differ across levels, ART tends to confound effects. Naturally, as the shapes become more similar, the problem diminishes. In conclusion, heteroscedasticity may exacerbate the problem, but it is not its sole cause.
 
 ### Discrete distributions
 As discussed earlier, @luepsen:2017 found that ART frequently fails when reponses are discrete. The problem becomes more pronounced for variables with few discrete levels and as the sample size increases. The author provides a detailed analysis of why this happens, summarized as follows:
