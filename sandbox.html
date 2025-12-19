@@ -71,7 +71,7 @@ div.csl-indent {
   <li><a href="#methodology" id="toc-methodology" class="nav-link active" data-scroll-target="#methodology"><span class="header-section-number">1</span> Experimental method</a>
   <ul class="collapse">
   <li><a href="#statistical-modeling" id="toc-statistical-modeling" class="nav-link" data-scroll-target="#statistical-modeling">Statistical modeling</a></li>
-  <li><a href="#population-control-and-distribution-conversions" id="toc-population-control-and-distribution-conversions" class="nav-link" data-scroll-target="#population-control-and-distribution-conversions">Population control and distribution conversions</a></li>
+  <li><a href="#effects-and-population-control" id="toc-effects-and-population-control" class="nav-link" data-scroll-target="#effects-and-population-control">Effects and population control</a></li>
   <li><a href="#implementation-of-rank-transformation-methods" id="toc-implementation-of-rank-transformation-methods" class="nav-link" data-scroll-target="#implementation-of-rank-transformation-methods">Implementation of rank transformation methods</a></li>
   <li><a href="#evaluation-measures" id="toc-evaluation-measures" class="nav-link" data-scroll-target="#evaluation-measures">Evaluation measures</a></li>
   <li><a href="#hardware-platform-and-iterations" id="toc-hardware-platform-and-iterations" class="nav-link" data-scroll-target="#hardware-platform-and-iterations">Hardware platform and iterations</a></li>
@@ -130,19 +130,19 @@ div.csl-indent {
 <p>We can now detail our experimental method. We evaluate the standard parametric approach (<em>PAR</em>) and the three rank-transformation methods (<em>RNK</em>, <em>INT</em>, and <em>ART</em>) that we introduced earlier. We conduct a series of Monte Carlo experiments that assess their performance under a variety of experimental configurations:</p>
 <p><strong>Distributions.</strong> We evaluate both <em>ratio</em> and <em>ordinal</em> data, drawn from the following distributions:</p>
 <ol type="1">
-<li><em>Normal distribution</em> <span class="math inline">\(\mathcal{N}(\mu, \sigma)\)</span>, where <span class="math inline">\(\mu\)</span> is its mean and <span class="math inline">\(\sigma^2\)</span> is its standard deviation. For most experiments where variances are equal, we set <span class="math inline">\(\sigma = 1\)</span>.</li>
-<li><em>Log-normal distribution</em> <span class="math inline">\(\mathcal{LogN}(\mu, \sigma)\)</span>, where <span class="math inline">\(\mu\)</span> is its mean and <span class="math inline">\(\sigma^2\)</span> is its standard deviation at the logarithmic scale. The log-normal distribution is a good model for various measures bounded by zero, such as task-completion times. We set <span class="math inline">\(\sigma = 1\)</span> in our main experiments but evaluate a wider range of parameters in <a href="appendix_I.html#lognormal">Appendix I</a>.</li>
+<li><em>Normal distribution</em> <span class="math inline">\(\mathcal{N}(\mu, \sigma^2)\)</span>, where <span class="math inline">\(\mu\)</span> is its mean and <span class="math inline">\(\sigma^2\)</span> is its standard deviation. For most experiments where variances are equal, we set <span class="math inline">\(\sigma^2 = 1\)</span>.</li>
+<li><em>Log-normal distribution</em> <span class="math inline">\(\mathcal{LogN}(\mu, \sigma^2)\)</span>, where <span class="math inline">\(\mu\)</span> is its mean and <span class="math inline">\(\sigma^2\)</span> is its standard deviation at the logarithmic scale. The log-normal distribution is a good model for various measures bounded by zero, such as task-completion times. We set <span class="math inline">\(\sigma = 1\)</span> in our main experiments but evaluate a wider range of parameters in <a href="appendix_I.html#lognormal">Appendix I</a>.</li>
 <li><em>Exponential distribution</em> <span class="math inline">\(Exp(\lambda)\)</span>, where <span class="math inline">\(\lambda\)</span> is its rate. The exponential distribution naturally emerges when describing the time elapsed between events. For example, we could use it to model the time a random person spends with a public display, or the waiting time before a new person approaches to interact with the display, when the average waiting time is <span class="math inline">\(\frac{1}{\lambda}\)</span>.<br>
 </li>
 <li><em>Cauchy distribution</em> <span class="math inline">\(\mathcal{Cauchy}(x_0, \gamma)\)</span>, where <span class="math inline">\(x_0\)</span> defines its location (median) and <span class="math inline">\(\gamma\)</span> defines its scale. The Cauchy distribution is the distribution of the ratio of two independent normally distributed random variables. It rarely emerges in practice. However, it is commonly used in statistics to test the robustness of statistical procedures because both its mean and variance are undefined. As we discussed earlier, past evaluations of ART <span class="citation" data-cites="Mansouri:1995 elkin:2021">(<a href="#ref-Mansouri:1995" role="doc-biblioref">Mansouri and Chang 1995</a>; <a href="#ref-elkin:2021" role="doc-biblioref">Elkin et al. 2021</a>)</span> show that the method fails under the Cauchy distribution. We set <span class="math inline">\(\gamma = 1\)</span>.</li>
 <li><em>Poisson distribution</em> <span class="math inline">\(\mathcal{Pois}(\lambda)\)</span>, where <span class="math inline">\(\lambda\)</span> is its rate. It expresses the probability of a given number of events in a fixed interval of time. For example, we could use it to model the number of people who interact with a public display in an hour, when the average rate is <span class="math inline">\(\lambda\)</span> people per hour.</li>
 <li><em>Binomial distribution</em> <span class="math inline">\(\mathcal{B}(\kappa, p)\)</span>, where <span class="math inline">\(\kappa\)</span> defines the number of independent Bernoulli trials and <span class="math inline">\(p\)</span> is the probability of error or success of each trial. It frequently appears in HCI research, as it can model the number of successes and failures in a series of experimental tasks. We set <span class="math inline">\(\kappa = 10\)</span> in our main experiments but evaluate a wider range of parameters in <a href="appendix_I.html#binomial">Appendix I</a>.</li>
-<li>Distributions of <em>Likert-item</em> responses with 5, 7, and 11 levels.</li>
+<li>Distributions of <em>Likert-item</em> responses with 5, 7, and 11 discrete levels.</li>
 </ol>
-<p><strong>Experimental designs.</strong> We present results for five experimental designs. To simplify our presentation, we start with a 4 <span class="math inline">\(\times\)</span> 3 within-subjects factorial design. We then show how our conclusions generalize to four additional designs: (i) a 2 <span class="math inline">\(\times\)</span> 3 between-subjects design; (ii) a 2 <span class="math inline">\(\times\)</span> 4 mixed design, with a between-subjects factor and a within-subjects factor; (iii) a 2 <span class="math inline">\(\times\)</span> 2 <span class="math inline">\(\times\)</span> 2 within-subjects design, and (iv) a 3 <span class="math inline">\(\times\)</span> 3 <span class="math inline">\(\times\)</span> 3 within-subjects design.</p>
+<p><strong>Experimental designs.</strong> We present results for five experimental designs. To simplify our presentation, we start with (i) a 4 <span class="math inline">\(\times\)</span> 3 within-subjects factorial design. We then show how our conclusions generalize to four additional designs: (ii) a 2 <span class="math inline">\(\times\)</span> 3 between-subjects design; (iii) a 2 <span class="math inline">\(\times\)</span> 4 mixed design, with a between-subjects factor and a within-subjects factor; (iv) a 2 <span class="math inline">\(\times\)</span> 2 <span class="math inline">\(\times\)</span> 2 within-subjects design; and (v) a 3 <span class="math inline">\(\times\)</span> 3 <span class="math inline">\(\times\)</span> 3 within-subjects design.</p>
 <p><strong>Sample sizes.</strong> We focus on three sample sizes, <span class="math inline">\(n=10\)</span>, <span class="math inline">\(n=20\)</span>, and <span class="math inline">\(n=30\)</span>, where <span class="math inline">\(n\)</span> represents the cell size in an experimental design. However, for certain scenarios, we also report results for larger sample sizes, up to <span class="math inline">\(n = 512\)</span>. In within-subjects designs, where all factors are treated as repeated measures, <span class="math inline">\(n\)</span> corresponds to the number of subjects <span class="math inline">\(N\)</span> (commonly human participants in HCI research). In contrast, in a 2 <span class="math inline">\(\times\)</span> 3 between-subjects design, a cell size of <span class="math inline">\(n = 20\)</span>, implies a total of <span class="math inline">\(N = 120\)</span> subjects.</p>
-<p><strong>Equal vs.&nbsp;unequal variances.</strong> We test the robustness of the methods when the variances on the latent variable are unequal.</p>
-<p><strong>Evaluation measures.</strong> In addition to Type I error rates, we compare the statistical power of the methods and assess the accuracy of their effect size estimates.</p>
+<p><strong>Equal vs.&nbsp;unequal variances.</strong> For normal and ordinal distributions, we test the robustness of the methods when variances are unequal.</p>
+<p><strong>Evaluation measures.</strong> In addition to Type I error rates, we compare the statistical power of the methods and compare their effect size estimates with ground-truth estimates.</p>
 <p><strong>Magnitude of effects.</strong> We analyze both main and interaction effects, examining how increasing the magnitude of effect of one factor influences the Type I error rates of other factors and their interactions. In addition, we examine how increasing two main effects in parallel influences the Type I error rate of their interaction, while emphasizing that the definition of the null hypothesis in this case is ambiguous.</p>
 <!--
 Furthermore, we assess how a growing interaction effect, either in isolation or in combination with a main effect, can affect the inference of main effects. -->
@@ -152,7 +152,7 @@ Furthermore, we assess how a growing interaction effect, either in isolation or 
 <p>For simplicity, we explain here our modeling approach for two factors, but its extension to three factors is straightforward.</p>
 <p><strong>Linear component.</strong> The base of our data generation process for all distributions is the following linear term:</p>
 <p><span id="eq-linear-model"><span class="math display">\[
-\eta_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j}
+\ell_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j}
 \tag{1}\]</span></span></p>
 <ul>
 <li><p><span class="math inline">\(\mu\)</span> is the grand mean</p></li>
@@ -172,15 +172,15 @@ Furthermore, we assess how a growing interaction effect, either in isolation or 
 <li><p>We require all levels to sum up to 0, or <span class="math inline">\(\sum\limits_{i=1}^{m_1} x_{1i} = 0\)</span> and <span class="math inline">\(\sum\limits_{j=1}^{m_2} x_{2j} = 0\)</span>, which ensures that the grand mean is <span class="math inline">\(\mu\)</span>.</p></li>
 </ol>
 <p>For example, we can encode a factor with four levels as <span class="math inline">\(\{-.6, .4, .1, .1\}\)</span> or as <span class="math inline">\(\{-.5, .5, .3, -.3\}\)</span>.</p>
-<p><strong>Generating ratio data.</strong> We adopt generalized linear modeling for ratio data, where we use an inverse link function <span class="math inline">\(g^{-1}\)</span> to make the connection between <span class="math inline">\(\eta_{ijk}\)</span> and the location parameter of the distribution of interest:<br>
+<p><strong>Generating ratio data.</strong> We adopt generalized linear modeling <span class="citation" data-cites="Bolker2009glm">(<a href="#ref-Bolker2009glm" role="doc-biblioref">Bolker et al. 2009</a>)</span> for ratio data, where we use an inverse link function <span class="math inline">\(g^{-1}\)</span> to make the connection between <span class="math inline">\(\ell_{ijk}\)</span> and the location parameter of the distribution of interest:<br>
 <span id="eq-glm-ratio"><span class="math display">\[
-Y_{ijk} \sim \mathcal{F}(location=g^{-1}(\eta_{ijk}), ...)
+Y_{ijk} \sim \mathcal{F}(location=g^{-1}(\ell_{ijk}), ...)
 \tag{2}\]</span></span></p>
-<p>where <span class="math inline">\(\mathcal{F}\)</span> denotes the probability density (or mass) function from which we draw samples. For example, the mean of the exponential distribution is equal to <span class="math inline">\(1 / \lambda\)</span>, where <span class="math inline">\(\lambda\)</span> is its rate parameter. This mean is linked to the linear term through the function <span class="math inline">\(g^{-1}(x) = e^{x}\)</span>, and therefore, <span class="math inline">\(\lambda = e^{-\eta_{ijk}}\)</span>.</p>
-<p><a href="#tbl-distributions">Table&nbsp;1</a> presents how the parameters of the other distributions are linked to the linear term.</p>
+<p>where <span class="math inline">\(\mathcal{F}\)</span> denotes the probability density (or mass) function from which we draw the responses <span class="math inline">\(Y_{ijk}\)</span>. For example, the mean of the exponential distribution is equal to <span class="math inline">\(1 / \lambda\)</span>, where <span class="math inline">\(\lambda\)</span> is its rate parameter. This mean is linked to the linear term through the function <span class="math inline">\(g^{-1}(x) = e^{x}\)</span>, and therefore, <span class="math inline">\(\lambda = e^{-\ell_{ijk}}\)</span>. Or the link function commonly used for the binomial distribution is the <em>logit</em> function, but its inverse if the <em>logistic</em> function <span class="math inline">\(g^{-1}(x) = 1 / (1 + e^{-x})\)</span>.</p>
+<p><a href="#tbl-distributions">Table&nbsp;1</a> presents how the location parameters of the other distributions are linked to the linear term. We emphasize that the Cauchy distribution does not define a GLM (since it does not belong to the exponential family), but we use a model that connects its location (median) through the identity link.</p>
 <div id="tbl-distributions" class="anchored">
 <table class="table">
-<caption>Table&nbsp;1: Distribution parameters and their links to the linear term <span class="math inline">\(\eta_{ijk}\)</span></caption>
+<caption>Table&nbsp;1: Distribution parameters and their links to the linear term <span class="math inline">\(\ell_{ijk}\)</span></caption>
 <colgroup>
 <col style="width: 26%">
 <col style="width: 22%">
@@ -189,64 +189,132 @@ Y_{ijk} \sim \mathcal{F}(location=g^{-1}(\eta_{ijk}), ...)
 <thead>
 <tr class="header">
 <th>distribution</th>
-<th>parameters</th>
+<th>location parameter</th>
 <th>description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Normal</td>
-<td><span class="math inline">\(\mu = \eta_{ijk}\)</span> <br> <span class="math inline">\(\sigma^2 = \sigma_{\varepsilon}^2\)</span></td>
-<td>mean <br> standard deviation</td>
+<td><span class="math inline">\(\mu = \ell_{ijk}\)</span></td>
+<td>mean</td>
 </tr>
 <tr class="even">
 <td>Log-normal</td>
-<td><span class="math inline">\(\mu = \eta_{ijk}\)</span> <br> <span class="math inline">\(\sigma^2 = \sigma_{\varepsilon}^2\)</span></td>
-<td>mean at logarithmic scale (logarithm of median) <br> standard deviation at logarithmic scale</td>
+<td><span class="math inline">\(\mu = \ell_{ijk}\)</span></td>
+<td>mean at logarithmic scale (logarithm of median)</td>
 </tr>
 <tr class="odd">
 <td>Exponential</td>
-<td><span class="math inline">\(\lambda = e^{-\eta_{ijk}}\)</span></td>
+<td><span class="math inline">\(\lambda = e^{-\ell_{ijk}}\)</span></td>
 <td>rate (1 / mean)</td>
 </tr>
 <tr class="even">
 <td>Cauchy</td>
-<td><span class="math inline">\(x_0 = \eta_{ijk}\)</span> <br> <span class="math inline">\(\gamma = 1\)</span></td>
-<td>location (median) <br> scale</td>
+<td><span class="math inline">\(x_0 = \ell_{ijk}\)</span></td>
+<td>median</td>
 </tr>
 <tr class="odd">
 <td>Poisson</td>
-<td><span class="math inline">\(\lambda = e^{\eta_{ijk}}\)</span></td>
+<td><span class="math inline">\(\lambda = e^{\ell_{ijk}}\)</span></td>
 <td>rate (mean)</td>
 </tr>
 <tr class="even">
 <td>Binomial</td>
-<td><span class="math inline">\(p = Logistic(\eta_{ijk})\)</span> <br> <span class="math inline">\(\kappa = 10\)</span></td>
-<td>probability of error <br> number of Bernoulli trials</td>
+<td><span class="math inline">\(p = 1 / (1 + e^{-\ell_{ijk}})\)</span></td>
+<td>probability of success or error</td>
 </tr>
 </tbody>
 </table>
 </div>
-<p><strong>Generating ordinal data.</strong></p>
+<p><strong>Generating ordinal data.</strong> For generating ordinal data, we follow a latent-variable approach as explained by <span class="citation" data-cites="Liddell:2018">Liddell and Kruschke (<a href="#ref-Liddell:2018" role="doc-biblioref">2018</a>)</span>. Specifically, we consider that there is a continuous latent variable that follows a normal distribution: <span id="eq-ordinal-latent"><span class="math display">\[
+Y_{ijk}^* \sim \mathcal{N}(\mu = \ell_{ijk}, \sigma^2 = 1)
+\tag{3}\]</span></span> From this, we derive discrete responses <span class="math inline">\(d = 1,2 ... D\)</span> by applying fixed thresholds <span class="math inline">\(\tau_d \in (-\infty, \infty)\)</span> as follows: <span id="eq-ordinal-thresholds"><span class="math display">\[
+\begin{aligned}
+Y_{ijk} = d\ \ \text{if}\ \ \tau_{d-1} &lt; Y_{ijk}^* \leq \tau_d
+\end{aligned}
+\tag{4}\]</span></span> Since, in practice, <span class="math inline">\(\tau_0 = -\infty\)</span> and <span class="math inline">\(\tau_D = \infty\)</span>, generating responses with <span class="math inline">\(D\)</span> discrete levels requires <span class="math inline">\(D-1\)</span> thresholds.</p>
 </section>
-<section id="population-control-and-distribution-conversions" class="level3">
-<h3 class="anchored" data-anchor-id="population-control-and-distribution-conversions">Population control and distribution conversions</h3>
-<p>To simplify our simulations, we fix the following population parameters: <span class="math inline">\(\mu = 0\)</span>, <span class="math inline">\(\sigma = 1\)</span>, and <span class="math inline">\(\sigma_s = 1\)</span>. We then control the magnitude of effects by varying <span class="math inline">\(a_1\)</span>, <span class="math inline">\(a_2\)</span>, and, for some experiments <span class="math inline">\(a_{12}\)</span>. <a href="#fig-effects">Figure&nbsp;1</a> presents the range of values that we test for <span class="math inline">\(a_1\)</span> and <span class="math inline">\(a_2\)</span>. We also visualize their effects on the latent variable for factors with two, three, and four categorical levels.</p>
-<div id="fig-effects" class="quarto-figure quarto-figure-center anchored">
+<section id="effects-and-population-control" class="level3">
+<h3 class="anchored" data-anchor-id="effects-and-population-control">Effects and population control</h3>
+<p>We next detail how we select the parameters of the linear component (see <a href="#eq-linear-model">Equation&nbsp;1</a>) for the various distributions, as well as the thresholds of the ordinal model (see <a href="#eq-ordinal-thresholds">Equation&nbsp;4</a>).</p>
+<p><strong>Magnitude of effects.</strong> We control the magnitude of effects by varying <span class="math inline">\(a_1\)</span>, <span class="math inline">\(a_2\)</span>, and, for some experiments (those evaluating power for interactions), <span class="math inline">\(a_{12}\)</span>. <a href="#fig-effects-normal">Figure&nbsp;1</a> presents normal distributions (<span class="math inline">\(\sigma^2 = 1\)</span>) generated across the range of values of <span class="math inline">\(a_1\)</span> used to evaluate Type I error rates. In these examples, we illustrate effects for a factor with three categorical levels and, for clarity, disregard between-subject variability (<span class="math inline">\(\sigma_k^2 = 0\)</span>).</p>
+<div id="fig-effects-normal" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="sandbox_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="864"></p>
 </div>
 </div>
-<figcaption class="figure-caption">Figure&nbsp;1: Varying <span class="math inline">\(a_1\)</span> or <span class="math inline">\(a_2\)</span> to control the magnitude of main effects. The plots show examples of population distributions on the latent variable <span class="math inline">\(\mathcal{Y}\)</span> for factors (<span class="math inline">\(X_1\)</span> or <span class="math inline">\(X_2\)</span>) with two (top), three (middle), or four categorical levels (bottom).</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;1: Varying <span class="math inline">\(a_1\)</span> to control the magnitude of the main effect of <span class="math inline">\(X_1\)</span>. The plots show examples of normal distributions (<span class="math inline">\(\sigma^2=1\)</span>) for a factor with three categorical levels.</figcaption>
 </figure>
 </div>
-<p>We follow the approach of <span class="citation" data-cites="DeBruine:2021">DeBruine and Barr (<a href="#ref-DeBruine:2021" role="doc-biblioref">2021</a>)</span> and use the R package <em>faux</em> v1.2.1 <span class="citation" data-cites="faux">(<a href="#ref-faux" role="doc-biblioref">DeBruine 2023</a>)</span> to simulate data for our mixed-effects models. We assume that the distributions of random intercepts and errors are normal, or <span class="math inline">\(s_k \sim N(0,\sigma_s)\)</span> and <span class="math inline">\(\varepsilon_{ijk} \sim N(0,\sigma)\)</span>. To simulate the observed variable <span class="math inline">\(Y\)</span>, we then transform the response values <span class="math inline">\(y_{ijk}\)</span> as described in <a href="#approach">Section 3</a>. A key advantage of this method is that we can generate responses for any distribution, while we control effects on the latent variable in the exact same way.</p>
+<p><strong>Grand mean and variance parameters.</strong> We select the mean term <span class="math inline">\(\mu\)</span> to match a target location of the responses. <a href="#tbl-locations">Table&nbsp;2</a> reports the target location for each distribution, which is typically the overall mean (or the median in the case of the Cauchy distribution). We describe how <span class="math inline">\(\mu\)</span> is derived from these parameters in <a href="appendix_II.html#mu">Appendix II</a>.</p>
+<div id="tbl-locations" class="anchored">
+<table class="table">
+<caption>Table&nbsp;2: Target mean (median for the Cauchy distribution) of responses <span class="math inline">\(Y_{ijk}\)</span></caption>
+<colgroup>
+<col style="width: 11%">
+<col style="width: 17%">
+<col style="width: 15%">
+<col style="width: 12%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Normal</th>
+<th style="text-align: center;">Log-normal</th>
+<th style="text-align: center;">Exponential</th>
+<th style="text-align: center;">Cauchy</th>
+<th style="text-align: center;">Poisson</th>
+<th style="text-align: center;">Binomial</th>
+<th style="text-align: center;">Ordinal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0.1 (per trial)</td>
+<td style="text-align: center;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><a href="#fig-effects-distributions">Figure&nbsp;2</a> shows distributions generated with these location values when <span class="math inline">\(a_1 = 2\)</span> for a factor with three categorical levels.</p>
+<div id="fig-effects-distributions" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="sandbox_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="864"></p>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;2: Different ratio distributions generated with <span class="math inline">\(a_1 = 2\)</span> when <span class="math inline">\(X_1\)</span> has three categorical levels (here, <span class="math inline">\(\sigma_k^2 = 0\)</span>).</figcaption>
+</figure>
+</div>
+<p>In practice, we randomly choose the standard deviation <span class="math inline">\(\sigma_k^2\)</span> — which determines between-subject variability — from the interval <span class="math inline">\([0.1, 0.5]\)</span>, drawing each value from a uniform distribution.</p>
+<p><strong>Thresholds of ordinal scales.</strong> For ordinal data, we evaluate <span class="math inline">\(D =\)</span> 5, 7, or 11 discrete levels. To derive the discretization thresholds <span class="math inline">\(\tau_d\)</span>, we first consider the range <span class="math inline">\([-2SD, 2SD]\)</span> , where <span class="math inline">\(SD\)</span> is the overall standard deviation of the latent variable <span class="math inline">\(Y^{*}_{ijk}\)</span>. We then divide this range into 5, 7, or 11 intervals, following two different strategies: (i) setting thresholds to be <em>equidistant</em>; or (ii) considering <em>flexible</em> thresholds, randomly drawing their position in the above range.</p>
+<p><a href="#fig-ordinal">Figure&nbsp;3</a> presents examples of equidistant and flexible thresholds for a 5-level scale when the magnitude of main effect of <span class="math inline">\(X_1\)</span> is either <span class="math inline">\(a_1 = 2\)</span> or <span class="math inline">\(a_1 = 8\)</span>, while all other effects are zero.</p>
+<div id="fig-ordinal" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="sandbox_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="864"></p>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;3: The four vertical lines in each plot represent thresholds defining 5-level ordinal scales. Thresholds are either equidistant (top) or flexible (bottom) within a range of <span class="math inline">\(\pm 2\)</span> standard deviations around the grand mean <span class="math inline">\(\mu = 0\)</span>.</figcaption>
+</figure>
+</div>
 </section>
 <section id="implementation-of-rank-transformation-methods" class="level3">
 <h3 class="anchored" data-anchor-id="implementation-of-rank-transformation-methods">Implementation of rank transformation methods</h3>
-<p>For the aligned rank transformation (ART), we use the R implementation of ARTool v0.11.1 <span class="citation" data-cites="artool">(<a href="#ref-artool" role="doc-biblioref">Kay et al. 2021</a>)</span>. For the pure rank transformation (RNK), we use R’s <em>rank()</em> function. We use the <em>Rankit</em> formulation <span class="citation" data-cites="Bliss:1956">(<a href="#ref-Bliss:1956" role="doc-biblioref">Bliss, Greenwood, and White 1956</a>)</span> for the inverse normal transformation (INT), as explained earlier. Unless explicitly mentioned otherwise, we use the formula <code>Y' ~ X1*X2 + (1|S)</code> with R’s <em>lmer</em> function, except for the between-subjects design where we use the formula <code>Y' ~ X1*X2 + Error(S)</code> with R’s <em>aov</em> function.</p>
+<p>For the aligned rank transformation (ART), we use the R implementation of ARTool v0.11.1 <span class="citation" data-cites="artool">(<a href="#ref-artool" role="doc-biblioref">Kay et al. 2021</a>)</span>. For the pure rank transformation (RNK), we use R’s <em>rank()</em> function. We use the <em>Rankit</em> formulation <span class="citation" data-cites="Bliss:1956">(<a href="#ref-Bliss:1956" role="doc-biblioref">Bliss, Greenwood, and White 1956</a>)</span> for the inverse normal transformation (INT), as explained earlier.</p>
+<p>Unless stated otherwise, we analyze the data using ANOVA with R’s <em>aov()</em> function and the model specification <code>Y' ~ X1 * X2 + Error(S)</code>. For balanced designs, this approach yields results that are identical or nearly identical to those obtained using R’s <em>lmer()</em> function with the model specification <code>Y' ~ X1 * X2 + (1 | S)</code>.</p>
 </section>
 <section id="evaluation-measures" class="level3">
 <h3 class="anchored" data-anchor-id="evaluation-measures">Evaluation measures</h3>
@@ -255,7 +323,7 @@ Y_{ijk} \sim \mathcal{F}(location=g^{-1}(\eta_{ijk}), ...)
 <p>We do not directly evaluate Type II errors. Instead, we report on statistical <em>power</em> defined as <span class="math inline">\(Power = 1 - \beta\)</span>, where <span class="math inline">\(\beta\)</span> is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. In addition to power, we assess effect size estimates, where we use as ground truth the estimates of a parametric ANOVA conducted on the latent variable <span class="math inline">\(\mathcal{Y}\)</span>. While partial <span class="math inline">\(\eta^2\)</span> is the most commonly used effect size measure, we also evaluate Cohen’s <span class="math inline">\(f\)</span>, as its expected value is proportional to the real magnitude of effect. However, <span class="math inline">\(\eta^2\)</span> can be directly derived from Cohen’s <span class="math inline">\(f\)</span> as follows:</p>
 <p><span id="eq-cohensf"><span class="math display">\[
 \eta^2 = \frac{f^2}{1 + f^2}
-\tag{3}\]</span></span></p>
+\tag{5}\]</span></span></p>
 <p>As explained earlier, interaction effects are distorted when the latent variable <span class="math inline">\(\mathcal{Y}\)</span> is transformed to produce the observed responses. These transformations also influence the Type I error rates and statistical power we observe. In this analysis, we focus on evaluating these measures with respect to the effects applied to the latent variable <span class="math inline">\(\mathcal{Y}\)</span>. We explicitly make this distinction whenever it is relevant to our discussion.</p>
 </section>
 <section id="hardware-platform-and-iterations" class="level3">
@@ -279,17 +347,17 @@ Blanca, Marı́a J., Rafael Alarcón, Jaume Arnau, Roser Bono, and Rebecca Benda
 <div id="ref-Bliss:1956" class="csl-entry" role="listitem">
 Bliss, C. I., Mary L. Greenwood, and Edna Sakamoto White. 1956. <span>“A Rankit Analysis of Paired Comparisons for Measuring the Effect of Sprays on Flavor.”</span> <em>Biometrics</em> 12 (4): 381–403. <a href="http://www.jstor.org/stable/3001679">http://www.jstor.org/stable/3001679</a>.
 </div>
-<div id="ref-faux" class="csl-entry" role="listitem">
-DeBruine, Lisa. 2023. <em>Faux: Simulation for Factorial Designs</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.2669586">https://doi.org/10.5281/zenodo.2669586</a>.
-</div>
-<div id="ref-DeBruine:2021" class="csl-entry" role="listitem">
-DeBruine, Lisa, and Dale Barr. 2021. <span>“Understanding Mixed-Effects Models Through Data Simulation.”</span> <em>Advances in Methods and Practices in Psychological Science</em> 4 (1): 2515245920965119. <a href="https://doi.org/10.1177/2515245920965119">https://doi.org/10.1177/2515245920965119</a>.
+<div id="ref-Bolker2009glm" class="csl-entry" role="listitem">
+Bolker, Benjamin M., Mollie E. Brooks, Connie J. Clark, Shane W. Geange, John R. Poulsen, M. Henry H. Stevens, and Jada-Simone S. White. 2009. <span>“Generalized Linear Mixed Models: A Practical Guide for Ecology and Evolution.”</span> <em>Trends in Ecology &amp; Evolution</em> 24 (3): 127–135. <a href="https://doi.org/10.1016/j.tree.2008.10.008">https://doi.org/10.1016/j.tree.2008.10.008</a>.
 </div>
 <div id="ref-elkin:2021" class="csl-entry" role="listitem">
 Elkin, Lisa A., Matthew Kay, James J. Higgins, and Jacob O. Wobbrock. 2021. <span>“An Aligned Rank Transform Procedure for Multifactor Contrast Tests.”</span> <em>The 34th Annual ACM Symposium on User Interface Software and Technology</em> (New York, NY, USA), UIST ’21, 2021, 754–768. <a href="https://doi.org/10.1145/3472749.3474784">https://doi.org/10.1145/3472749.3474784</a>.
 </div>
 <div id="ref-artool" class="csl-entry" role="listitem">
 Kay, Matthew, Lisa A. Elkin, James J. Higgins, and Jacob O. Wobbrock. 2021. <em>ARTool r Package</em>. <a href="https://cran.r-project.org/web/packages/ARTool">https://cran.r-project.org/web/packages/ARTool</a>.
+</div>
+<div id="ref-Liddell:2018" class="csl-entry" role="listitem">
+Liddell, Torrin M., and John K. Kruschke. 2018. <span>“Analyzing Ordinal Data with Metric Models: What Could Possibly Go Wrong?”</span> <em>Journal of Experimental Social Psychology</em> 79: 328–348. <a href="https://doi.org/10.1016/j.jesp.2018.08.009">https://doi.org/10.1016/j.jesp.2018.08.009</a>.
 </div>
 <div id="ref-luepsen:2018" class="csl-entry" role="listitem">
 Lüpsen, Haiko. 2018. <span>“Comparison of Nonparametric Analysis of Variance Methods: A Vote for van Der Waerden.”</span> <em>Communications in Statistics - Simulation and Computation</em> 47 (9): 2547–2576. <a href="https://doi.org/10.1080/03610918.2017.1353613">https://doi.org/10.1080/03610918.2017.1353613</a>.

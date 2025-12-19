@@ -44,21 +44,21 @@ We can now detail our experimental method. We evaluate the standard parametric a
 
 **Distributions.** We evaluate both *ratio* and *ordinal* data, drawn from the following distributions: 
 
-1. *Normal distribution* $\mathcal{N}(\mu, \sigma)$, where $\mu$ is its mean and $\sigma^2$ is its standard deviation. For most experiments where variances are equal, we set $\sigma = 1$.
-2. *Log-normal distribution* $\mathcal{LogN}(\mu, \sigma)$, where $\mu$ is its mean and $\sigma^2$ is its standard deviation at the logarithmic scale. The log-normal distribution is a good model for various measures bounded by zero, such as task-completion times. We set $\sigma = 1$ in our main experiments but evaluate a wider range of parameters in [Appendix I](appendix_I.html#lognormal).
+1. *Normal distribution* $\mathcal{N}(\mu, \sigma^2)$, where $\mu$ is its mean and $\sigma^2$ is its standard deviation. For most experiments where variances are equal, we set $\sigma^2 = 1$.
+2. *Log-normal distribution* $\mathcal{LogN}(\mu, \sigma^2)$, where $\mu$ is its mean and $\sigma^2$ is its standard deviation at the logarithmic scale. The log-normal distribution is a good model for various measures bounded by zero, such as task-completion times. We set $\sigma = 1$ in our main experiments but evaluate a wider range of parameters in [Appendix I](appendix_I.html#lognormal).
 3. *Exponential distribution* $Exp(\lambda)$, where $\lambda$ is its rate. The exponential distribution naturally emerges when describing the time elapsed between events. For example, we could use it to model the time a random person spends with a public display, or the waiting time before a new person approaches to interact with the display, when the average waiting time is $\frac{1}{\lambda}$.  
 4. *Cauchy distribution* $\mathcal{Cauchy}(x_0, \gamma)$, where $x_0$ defines its location (median) and $\gamma$ defines its scale. The Cauchy distribution is the distribution of the ratio of two independent normally distributed random variables. It rarely emerges in practice. However, it is commonly used in statistics to test the robustness of statistical procedures because both its mean and variance are undefined. As we discussed earlier, past evaluations of ART [@Mansouri:1995; @elkin:2021] show that the method fails under the Cauchy distribution. We set $\gamma = 1$.
 5. *Poisson distribution* $\mathcal{Pois}(\lambda)$, where $\lambda$ is its rate. It expresses the probability of a given number of events in a fixed interval of time. For example, we could use it to model the number of people who interact with a public display in an hour, when the average rate is $\lambda$ people per hour.
 6. *Binomial distribution* $\mathcal{B}(\kappa, p)$, where $\kappa$ defines the number of independent Bernoulli trials and $p$ is the probability of error or success of each trial. It frequently appears in HCI research, as it can model the number of successes and failures in a series of experimental tasks. We set $\kappa = 10$ in our main experiments but evaluate a wider range of parameters in [Appendix I](appendix_I.html#binomial).
-7. Distributions of *Likert-item* responses with 5, 7, and 11 levels.
+7. Distributions of *Likert-item* responses with 5, 7, and 11 discrete levels.
 
-**Experimental designs.** We present results for five experimental designs. To simplify our presentation, we start with a 4 $\times$ 3 within-subjects factorial design. We then show how our conclusions generalize to four additional designs: (i) a 2 $\times$ 3 between-subjects design; (ii) a 2 $\times$ 4 mixed design, with a between-subjects factor and a within-subjects factor; (iii) a 2 $\times$ 2 $\times$ 2 within-subjects design, and (iv) a 3 $\times$ 3 $\times$ 3 within-subjects design.
+**Experimental designs.** We present results for five experimental designs. To simplify our presentation, we start with (i) a 4 $\times$ 3 within-subjects factorial design. We then show how our conclusions generalize to four additional designs: (ii) a 2 $\times$ 3 between-subjects design; (iii) a 2 $\times$ 4 mixed design, with a between-subjects factor and a within-subjects factor; (iv) a 2 $\times$ 2 $\times$ 2 within-subjects design; and (v) a 3 $\times$ 3 $\times$ 3 within-subjects design.
 
 **Sample sizes.** We focus on three sample sizes, $n=10$, $n=20$, and $n=30$, where $n$ represents the cell size in an experimental design. However, for certain scenarios, we also report results for larger sample sizes, up to $n = 512$. In within-subjects designs, where all factors are treated as repeated measures, $n$ corresponds to the number of subjects $N$ (commonly human participants in HCI research). In contrast, in a 2 $\times$ 3 between-subjects design, a cell size of $n = 20$, implies a total of $N = 120$ subjects. 
 
-**Equal vs. unequal variances.** We test the robustness of the methods when the variances on the latent variable are unequal. 
+**Equal vs. unequal variances.** For normal and ordinal distributions, we test the robustness of the methods when variances are unequal. 
 
-**Evaluation measures.** In addition to Type I error rates, we compare the statistical power of the methods and assess the accuracy of their effect size estimates.
+**Evaluation measures.** In addition to Type I error rates, we compare the statistical power of the methods and compare their effect size estimates with ground-truth estimates.
 
 **Magnitude of effects.** We analyze both main and interaction effects, examining how increasing the magnitude of effect of one factor influences the Type I error rates of other factors and their interactions. In addition, we examine how increasing two main effects in parallel influences the Type I error rate of their interaction, while emphasizing that the definition of the null hypothesis in this case is ambiguous.    
 
@@ -73,7 +73,7 @@ For simplicity, we explain here our modeling approach for two factors, but its e
 **Linear component.** The base of our data generation process for all distributions is the following linear term:
 
 $$ 
-\eta_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j}
+\ell_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j}
 $${#eq-linear-model}
 
  - $\mu$ is the grand mean
@@ -102,45 +102,86 @@ $${#eq-linear-model}
 
 For example, we can encode a factor with four levels as $\{-.6, .4, .1, .1\}$ or as $\{-.5, .5, .3, -.3\}$. 
 
-**Generating ratio data.** We adopt generalized linear modeling for ratio data, where we use an inverse link function $g^{-1}$ to make the connection between $\eta_{ijk}$ and the location parameter of the distribution of interest:  
+**Generating ratio data.** We adopt generalized linear modeling [@Bolker2009glm] for ratio data, where we use an inverse link function $g^{-1}$ to make the connection between $\ell_{ijk}$ and the location parameter of the distribution of interest:  
 $$
-Y_{ijk} \sim \mathcal{F}(location=g^{-1}(\eta_{ijk}), ...)
+Y_{ijk} \sim \mathcal{F}(location=g^{-1}(\ell_{ijk}), ...)
 $${#eq-glm-ratio}
 
-where $\mathcal{F}$ denotes the probability density (or mass) function from which we draw samples. For example, the mean of the exponential distribution is equal to $1 / \lambda$, where $\lambda$ is its rate parameter. This mean is linked to the linear term through the function $g^{-1}(x) = e^{x}$, and therefore, $\lambda = e^{-\eta_{ijk}}$.
+where $\mathcal{F}$ denotes the probability density (or mass) function from which we draw the responses $Y_{ijk}$. For example, the mean of the exponential distribution is equal to $1 / \lambda$, where $\lambda$ is its rate parameter. This mean is linked to the linear term through the function $g^{-1}(x) = e^{x}$, and therefore, $\lambda = e^{-\ell_{ijk}}$. Or the link function commonly used for the binomial distribution is the *logit* function, but its inverse if the *logistic* function $g^{-1}(x) = 1 / (1 + e^{-x})$.
 
- @tbl-distributions presents how the parameters of the other distributions are linked to the linear term.
+ @tbl-distributions presents how the location parameters of the other distributions are linked to the linear term. We emphasize that the Cauchy distribution does not define a GLM (since it does not belong to the exponential family), but we use a model that connects its location (median) through the identity link. 
 
-| distribution | parameters | description               |
+| distribution | location parameter | description               |
 |--------------|------------|---------------------------|
-| Normal       |$\mu = \eta_{ijk}$ <br> $\sigma^2 = \sigma_{\varepsilon}^2$ | mean <br> standard deviation |
-| Log-normal    |$\mu = \eta_{ijk}$ <br> $\sigma^2 = \sigma_{\varepsilon}^2$ | mean at logarithmic scale (logarithm of median) <br> standard deviation at logarithmic scale|
-| Exponential  |$\lambda = e^{-\eta_{ijk}}$ | rate (1 / mean) |
-| Cauchy       |$x_0 = \eta_{ijk}$ <br> $\gamma = 1$ | location (median) <br> scale 
-| Poisson      |$\lambda = e^{\eta_{ijk}}$ | rate (mean) |
-| Binomial     |$p = Logistic(\eta_{ijk})$ <br> $\kappa = 10$ | probability of error <br> number of Bernoulli trials |
+| Normal       |$\mu = \ell_{ijk}$ | mean |
+| Log-normal    |$\mu = \ell_{ijk}$ | mean at logarithmic scale (logarithm of median) |
+| Exponential  |$\lambda = e^{-\ell_{ijk}}$ | rate (1 / mean) |
+| Cauchy       |$x_0 = \ell_{ijk}$ | median |
+| Poisson      |$\lambda = e^{\ell_{ijk}}$ | rate (mean) |
+| Binomial     |$p = 1 / (1 + e^{-\ell_{ijk}})$ | probability of success or error |
 
-: Distribution parameters and their links to the linear term $\eta_{ijk}$ {#tbl-distributions}
+: Distribution parameters and their links to the linear term $\ell_{ijk}$ {#tbl-distributions}
 
-**Generating ordinal data.**
+**Generating ordinal data.** For generating ordinal data, we follow a latent-variable approach as explained by @Liddell:2018. Specifically, we consider that there is a continuous latent variable that follows a normal distribution: 
+$$
+Y_{ijk}^* \sim \mathcal{N}(\mu = \ell_{ijk}, \sigma^2 = 1)
+$${#eq-ordinal-latent}
+From this, we derive discrete responses $d = 1,2 ... D$ by applying fixed thresholds $\tau_d \in (-\infty, \infty)$ as follows:
+$$
+\begin{aligned}
+Y_{ijk} = d\ \ \text{if}\ \ \tau_{d-1} < Y_{ijk}^* \leq \tau_d
+\end{aligned} 
+$${#eq-ordinal-thresholds}
+Since, in practice, $\tau_0 = -\infty$ and $\tau_D = \infty$, generating responses with $D$ discrete levels requires $D-1$ thresholds. 
 
+### Effects and population control
+We next detail how we select the parameters of the linear component (see @eq-linear-model) for the various distributions, as well as the thresholds of the ordinal model (see @eq-ordinal-thresholds). 
 
-### Population control and distribution conversions 
-To simplify our simulations, we fix the following population parameters: $\mu = 0$, $\sigma = 1$, and $\sigma_s = 1$. We then control the magnitude of effects by varying $a_1$, $a_2$, and, for some experiments $a_{12}$. @fig-effects presents the range of values that we test for $a_1$ and $a_2$. We also visualize their effects on the latent variable for factors with two, three, and four categorical levels. 
+**Magnitude of effects.** We control the magnitude of effects by varying $a_1$, $a_2$, and, for some experiments (those evaluating power for interactions), $a_{12}$. @fig-effects-normal presents normal distributions ($\sigma^2 = 1$) generated across the range of values of $a_1$ used to evaluate Type I error rates. In these examples, we illustrate effects for a factor with three categorical levels and, for clarity, disregard between-subject variability ($\sigma_k^2 = 0$).
 
-::: {#fig-effects}
-```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 9, warning=FALSE}
-source("effects_plot.R")
-plotEffects()
+::: {#fig-effects-normal}
+```{r, echo=FALSE, message=FALSE, fig.height=1.2, fig.width = 9, warning=FALSE}
+source("distributions_plots.R")
+plot_effects_normal()
 ```
-Varying $a_1$ or $a_2$ to control the magnitude of main effects. The plots show examples of population distributions on the latent variable $\mathcal{Y}$ for factors ($X_1$ or $X_2$) with two (top), three (middle), or four categorical levels (bottom).    
+Varying $a_1$ to control the magnitude of the main effect of $X_1$. The plots show examples of normal distributions ($\sigma^2=1$) for a factor with three categorical levels. 
 :::
 
-We follow the approach of @DeBruine:2021 and use the R package *faux* v1.2.1 [@faux] to simulate data for our mixed-effects models. We assume that the distributions of random intercepts and errors are normal, or $s_k \sim N(0,\sigma_s)$ and $\varepsilon_{ijk} \sim N(0,\sigma)$.
-To simulate the observed variable $Y$, we then transform the response values $y_{ijk}$ as described in [Section 3](#approach). A key advantage of this method is that we can generate responses for any distribution, while we control effects on the latent variable in the exact same way.
+**Grand mean and variance parameters.** We select the mean term $\mu$ to match a target location of the responses. @tbl-locations reports the target location for each distribution, which is typically the overall mean (or the median in the case of the Cauchy distribution). We describe how $\mu$ is derived from these parameters in [Appendix II](appendix_II.html#mu). 
+
+| Normal | Log-normal | Exponential | Cauchy | Poisson | Binomial | Ordinal |
+|:------:|:----------:|:---------:|:-------:|:--------:|:--------:|:--------:|
+| 0 | 1 | 0.5 | 0 | 3 | 0.1 (per trial) | 0 |  
+
+: Target mean (median for the Cauchy distribution) of responses $Y_{ijk}$ {#tbl-locations}
+
+@fig-effects-distributions shows distributions generated with these location values when $a_1 = 2$ for a factor with three categorical levels.
+
+::: {#fig-effects-distributions}
+```{r, echo=FALSE, message=FALSE, fig.height=1.2, fig.width = 9, warning=FALSE}
+source("distributions_plots.R")
+plot_effects_distr()
+```
+Different ratio distributions generated with $a_1 = 2$ when $X_1$ has three categorical levels (here, $\sigma_k^2 = 0$).
+:::
+
+In practice, we randomly choose the standard deviation $\sigma_k^2$ --- which determines between-subject variability --- from the interval $[0.1, 0.5]$, drawing each value from a uniform distribution.
+
+**Thresholds of ordinal scales.** For ordinal data, we evaluate $D =$ 5, 7, or 11 discrete levels. To derive the discretization thresholds $\tau_d$, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of the latent variable $Y^{*}_{ijk}$. We then divide this range into 5, 7, or 11 intervals, following two different strategies: (i) setting thresholds to be *equidistant*; or (ii) considering *flexible* thresholds, randomly drawing their position in the above range.
+
+ @fig-ordinal presents examples of equidistant and flexible thresholds for a 5-level scale when the magnitude of main effect of $X_1$ is either $a_1 = 2$ or $a_1 = 8$, while all other effects are zero. 
+
+::: {#fig-ordinal}
+```{r, echo=FALSE, message=FALSE, fig.height=2.5, fig.width = 9, warning=FALSE}
+plot_thresholds()
+```
+The four vertical lines in each plot represent thresholds defining 5-level ordinal scales. Thresholds are either equidistant (top) or flexible (bottom) within a range of $\pm 2$ standard deviations around the grand mean $\mu = 0$.  
+:::
 
 ### Implementation of rank transformation methods
-For the aligned rank transformation (ART), we use the R implementation of ARTool v0.11.1 [@artool]. For the pure rank transformation (RNK), we use R's *rank()* function. We use the *Rankit* formulation [@Bliss:1956] for the inverse normal transformation (INT), as explained earlier. Unless explicitly mentioned otherwise, we use the formula ``Y' ~ X1*X2 + (1|S)`` with R's *lmer* function, except for the between-subjects design where we use the formula ``Y' ~ X1*X2 + Error(S)`` with R's *aov* function.
+For the aligned rank transformation (ART), we use the R implementation of ARTool v0.11.1 [@artool]. For the pure rank transformation (RNK), we use R's *rank()* function. We use the *Rankit* formulation [@Bliss:1956] for the inverse normal transformation (INT), as explained earlier. 
+
+Unless stated otherwise, we analyze the data using ANOVA with R’s *aov()* function and the model specification ``Y' ~ X1 * X2 + Error(S)``. For balanced designs, this approach yields results that are identical or nearly identical to those obtained using R's *lmer()* function with the model specification ``Y' ~ X1 * X2 + (1 | S)``.
 
 ### Evaluation measures
 Significance tests have two types of errors. *Type I errors*, or false positives, are mistaken rejections of the null hypothesis. Type II errors, of false negatives, are failures to reject a null hypothesis that is actually true. In our illustrative example in @fig-example, a Type I error is finding that there is an effect of the choice of the technique on time performance. A *Type II error*, in turn, is finding that the task difficulty has no effect on time performance. 

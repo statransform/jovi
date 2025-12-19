@@ -23,12 +23,12 @@ tbl-cap-location: top
 ## Absence of spurious effects when $a_2=0$ and $a_{12} = 0${#effects-proof}
 Let $x_1$ and $x_2$ be two independent variables, and suppose the conditional distribution of the response $Y | (x_1, x_2)$ depends on these variables only through the linear predictor:
 $$
-\eta(x_1, x_2) = a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2
+\ell(x_1, x_2) = a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2
 $$
 
 Assume that the conditional mean can be written as:
 $$
-\mu(x_1, x_2) = E(Y|x_1, x_2) = h(\eta(x_1, x_2))
+\mu(x_1, x_2) = E(Y|x_1, x_2) = h(\ell(x_1, x_2))
 $$
 where $h$ is a monotone function. This function may coincide with the inverse link function $g^{-1}$ in a GLM, but it may also arise from other frameworks, including transformation models or latent-variable constructions. Thus it does not necessarily need to be smooth or invertible; for example, this assumption is not required for the ordinal example discussed later.
 
@@ -42,7 +42,7 @@ Thus, whether Type I errors are defined in terms of the model coefficients $a_2$
 ### Proof
 Under $a_2 = a_{12} = 0$, the linear predictor reduces to
 
-$$\eta(x_1, x_2) = a_0 + a_1x_1$$
+$$\ell(x_1, x_2) = a_0 + a_1x_1$$
 
 which does not depend on $x_2$. Hence, the conditional distribution $Y | (x_1, x_2)$, including its mean, median, and all quantiles, is invariant to $x_2$. This establishes the absence of a main effect of $x_2$ or an effect of its interaction $x_2$. 
 
@@ -51,7 +51,7 @@ We further explain this results for special cases, where we largely rely on the 
 #### Main effect of $x_2$
 If $x_2$ is continuous and $h$ is differentiable, the effect of $x_2$ on the response can be defined as:
 
-$$\frac{\partial \mu(x_1, x_2)}{\partial x_2}  = h'(\eta) \frac{\partial \eta}{\partial x_2} = 0$$
+$$\frac{\partial \mu(x_1, x_2)}{\partial x_2}  = h'(\ell) \frac{\partial \ell}{\partial x_2} = 0$$
 where $h'$ denotes the first derivative of $h$.
 
 If $x_2$ is categorical, all contrasts across its levels are zero because the mean response is identical at each level:
@@ -63,7 +63,7 @@ An interaction on the response scale is present if the marginal effect of $x_1$ 
 
 Using the chain rule:
 
-$$\frac{\partial^2 \mu(x_1, x_2)}{\partial x_2 \partial x_1} = h''(\eta) \frac{\partial \eta}{\partial x_2} \frac{\partial \eta}{\partial x_1} + h'(\eta)\frac{\partial^2\eta}{\partial x_2 \partial x_1} = 0$$
+$$\frac{\partial^2 \mu(x_1, x_2)}{\partial x_2 \partial x_1} = h''(\ell) \frac{\partial \ell}{\partial x_2} \frac{\partial \ell}{\partial x_1} + h'(\ell)\frac{\partial^2\ell}{\partial x_2 \partial x_1} = 0$$
 
 Thus the marginal effect of $x_1$ does not vary with $x_2$, and there is no interaction.
   
@@ -74,10 +74,10 @@ $$= [h(a_0 + a_1 u_1) - h(a_0 + a_1 u_1)] - [h(a_0 + a_1 \nu_2) - h(a_0 + a_1 \n
 
 for any levels $u_1, \nu_1$ of $x_1$ and $u_2, \nu_2$ of $x_2$. Again, there is no observed interaction.
 
-### Illustrative examples
+### Examples
 We discuss two examples.
 
-#### Lognormal data
+#### Log-normal distributions
 Let $x_1$ and $x_2$ be two experimental factors. Suppose the true model of the data is
 $$
 \begin{aligned}
@@ -97,22 +97,23 @@ For the same reasons, there is no interaction on the response scale.
 #### Ordinal responses
 Suppose there exists a latent continuous variable:
 
-$$Y^* = a_0 + a_1 x_1 + \varepsilon$$
+$$Y^* = a_0 + a_1 x_1 + \varepsilon, \qquad
+\varepsilon \sim \mathcal{N}(0, \sigma^2)$$
 
 and the observed response $Y$ is obtained by applying fixed thresholds: 
 $$
 \begin{aligned}
-Y = k\ \ \text{if}\ \ \tau_{k-1} < Y^* \leq \tau_k, 
-\qquad k = 1,2 ... K
+Y = d\ \ \text{if}\ \ \tau_{d-1} < Y^* \leq \tau_k, 
+\qquad d = 1,2 ... D
 \end{aligned} 
 $$ 
-Again, the conditional distribution $Y| (x_1, x_2)$ depends on the independent variables only through $\eta(x_1, x_2)=a_0+a_1 x_1$, and there is no effect of $x_2$ on either the latent or the observed ordinal scale. 
+Again, the conditional distribution $Y| (x_1, x_2)$ depends on the independent variables only through $\ell(x_1, x_2)=a_0+a_1 x_1$, and there is no effect of $x_2$ on either the latent or the observed ordinal scale. 
 
-In this case, the mapping from $\eta$ to the observed response is monotone but not strictly monotone and is therefore non-invertible. As a result, a true effect of $x_2$ on the latent variable (i.e., $a_2 \neq 0$) may be attenuated or entirely unobservable on the ordinal response scale. This does not affect Type I error rates, provided the null hypothesis is defined on the latent scale and the thresholds are fixed, because the absence of a latent effect implies the absence of an effect on the observed scale. However, power and effect sizes can be reduced when effects are assessed on the ordinal scale, reflecting the loss of information due to discretization.  
+In this case, the mapping from $\ell$ to the observed response is monotone but not strictly monotone and is therefore non-invertible. As a result, a true effect of $x_2$ on the latent variable (i.e., $a_2 \neq 0$) may be attenuated or entirely unobservable on the ordinal response scale. This does not affect Type I error rates, provided the null hypothesis is defined on the latent scale and the thresholds are fixed, because the absence of a latent effect implies the absence of an effect on the observed scale. However, power and effect sizes can be reduced when effects are assessed on the ordinal scale, reflecting the loss of information due to discretization.  
 
 
 ### Invariance under monotone transformations 
-Suppose we apply a monotone transformation $T$ directly to the observed responses---such as the rank transformation (RNK) or the inverse normal transformation (INT). Because $T$ is monotone, it preserves the ordering of observations within each condition. The transformed conditional distribution $T(Y) | (x_1, x_2)$ therefore depends on the independent variables only through $\eta(x_1, x_2) = a_0+a_1 x_1$. Consequently, the mean, median, and all quantiles of $T(Y) | (x_1, x_2)$ remain invariant to $x_2$, and marginal effects of $x_1$ do not depend on $x_2$. 
+Suppose we apply a monotone transformation $T$ directly to the observed responses---such as the rank transformation (RNK) or the inverse normal transformation (INT). Because $T$ is monotone, it preserves the ordering of observations within each condition. The transformed conditional distribution $T(Y) | (x_1, x_2)$ therefore depends on the independent variables only through $\ell(x_1, x_2) = a_0+a_1 x_1$. Consequently, the mean, median, and all quantiles of $T(Y) | (x_1, x_2)$ remain invariant to $x_2$, and marginal effects of $x_1$ do not depend on $x_2$. 
 
 We emphasize that ART is not a monotone transformation. Instead of transforming $Y$ directly, ART first constructs aligned responses by subtracting and adding sample means on the response scale. These alignment terms can vary across levels of $x_2$ or combinations of $(x_1, x_2)$. Therefore, ART is not invariant to nonlinear mean–response relationships.
 

@@ -1,12 +1,5 @@
 ### Type I error rates in ordinal scales {#ordinal}
-We also evaluate Type I error rates for ordinal scales. We test again a $4 \times 3$ repeated-measures design. We focus on individual Likert items levels and implement an ordered-probit method [@Liddell:2018] to discretize the latent variable $Y$ into 5, 7, or 11 ordinal levels. To derive the discretization thresholds, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of the responses $y_{ijk}$. We then divide this range into 5, 7, or 11 intervals, following two different strategies: (i) setting thresholds to be *equidistant*; or (ii) considering *flexible* thresholds, randomly drawing their position in the above range. @fig-ordinal presents examples of equidistant and flexible thresholds for a 5-level scale when the magnitude of main effect of $X_1$ is either $a_1 = 2$ or $a_1 = 8$, while all other effects are zero. 
-
-::: {#fig-ordinal}
-```{r, echo=FALSE, message=FALSE, fig.height=2.5, fig.width = 9, warning=FALSE}
-plotThresholds()
-```
-The four vertical lines in each plot represent thresholds defining 5-level ordinal scales. Thresholds are either equidistant (top) or flexible (bottom) within a range of $\pm 2$ standard deviations around the grand mean $\mu = 0$.  
-:::
+We also evaluate Type I error rates for ordinal scales. We test again a $4 \times 3$ repeated-measures design. 
 
 **Main effects**. @fig-ordinal-main present Type I errors for $X_2$'s main effect, as we vary $X_1$'s magnitude of main effect. 
 

@@ -1,19 +1,5 @@
 ### Type I error rates in ratio scales {#ratio}
-We first evaluate Type I error rates for ratio scales. We test a 4 $\times$ 3 repeated-measures design, where we refer to the 4-level factor as $X_1$ and the 3-level factor as $X_2$. For the observed response variable $Y = \mathcal{T}(\mathcal{Y})$, we evaluate transformations to four continuous and two discrete distributions:  
-
-1. No transformation, or $Y = \mathcal{Y}$. Distributions are normal with a grand mean $\mu = 0$ (e.g., see @fig-effects). 
-
-2. Log-normal distribution $LogN(\mu, \sigma)$ with global parameters $\mu = 0$ and $\sigma = 1$. As discussed in [the introduction](#intro), the log-normal distribution is a good model for various measures bounded by zero, such as task-completion times. 
-
-3. Exponential distribution $Exp(\lambda)$ with a global parameter $\lambda = 2$. The exponential distribution naturally emerges when describing the time elapsed between events. For example, we could use it to model the time a random person spends with a public display, or the waiting time before a new person approaches to interact with the display, when the average waiting time is $\frac{1}{\lambda}$. 
-
-4. Cauchy distribution $Cauchy(x_0,\gamma)$ with global parameters $x_0 = 0$ and $\gamma = 1$. The Cauchy distribution is the distribution of the ratio of two independent normally distributed random variables. It rarely emerges in practice. However, it is commonly used in statistics to test the robustness of statistical procedures because both its mean and variance are undefined. As we discussed earlier, past evaluations of ART [@Mansouri:1995; @elkin:2021] show that the method fails under the Cauchy distribution.
-
-5. Poisson distribution $Pois(\lambda)$ with a single parameter $\lambda = 3$. It expresses the probability of a given number of events in a fixed interval of time. For example, we could use it to model the number of people who interact with a public display in an hour, when the average rate is $\lambda = 3$ people per hour.
-
-6. Binomial distribution $B(k,p)$ with parameters $k = 10$ and $p=.1$. It frequently appears in HCI research, as it can model the number of successes and failures in a series of experimental tasks. For example, we could use it to model the number of errors that participants make in a series of $k = 10$ repetitions of a memorization task, when the average error rate is $10\%$, thus the average error probability is $p=.1$. 
-
-Specifically for the log-normal and binomial distributions, we present results for a wider range of their parameters in the [appendix](appendix.html).
+We first evaluate Type I error rates for ratio scales. We test a 4 $\times$ 3 repeated-measures design, where we refer to the 4-level factor as $X_1$ and the 3-level factor as $X_2$. 
 
 **Main effects**. @fig-ratio-main presents Type I error rates for the main effect of $X_2$ as the magnitude of the main effect of $X_1$ increases.
 
