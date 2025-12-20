@@ -37,54 +37,125 @@ library(plotly)
 }
 </style>
 ```
-### Type I errors under unequal variances
-Many statistical procedures assume equal variances across all levels of each independent variable, or more strictly, across all possible pairs of factor levels (the latter is known as the sphericity assumption in repeated-measures ANOVA). Nonparametric tests are often mistakenly assumed to be free of such assumptions; however, as discussed earlier, this is generally incorrect.
 
-Our next experiment evaluates the behavior of the four methods under conditions of unequal variances, focusing on the normal distribution and four ordinal distributions. For ordinal outcomes, we control variances at the level of the latent variable $Y^*$. 
-
-We examine three two-factor designs: (i) a $4 \times 3$ within-subjects design; (ii) a $2 \times 3$ between-subjects design; and (iii) a $2 \times 4$ mixed design. We set all effects to zero and vary the ratio $r_{sd}$ of standard deviations between the levels of the first factor $X_1$. @fig-unequal shows the five ratios tested when $X_1$ has two levels. When $X_1$ has additional levels (as in the $4 \times 3$ design), their standard deviations are randomly drawn from a range bounded by the standard deviations of the first two levels. 
-
-::: {#fig-unequal}
-```{r, echo=FALSE, message=FALSE, fig.height=1.5, fig.width = 9, warning=FALSE}
-source("distributions_plots.R")
-plot_unequal_variances()
-```
-Varying the ratio $r_{sd}$ of standard deviations across the levels of $X_1$. The plots show examples of population distributions for factors with two categorical levels.    
-:::
-
-**Main effects**. We begin by investigating how the four methods detect main effects of $X_1$. Interpreting results in this setting is challenging because the underlying populations differ in variance while sharing the same means (and medians). For ordinal scales, differences in variance may also manifest as differences in observed means [@Liddell:2018]. In this experiment, we define the null hypothesis in terms of mean differences on the latent variable, but we emphasize that the results should be interpreted with caution.
-
-@fig-unequal-main-1 presents the results. Under normal distributions, and depending on the experimental design, the different methods either slightly inflate or slightly deflate Type I error rates as $r_{sd}$ increases, with no method clearly outperforming the others. For ordinal scales, larger values of $r_{sd}$ primarily affect conditions with flexible thresholds. This effect is particularly pronounced for PAR, although all methods are affected.
-
-::: {#fig-unequal-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "Type_I_heteroscedacity"
-distributions = c("norm", "likert_5", "likert_5_flex", "likert_7", "likert_7_flex")
-dnames = c("Normal", "Equidistant (5 levels)", "Flexible (5 levels)", "Equidistant (7 levels)", "Flexible (7 levels)")
-
-df <- read_data(prefix, alpha = 0.05, effectType = 1, distributions)
-df <- reshape_by_design(df, dnames, effectvars = c("sdratio", "effectX1","effectX2","effectX1X2"))
-plotly_error_by_design_2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX1", xvar = "sdratio", max = 41)
+library(dplyr)
+library(tidyverse)
+source("utils-data-reading.R")
+source("utils-plotlying.R")
 ```
-Type I error rates ($\alpha = .05$) for the **main effect of $X_1$** as the ratio of standard deviations $r_{sd}$ for $X_1$ increases ($n=20$). When $r_{sd} > 1$, the underlying populations are no longer identical, and different interpretations of the null hypothesis may lead to different outcomes.
-:::
 
-We also examine the influence of unequal variances across the levels of $X_1$ on the Type I error rate for $X_2$, as shown in @fig-unequal-main-2. In this case, there is no ambiguity in the interpretation of effects because the populations defined by $X_2$ are identical.
+### Statistical power {#power}
+We evaluate the statistical power of the four methods on the three two-factor designs. Because there is a tradeoff between Type I and Type II errors, high power may simply reflect an inflated Type I error rate. Since a main effect on $X_1$ inflates ART's Type I error rates for $X_2$ and for their interaction (see previous sections), we therefore focus on single-effect scenarios.
 
-The Type I error rates of PAR, RNK, and INT appear largely unaffected by increases in $r_{sd}$. In contrast, ART yields high error rates, surpassing acceptable levels even under normal distributions (see, for example, the $2 \times 4$ mixed design). Thus, unequal variances pose a more serious problem for ART than for the other methods, as the method's sensitivity propagates across factors. This provides further evidence that ART's alignment procedure leads to confounding across effects.
+**Main effects**. We vary the magnitude of effect on $X_1$ and $X_2$ separately and assess each method's power to detect the corresponding effect at $\alpha = .05$. Specifically, we manipulate the parameters $a_1$ or $a_2$ over the range $0.2$ to $0.8$. Depending on the experimental design, this range allows us to simulate both low-power settings (e.g., power below $30\%$) and high-power settings (e.g., power above $80\%$).
 
-::: {#fig-unequal-main-2}
+@fig-power-main-1 presents the results for $X_1$. In many configurations, differences in power across methods are modest. To facilitate comparison, we also report method rankings; readers are encouraged to interact with the figures for precise power estimates. 
+
+PAR achieves the highest power under the normal and exponential distributions, but its power is particularly low under the log-normal distribution. ART initially appears advantageous under the the log-normal, binomial, and ordinal distributions for small effects, likely reflecting inflated Type I errors under these conditions. As $a_1$ grows larger, ART's relative advantage diminishes, and it ultimately becomes the least powerful method. Finally, INT consistently outperforms RNK and ranks highly across all conditions.
+
+::: {#fig-power-main-1}
+<div id="plot-power-1.1">
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-plotly_error_by_design_2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX2", xvar = "sdratio", max = 41)
+prefix <- "Power"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+data <- read_data(prefix, alpha = .05, effectType = 3, distributions)
+df <- reshape_by_design(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX1", max = 104,  ytitle = 'Power (%)')
 ```
-Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as the ratio of standard deviations $r_{sd}$ across the levels of $X_1$ increases ($n=20$)
-:::
+</div>
 
-**Interaction effects**. Finally, we evaluate Type I error rates for the interaction, as shown in @fig-unequal-interaction. ART exhibits a similar pattern as before, with error rates increasing as $r_{sd}$ grows. We also observe some inflation of Type I error rates for the other three methods under the $4 \times 3$ within-subjects design, albeit to a significantly lesser degree.
-
-::: {#fig-unequal-interaction}
+<div id="plot-power-1.2">
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-plotly_error_by_design_2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX1X2", xvar = "sdratio", max = 42)
+df <- data %>% arrange(design,family,effectX1,rateX1)  %>% group_by(design,family,effectX1) %>% mutate(rank = rank(rateX1))
+df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_power_by_design(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX1", xvar = "effectX1", max = 4.2, ytitle = 'Power - ranking')
 ```
-Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2$** as the ratio of standard deviations $r_{sd}$ across the levels of $X_1$ increases ($n=20$)
+</div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-1.2").classList.add("hidden"); }); </script>
+
+<button id="btn1" style="background-color: #f0f0f0; border: 1px solid #ccc; color: #333; font-size: 0.9em;
+    padding: 4px 10px; border-radius: 6px; cursor: pointer; float: right;"
+  onclick="const plot = document.getElementById('plot-power-1.1');
+  plot.classList.toggle('hidden');
+  document.getElementById('plot-power-1.2').classList.toggle('hidden');
+  btn1.innerText = plot.classList.contains('hidden') ? 'show percent' : 'show ranking';
+">
+  show ranking
+</button>
+
+Power ($\alpha = .05$) for detecting the **main effect of $X_1$** as a function of its magnitude $a_1$, with $n=20$.
 :::
+
+@fig-power-main-2 presents our results for $X_2$. Because this factor has a different number of levels across designs, we assess different ranges of power for each design. Nevertheless, the same overall patterns emerge.
+
+::: {#fig-power-main-2}
+<div id="plot-power-2.1">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+data <- read_data(prefix, alpha=.05, effectType = 4, distributions) # CHANGE n TO 20
+
+df <- reshape_by_design(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX2", max = 104,  ytitle = 'Power (%)')
+```
+</div>
+
+<div id="plot-power-2.2">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- data %>% arrange(design,family,effectX2,rateX2)  %>% group_by(design,family,effectX2) %>% mutate(rank = rank(rateX2))
+df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+#df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_power_by_design(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX2", xvar = "effectX2", max = 4.2, ytitle = 'Power - ranking')
+```
+</div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-2.2").classList.add("hidden"); }); </script>
+
+<button id="btn2" style="background-color: #f0f0f0; border: 1px solid #ccc; color: #333; font-size: 0.9em;
+    padding: 4px 10px; border-radius: 6px; cursor: pointer; float: right;"
+  onclick="const plot = document.getElementById('plot-power-2.1');
+  plot.classList.toggle('hidden');
+  document.getElementById('plot-power-2.2').classList.toggle('hidden');
+  btn2.innerText = plot.classList.contains('hidden') ? 'show percent' : 'show ranking';
+">
+  show ranking
+</button>
+
+Power ($\alpha = .05$) for detecting the **main effect of $X_2$** as a function of its magnitude $a_2$, with $n=20$. 
+:::
+
+**Interaction effects**. We also vary the magnitude of the interaction effect $X_1 \times X_2$ by manipulating the parameter $a_{12}$ over the range $0.5$ to $2.0$, and then measure the power to detect this interaction. The results, summarized in @fig-power-interaction, are consistent with the patterns observed for main effects. 
+
+::: {#fig-power-interaction}
+<div id="plot-power-3.1">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+data <- read_data(prefix, alpha=.05, effectType = 5, distributions)
+
+df <- reshape_by_design(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "magnitude of interaction effect", var = "rateX1X2", xvar = "effectX1X2", max = 104,  ytitle = 'Power (%)')
+```
+</div>
+
+<div id="plot-power-3.2">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- data %>% arrange(design,family,effectX1X2,rateX1X2)  %>% group_by(design,family,effectX1X2) %>% mutate(rank = rank(rateX1X2))
+df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+#df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_power_by_design(df, xlab = "magnitude of interaction effect", var = "rank", hovervar = "rateX1X2", xvar = "effectX1X2", max = 4.2, ytitle = 'Power - ranking')
+```
+</div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-3.2").classList.add("hidden"); }); </script>
+
+<button id="btn3" style="background-color: #f0f0f0; border: 1px solid #ccc; color: #333; font-size: 0.9em;
+    padding: 4px 10px; border-radius: 6px; cursor: pointer; float: right;"
+  onclick="const plot = document.getElementById('plot-power-3.1');
+  plot.classList.toggle('hidden');
+  document.getElementById('plot-power-3.2').classList.toggle('hidden');
+  btn3.innerText = plot.classList.contains('hidden') ? 'show percent' : 'show ranking';
+">
+  show ranking
+</button>
+
+Power ($\alpha = .05$) for detecting the **interaction effect $X_1 \times X_2$** as a function of its magnitude $a_{12}$, with $n=20$.
+:::
+
+Overall, there is no clear winner, but we observe that PAR shows poor power performance for log-normal data, while INT consistently outperforms RNK. Furthermore, ART provides no substantial power advantage, despite its inflated Type I error rates.

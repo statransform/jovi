@@ -1,11 +1,11 @@
 ### Statistical power {#power}
-Our sixth experiment compares the statistical power of the four methods on the three 2-factor designs. Because there is a tradeoff between Type I and Type II errors, high power can simply be the result of a high Type I error rate. Since parallel effects can inflate errors (see our previous results), we focus here on single effects, both main or interaction effects. We only report results for $n=20$ (see supplementary materials for additional results). 
+We evaluate the statistical power of the four methods on the three two-factor designs. Because there is a tradeoff between Type I and Type II errors, high power may simply reflect an inflated Type I error rate. Since a main effect on $X_1$ inflates ART's Type I error rates for $X_2$ and for their interaction (see previous sections), we therefore focus on single-effect scenarios.
 
-**Main effects**. We individually vary the magnitude of effect on $X_1$ and $X_2$ and observe the power of each method to detect this effect ($\alpha = .05$). Specifically, we manipulate the parameters $a_1$ or $a_2$ within the range of $0.4$ to $1.0$. Depending on the experimental design, this range allows us to simulate both low-power experiments (e.g., with less than $30\%$ power) and high-power experiments (e.g., with more than $80\%$ power).
+**Main effects**. We vary the magnitude of effect on $X_1$ and $X_2$ separately and assess each method's power to detect the corresponding effect at $\alpha = .05$. Specifically, we manipulate the parameters $a_1$ or $a_2$ over the range $0.2$ to $0.8$. Depending on the experimental design, this range allows us to simulate both low-power settings (e.g., power below $30\%$) and high-power settings (e.g., power above $80\%$).
 
-@fig-power-main-1 presents our results for $X_1$. In several configurations, the differences in power among the methods are marginal. To enhance clarity in our comparisons, we also present the method rankings. Readers are encouraged to interact with the graphs for precise power values. PAR exhibits the highest power under the normal distribution, closely followed by INT. INT is also consistently the winning method across all non-normal distributions. PAR's power is notably low under the log-normal and exponential distribution.
+@fig-power-main-1 presents the results for $X_1$. In many configurations, differences in power across methods are modest. To facilitate comparison, we also report method rankings; readers are encouraged to interact with the figures for precise power estimates. 
 
-ART initially appears advantageous under the three discrete distributions for small effects, likely due to inflated Type I errors even without an effect on $X_2$ (as observed in @fig-2x3-main). However, as effects grow larger, its relative power diminishes, and ART eventually becomes the least effective method.
+PAR achieves the highest power under the normal and exponential distributions, but its power is particularly low under the log-normal distribution. ART initially appears advantageous under the the log-normal, binomial, and ordinal distributions for small effects, likely reflecting inflated Type I errors under these conditions. As $a_1$ grows larger, ART's relative advantage diminishes, and it ultimately becomes the least powerful method. Finally, INT consistently outperforms RNK and ranks highly across all conditions.
 
 ::: {#fig-power-main-1}
 <div id="plot-power-1.1">
@@ -38,11 +38,10 @@ plotly_power_by_design(df, xlab = "magnitude of main effect", var = "rank", hove
   show ranking
 </button>
 
-Power ($\alpha = .05$) for detecting the **main effect of $X_1$** as a function of its magnitude $a_1$, where $n=20$.
+Power ($\alpha = .05$) for detecting the **main effect of $X_1$** as a function of its magnitude $a_1$, with $n=20$.
 :::
 
-@fig-power-main-2 presents our results for $X_2$. Given the different number of levels for this factor, we now assess a different range of power for each design. Nevertheless, we observe similar patterns. INT stands out as the most powerful method. Although ART surpasses PAR under the log-normal and exponential distributions, it does not demonstrate any other notable advantages compared to the other methods.  
-
+@fig-power-main-2 presents our results for $X_2$. Because this factor has a different number of levels across designs, we assess different ranges of power for each design. Nevertheless, the same overall patterns emerge.
 
 ::: {#fig-power-main-2}
 <div id="plot-power-2.1">
@@ -74,10 +73,10 @@ plotly_power_by_design(df, xlab = "magnitude of main effect", var = "rank", hove
   show ranking
 </button>
 
-Power ($\alpha = .05$) for detecting the **main effect of $X_2$** as a function of its magnitude $a_2$, where $n=20$. 
+Power ($\alpha = .05$) for detecting the **main effect of $X_2$** as a function of its magnitude $a_2$, with $n=20$. 
 :::
 
-**Interaction effects**. We also vary the magnitude of the interaction effect $X_1 \times X_2$ by manipulating the parameter $a_{12}$ across the range of $0.5$ to $2.0$. We then measure the power to detect this interaction effect. Our results are summarized in @fig-power-interaction, aligning with findings for main effects. ART's relative advantage diminishes later under the binomial and ordinal distributions. Once again, the method's inflated Type I error rates could account for this observed trend.
+**Interaction effects**. We also vary the magnitude of the interaction effect $X_1 \times X_2$ by manipulating the parameter $a_{12}$ over the range $0.5$ to $2.0$, and then measure the power to detect this interaction. The results, summarized in @fig-power-interaction, are consistent with the patterns observed for main effects. 
 
 ::: {#fig-power-interaction}
 <div id="plot-power-3.1">
@@ -109,5 +108,7 @@ plotly_power_by_design(df, xlab = "magnitude of interaction effect", var = "rank
   show ranking
 </button>
 
-Power ($\alpha = .05$) for detecting the **interaction effect $X_1 \times X_2$** as a function of its magnitude $a_{12}$, where $n=20$.
+Power ($\alpha = .05$) for detecting the **interaction effect $X_1 \times X_2$** as a function of its magnitude $a_{12}$, with $n=20$.
 :::
+
+Overall, there is no clear winner, but we observe that PAR shows poor power performance for log-normal data, while INT consistently outperforms RNK. Furthermore, ART provides no substantial power advantage, despite its inflated Type I error rates.
