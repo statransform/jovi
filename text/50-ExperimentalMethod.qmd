@@ -119,7 +119,6 @@ Varying $a_1$ to control the magnitude of the main effect of $X_1$. The plots sh
 
 ::: {#fig-effects-distributions}
 ```{r, echo=FALSE, message=FALSE, fig.height=1.2, fig.width = 9, warning=FALSE}
-source("distributions_plots.R")
 plot_effects_distr()
 ```
 Different ratio distributions generated with $a_1 = 2$ when $X_1$ has three categorical levels (here, $\sigma_k^2 = 0$).

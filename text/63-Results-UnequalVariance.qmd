@@ -1,20 +1,21 @@
 ### Type I errors under unequal variances
-Many statistical procedures assume equal variances among all levels of each independent variable, or more strictly, among all possible pairs of independent variable levels (known as sphericity assumption in repeated-measures ANOVA). Nonparametric tests are often mistakenly considered to be free of such as assumptions, but as we discussed earlier, this is generally incorrect.
+Many statistical procedures assume equal variances across all levels of each independent variable, or more strictly, across all possible pairs of factor levels (the latter is known as the sphericity assumption in repeated-measures ANOVA). Nonparametric tests are often mistakenly assumed to be free of such assumptions; however, as discussed earlier, this is generally incorrect.
 
-Our next experiment evaluates the behavior of the four methods when populations on the latent variable $\mathcal{Y}$ have unequal variances. As we previously discussed, even when variances are equal at the latent space, they may appear as unequal on the response scale if the response distributions are skewed. This is the case, for example, with the log-normal and the exponential distributions. So, in this experiment, we explore more extreme violations of the equal-variance assumption for these distributions.
+Our next experiment evaluates the behavior of the four methods under conditions of unequal variances, focusing on the normal distribution and four ordinal distributions. For ordinal outcomes, we control variances at the level of the latent variable $Y^*$. 
 
-We examine three 2-factor designs: (i) a $4 \times 3$ within-subjects design; (ii) a $2 \times 3$ between-subjects design; and (iii) a $2 \times 4$ mixed design. We set all effects to zero and then vary the ratio $r_{sd}$ of standard deviations between the levels of the first factor $X_1$. @fig-unequal shows the five ratios that we test when $X_1$ has two levels. When $X_1$ has additional levels ($4 \times 3$ design), their standard deviation is randomly drawn in a range between the standard deviations of the first two levels. 
+We examine three two-factor designs: (i) a $4 \times 3$ within-subjects design; (ii) a $2 \times 3$ between-subjects design; and (iii) a $2 \times 4$ mixed design. We set all effects to zero and vary the ratio $r_{sd}$ of standard deviations between the levels of the first factor $X_1$. @fig-unequal shows the five ratios tested when $X_1$ has two levels. When $X_1$ has additional levels (as in the $4 \times 3$ design), their standard deviations are randomly drawn from a range bounded by the standard deviations of the first two levels. 
 
 ::: {#fig-unequal}
 ```{r, echo=FALSE, message=FALSE, fig.height=1.5, fig.width = 9, warning=FALSE}
-plotVariances()
+source("distributions_plots.R")
+plot_unequal_variances()
 ```
-Varying the ratio $r_{sd}$ of standard deviations between the levels of $X_1$. The plots show examples of population distributions for factors with two categorical levels.    
+Varying the ratio $r_{sd}$ of standard deviations across the levels of $X_1$. The plots show examples of population distributions for factors with two categorical levels.    
 :::
 
-**Main effects**. We begin by investigating how the four methods detect main effects on $X_1$. The interpretation of results in this scenario is challenging due to differences in the original populations --- although they share the same means (and medians), their variances differ. Depending on the null hypothesis of interest, conclusions may vary. Complicating matters further, non-linear transformations can result in distributions with differing means and medians. Consequently, the choice of statistical method may lead to different outcomes; one method may be sensitive to mean differences while others to median differences.
+**Main effects**. We begin by investigating how the four methods detect main effects of $X_1$. Interpreting results in this setting is challenging because the underlying populations differ in variance while sharing the same means (and medians). For ordinal scales, differences in variance may also manifest as differences in observed means [@Liddell:2018]. In this experiment, we define the null hypothesis in terms of mean differences on the latent variable, but we emphasize that the results should be interpreted with caution.
 
-@fig-unequal-main-1 presents the percentage of times each method rejects the null hypothesis ($\%$ positives) at a significance level of $\alpha = .05$. If the null hypothesis of interest posits that *"$X_1$ has no effect on the mean of the latent variable $Y$,"* then these instances should be considered as Type I errors. Under normal distributions, all methods either moderately inflate or deflate the positives ratio as $r_{sd}$ increases. For the $4 \times 3$ within-subjects design ($r_{sd} \ge 2.5$), the ratio for PAR, RNK, and ART reaches levels of around $7-8\%$, while for INT, it drops below $3\%$ under the $2 \times 4$ mixed design ($r_{sd} \ge 2.5$).
+@fig-unequal-main-1 presents the results. Under normal distributions, and depending on the experimental design, the different methods either slightly inflate or slightly deflate Type I error rates as $r_{sd}$ increases, with no method clearly outperforming the others. For ordinal scales, larger values of $r_{sd}$ primarily affect conditions with flexible thresholds. This effect is particularly pronounced for PAR, although all methods are affected.
 
 ::: {#fig-unequal-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -26,25 +27,25 @@ df <- read_data(prefix, alpha = 0.05, effectType = 1, distributions)
 df <- reshape_by_design(df, dnames, effectvars = c("sdratio", "effectX1","effectX2","effectX1X2"))
 plotly_error_by_design_2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX1", xvar = "sdratio", max = 41)
 ```
-The percentage of positives (i.e., rejecting the null hypothesis) for the **main effect of $X_1$** as the ratio of standard deviations $r_{sd}$ on $X_1$ increases ($n=20$). Depending on the hypothesis of interest, these percentages can be interpreted as Type I error rates ($\alpha = .05$).
+Type I error rates ($\alpha = .05$) for the **main effect of $X_1$** as the ratio of standard deviations $r_{sd}$ for $X_1$ increases ($n=20$). When $r_{sd} > 1$, the underlying populations are no longer identical, and different interpretations of the null hypothesis may lead to different outcomes.
 :::
 
-The performance of RNK and INT remains unchanged across continuous distributions, a result expected due to the preservation of medians in such scales. Conversely, mean differences grow with increasing $r_{sd}$, which explains why PAR's ratio of positives reaches high levels under these distributions. However, this trend is not consistent across all three designs. The behavior of ART is less clear, further supporting our argument that its null hypothesis of interest is ill-defined. Under discrete distributions, the trends of positives vary across designs, with PAR and ART exhibiting the highest rates. 
+We also examine the influence of unequal variances across the levels of $X_1$ on the Type I error rate for $X_2$, as shown in @fig-unequal-main-2. In this case, there is no ambiguity in the interpretation of effects because the populations defined by $X_2$ are identical.
 
-We also investigate the influence of unequal variances among the levels of $X_1$ on positive rates for $X_2$, as depicted in @fig-unequal-main-2. These can be reliably considered as Type I errors because source populations defined by $X_2$ are identical. The error rates of PAR, RNK, and INT do not seem to be affected by an increase of $r_{sd}$. In contrast, ART yields high error rates, surpassing acceptable levels even in the case of normal distributions (check results for the $2 \times 4$ mixed design). Thus, the problem of unequal variance is more serious for ART than for other methods, as the method's sensitivity propagates across factors. This further demonstrates that ART's alignment procedure causes the method to confound effects.
+The Type I error rates of PAR, RNK, and INT appear largely unaffected by increases in $r_{sd}$. In contrast, ART yields high error rates, surpassing acceptable levels even under normal distributions (see, for example, the $2 \times 4$ mixed design). Thus, unequal variances pose a more serious problem for ART than for the other methods, as the method's sensitivity propagates across factors. This provides further evidence that ART's alignment procedure leads to confounding across effects.
 
 ::: {#fig-unequal-main-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 plotly_error_by_design_2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX2", xvar = "sdratio", max = 41)
 ```
-Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as the ratio of standard deviations $r_{sd}$ on $X_1$ increases ($n=20$)
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as the ratio of standard deviations $r_{sd}$ across the levels of $X_1$ increases ($n=20$)
 :::
 
-**Interaction effects**. Finally, we measure Type I error rates for the interaction effect $X_1 \times X_2$, shown in @fig-unequal-interaction. The error rates of ART exhibit similar trends, with a somewhat lower level under the $4 \times 3$ within-subjects design (compared to @fig-unequal-main-2). Additionally, for this design, we observe error inflation for the three other methods, albeit to a significantly lesser degree.
+**Interaction effects**. Finally, we evaluate Type I error rates for the interaction, as shown in @fig-unequal-interaction. ART exhibits a similar pattern as before, with error rates increasing as $r_{sd}$ grows. We also observe some inflation of Type I error rates for the other three methods under the $4 \times 3$ within-subjects design, albeit to a significantly lesser degree.
 
 ::: {#fig-unequal-interaction}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 plotly_error_by_design_2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX1X2", xvar = "sdratio", max = 42)
 ```
-Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2$** as the ratio of standard deviations $r_{sd}$ on $X_1$ increases ($n=20$)
+Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2$** as the ratio of standard deviations $r_{sd}$ across the levels of $X_1$ increases ($n=20$)
 :::

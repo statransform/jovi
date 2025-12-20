@@ -49,17 +49,17 @@ plot_densities_discrete <- function(
   plot
 }
 
-
-plot_densities_var <- function(n = 10000, nlevels = 2, sd_ratio = 2, alpha = 0.55) {
-  data <- simulate.sd(n, nlevels, effectSize = 0, sd_ratio = sd_ratio) 
+plot_densities_sd <- function(n = 10000, nlevels = 2, sd_ratio, alpha = 0.55) {
+	params <- list(sigma_e = 1, sigma_s = c(0, 0), ratio_sd = sd_ratio)
+  data <- simulate_heteroscedastic_response(nlevels = nlevels, within = 1, n = n, coeffs = c("X1"=0), family = "norm", params = params) 
 
   palette <- c("#4681C6", "#FF5E00", "red", "#888888")
 
-  plot <- ggplot(data) + geom_density(aes(x = dv, fill = x1, color = x1), alpha = alpha) + scale_color_manual(values = rep("#FFFFFF00",nlevels)) + scale_fill_manual(values = palette) + 
+  plot <- ggplot(data) + geom_density(aes(x = Y, fill = X1, color = X1), alpha = alpha) + scale_color_manual(values = rep("#FFFFFF00",nlevels)) + scale_fill_manual(values = palette) + 
   theme_classic() +
   theme(plot.margin=unit(c(0,0,0,0), "cm"), legend.position = "none", axis.title.x  = element_blank(), axis.line.y  = element_blank(), 
   	axis.title.y = element_blank(), axis.ticks.y  = element_blank(), axis.text.y  = element_blank()) +
-  scale_x_continuous(name =element_blank(), breaks = seq(-8, 8, by=4), limits = c(-10, 10))
+  scale_x_continuous(name =element_blank(), breaks = seq(-4, 4, by=2), limits = c(-5, 5))
 
   plot
 }
@@ -74,18 +74,6 @@ plot_effects_normal <- function(){
 	plot4 <- plot_densities(effectSize=4,nlevels=3)
 	plot5 <- plot_densities(effectSize=8,nlevels=3)
 
-#	plot6 <- plot_densities(effectSize=0.5,nlevels=3)
-#	plot7 <- plot_densities(effectSize=1,nlevels=3)
-#	plot8 <- plot_densities(effectSize=2,nlevels=3)
-#	plot9 <- plot_densities(effectSize=4,nlevels=3)
-#	plot10 <- plot_densities(effectSize=8,nlevels=3)
-
-#	plot11 <- plot_densities(effectSize=0.5,nlevels=4)
-#	plot12 <- plot_densities(effectSize=1,nlevels=4)
-#	plot13 <- plot_densities(effectSize=2,nlevels=4)
-#	plot14 <- plot_densities(effectSize=4,nlevels=4)
-#	plot15 <- plot_densities(effectSize=8,nlevels=4)
-
 	centered <- theme(plot.title = element_text(hjust = 0.5, size = 12))
 
 	ggarrange(
@@ -94,8 +82,6 @@ plot_effects_normal <- function(){
 	  plot3 + ggtitle(TeX("$\\alpha_1 = 2$")) + centered,
 	  plot4 + ggtitle(TeX("$\\alpha_1 = 4$")) + centered,
 	  plot5 + ggtitle(TeX("$\\alpha_1 = 8$")) + centered,
-	#	 plot6, plot7, plot8, plot9, plot10, 
-	#	 plot11, plot12, plot13, plot14, plot15, 
 		 ncol= 5) 
 } 
 
@@ -175,3 +161,25 @@ set.seed(6020)
 		ncol= 2) 
 } 
 
+plot_unequal_variances <- function(){
+	set.seed(300)
+	plot1 <- plot_densities_sd(sd_ratio=1,nlevels=2)
+	set.seed(300)
+	plot2 <- plot_densities_sd(sd_ratio=1.5,nlevels=2)
+	set.seed(300)
+	plot3 <- plot_densities_sd(sd_ratio=2,nlevels=2)
+	set.seed(300)
+	plot4 <- plot_densities_sd(sd_ratio=2.5,nlevels=2)
+	set.seed(300)
+	plot5 <- plot_densities_sd(sd_ratio=3,nlevels=2)
+
+	centered <- theme(plot.title = element_text(hjust = 0.5, size = 12))
+
+	ggarrange(
+	  plot1 + ggtitle(TeX("$r_{sd} = 1$")) + centered,
+	  plot2 + ggtitle(TeX("$r_{sd} = 1.5$")) + centered,
+	  plot3 + ggtitle(TeX("$r_{sd} = 2$")) + centered,
+	  plot4 + ggtitle(TeX("$r_{sd} = 2.5$")) + centered,
+	  plot5 + ggtitle(TeX("$r_{sd} = 3$")) + centered,
+		 ncol= 5) 
+}
