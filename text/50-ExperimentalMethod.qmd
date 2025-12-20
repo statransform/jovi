@@ -30,7 +30,7 @@ Previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:201
 ### Statistical modeling
 For simplicity, we explain here our modeling approach for two factors, but its extension to three factors is straightforward. 
 
-**Linear component.** The base of our data generation process for all distributions is the following linear term:
+**Linear component.** The base of our data generation process for all distributions is the following linear predictor:
 
 $$ 
 \ell_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j}
@@ -62,14 +62,14 @@ $${#eq-linear-model}
 
 For example, we can encode a factor with four levels as $\{-.6, .4, .1, .1\}$ or as $\{-.5, .5, .3, -.3\}$. 
 
-**Generating ratio data.** We adopt generalized linear modeling [@Bolker2009glm] for ratio data, where we use an inverse link function $g^{-1}$ to make the connection between $\ell_{ijk}$ and the location parameter of the distribution of interest:  
+**Generating ratio data.** We generate ratio-scaled data using generalized linear modeling [@Bolker2009glm]. Specifically, we use an inverse link function $g^{-1}$ to relate the linear predictor $\ell_{ijk}$ to the location parameter of the target distribution:  
 $$
 Y_{ijk} \sim \mathcal{F}(location=g^{-1}(\ell_{ijk}), ...)
 $${#eq-glm-ratio}
 
-where $\mathcal{F}$ denotes the probability density (or mass) function from which we draw the responses $Y_{ijk}$. For example, the mean of the exponential distribution is equal to $1 / \lambda$, where $\lambda$ is its rate parameter. This mean is linked to the linear term through the function $g^{-1}(x) = e^{x}$, and therefore, $\lambda = e^{-\ell_{ijk}}$. Or the link function commonly used for the binomial distribution is the *logit* function, but its inverse if the *logistic* function $g^{-1}(x) = 1 / (1 + e^{-x})$.
+where $\mathcal{F}$ denotes the probability density (or mass) function from which the responses $Y_{ijk}$ are drawn. For example, the mean of the exponential distribution is equal to $1 / \lambda$, where $\lambda$ is its rate parameter. This mean is linked to the linear predictor through the inverse link function $g^{-1}(x) = e^{x}$, which implies $\lambda = e^{-\ell_{ijk}}$. Similarly, for the binomial distribution, the canonical link function is the *logit* function, whose inverse is the *logistic* function $g^{-1}(x) = 1 / (1 + e^{-x})$.
 
- @tbl-distributions presents how the location parameters of the other distributions are linked to the linear term. We emphasize that the Cauchy distribution does not define a GLM (since it does not belong to the exponential family), but we use a model that connects its location (median) through the identity link. 
+ @tbl-distributions summarizes how the location parameters of all the distributions are linked to the linear predictor. We emphasize that the Cauchy distribution does not define a generalized linear model  --- because it does not belong to the exponential family --- but we nevertheless use a model that links its location (the median) to the linear predictor via the identity link. 
 
 | distribution | location parameter | description               |
 |--------------|------------|---------------------------|
@@ -80,7 +80,7 @@ where $\mathcal{F}$ denotes the probability density (or mass) function from whic
 | Poisson      |$\lambda = e^{\ell_{ijk}}$ | rate (mean) |
 | Binomial     |$p = 1 / (1 + e^{-\ell_{ijk}})$ | probability of success or error |
 
-: Distribution parameters and their links to the linear term $\ell_{ijk}$ {#tbl-distributions}
+: Distribution parameters and their links to the linear predictor $\ell_{ijk}$ {#tbl-distributions}
 
 **Generating ordinal data.** For generating ordinal data, we follow a latent-variable approach as explained by @Liddell:2018. Specifically, we consider that there is a continuous latent variable that follows a normal distribution: 
 $$
