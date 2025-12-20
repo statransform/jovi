@@ -1,5 +1,6 @@
+
 ### Type I error rates in ratio scales {#ratio}
-We first evaluate Type I error rates for ratio scales. We test a 4 $\times$ 3 repeated-measures design, where we refer to the 4-level factor as $X_1$ and the 3-level factor as $X_2$. 
+We first evaluate Type I error rates for ratio scales. We test a 4 $\times$ 3 within-subjects design, where we refer to the 4-level factor as $X_1$ and the 3-level factor as $X_2$. We encourage readers to use the interactive tools provided in the figures to explore the trends in greater detail. 
 
 **Main effects**. @fig-ratio-main presents Type I error rates for the main effect of $X_2$ as the magnitude of the main effect of $X_1$ increases.
 
@@ -24,9 +25,9 @@ plotly_error(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effe
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$
 :::
 
- The results show a very good behavior for RNK and INT across all distributions. The regular parametric ANOVA (PAR) keeps error rates below $5\%$. However, error rates become extremely low for some distributions, suggesting a loss in statistical power. We confirm previous results that ART fails to control the Type I error rate under the Cauchy distribution [@Mansouri:1995; @elkin:2021] but we also show that the method is problematic with other non-normal distributions. As the main effect on the first factor $X_1$ increases, Type I errors on the second factor $X_2$ grow and reach high levels. This pattern is particularly pronounced under the log-normal distribution. We also observe that for the binomial distribution, error rates are high ($\approx 11\%$ for $n = 20$) even when effects on $X_1$ are zero. In addition, error rates further grow when the sample size increases.
+Overall, RNK and INT exhibit very good behavior across all distributions. The standard parametric ANOVA (PAR) maintains error rates below $5\%$, but for some distributions (log-normal, Cauchy, and Poisson) the error rates are noticeably lower, suggesting a loss of statistical power. Consistent with previous findings [@Mansouri:1995; @elkin:2021], ART fails to control the Type I error rate under the Cauchy distribution. However, we further show that ART is also problematic for other non-normal distributions. As the main effect of the first factor $X_1$ increases, Type I errors on the second factor $X_2$ increase dramatically, approaching $100\%$ when $a_1=8$. For the binomial distribution, error rates are already elevated ($\approx 9\%$ for $n = 20$) even when $a_1=0$, and increase further as the sample size grows.
 
-**Contrasts**. The same problems appear when we run ART's procedure for contrasts [@elkin:2021]. @fig-ratio-contrasts shows our results, where we report average error rates for three pairwise comparisons (since $X_2$ has three levels). In the rest of the paper, we only show results for overall effects, since results for contrasts exhibit the same patterns. 
+**Contrasts**. The same issues arise when running ART's contrast procedure [@elkin:2021]. @fig-ratio-contrasts shows the corresponding results, where we report average error rates for three pairwise comparisons (since $X_2$ has three levels). In the rest of the paper, we focus on overall effects, since the results for contrasts exhibit the same patterns. 
 
 ::: {#fig-ratio-contrasts}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -38,7 +39,7 @@ plotly_error(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effe
 Average Type I error rates ($\alpha = .05$) for **contrasts on factor $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
 
-**Interaction effects**. @fig-ratio-interaction-1 presents Type I error rates for the interaction effect $X_1 \times X_2$, when the main effect on $X_2$ is zero while the main effect on $X_1$ increases. Overall, we observe the same trends as for main effects. Again, ART fails in similar ways, although its error rates are now slightly lower.
+**Interaction effects**. @fig-ratio-interaction-1 presents Type I error rates for the $X_1 \times X_2$ interaction when $a_2=0$ and $a_1$ increases. Overall, we observe trends similar to those for main effects. ART again fails in comparable ways, although its error rates are slightly lower in this case. In addition, PAR tends to inflate error rates under the log-normal and exponential distributions as $a_1$ increases.
 
 ::: {#fig-ratio-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -50,9 +51,9 @@ plotly_error(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "ef
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
 
-The scenarios above do not capture the failure cases of the rank transformation discussed earlier (see @fig-interactions-rank), as those arise only when both coefficients $a_1$ and $a_2$ are non-zero. Since there can be different possible definitions of an interaction effect in these cases, we address them in a separate subsection.
+The scenarios above do not capture the failure cases of the rank transformation discussed earlier (see @fig-interactions-rank), as these arise only when both coefficients $a_1$ and $a_2$ are non-zero. Because multiple definitions of interaction effects are possible in such cases, we address them in a separate subsection.
 
-**Analysis for large samples.** Let us further explore ART's error rates when sample sizes become larger.
+**Analysis for large samples.** We also examine Type I error rates for larger sample sizes (up to $n=512$), fixing $a_1=1$. As shown in @fig-ratio-large-samples, ART's error rates increase only slightly for log-normal data but rise substantially under the Cauchy, Poisson, and binomial distributions. These patters are consistent for both the main effect of $X_2$ and the interaction effect. As we later observe for ordinal scales, ART's tendency for increasing Type I error rates with sample size appears to be a more general issue for discrete distributions.    
 
 ::: {#fig-ratio-large-samples}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}

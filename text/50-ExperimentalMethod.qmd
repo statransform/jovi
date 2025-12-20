@@ -127,7 +127,7 @@ Different ratio distributions generated with $a_1 = 2$ when $X_1$ has three cate
 
 In practice, we randomly choose the standard deviation $\sigma_k^2$ --- which determines between-subject variability --- from the interval $[0.1, 0.5]$, drawing each value from a uniform distribution.
 
-**Thresholds of ordinal scales.** For ordinal data, we evaluate $D =$ 5, 7, or 11 discrete levels. To derive the discretization thresholds $\tau_d$, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of the latent variable $Y^{*}_{ijk}$. We then divide this range into 5, 7, or 11 intervals, following two different strategies: (i) setting thresholds to be *equidistant*; or (ii) considering *flexible* thresholds, randomly drawing their position in the above range.
+**Thresholds for ordinal scales.** For ordinal data, we evaluate $D =$ 5, 7, or 11 discrete levels. To derive the discretization thresholds $\tau_d$, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of the latent variable $Y^{*}_{ijk}$. We then divide this range into 5, 7, or 11 intervals, following two different strategies: (i) setting thresholds to be *equidistant*; or (ii) considering *flexible* thresholds, randomly drawing their position in the above range.
 
  @fig-ordinal presents examples of equidistant and flexible thresholds for a 5-level scale when the magnitude of main effect of $X_1$ is either $a_1 = 2$ or $a_1 = 8$, while all other effects are zero. 
 
@@ -148,13 +148,11 @@ Significance tests have two types of errors. *Type I errors*, or false positives
 
 Statistical significance testing requires setting a significance threshold known as significance or $\alpha$ (alpha) level, with typical values $\alpha = .05$ and $\alpha = .01$. The Type I error rate of a well-behaved significance test should be close to this nominal alpha level. An error rate clearly above this level suggests that the significance test is too liberal, while an error rate clearly below this level suggests that the test is too conservative. Four of our experiments specifically assess the Type I error rate of the methods. We test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brevity, we only report results for $\alpha = .05$ in the main paper and include additional results in our supplementary material. 
 
-We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. In addition to power, we assess effect size estimates, where we use as ground truth the estimates of a parametric ANOVA conducted on the latent variable $\mathcal{Y}$. While partial $\eta^2$ is the most commonly used effect size measure, we also evaluate Cohen's $f$, as its expected value is proportional to the real magnitude of effect. However, $\eta^2$ can be directly derived from Cohen's $f$ as follows:
+We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. For log-normal and ordinal distributions, we also assess effect size estimates, where we use as ground truth the estimates of a parametric ANOVA conducted either on the logarithmic scale of the data (for log-normal) or latent variable $Y^*$ (for ordinal). While partial $\eta^2$ is the most commonly used effect size measure, we also evaluate Cohen's $f$, as its expected value is proportional to the real magnitude of effect. However, $\eta^2$ can be directly derived from Cohen's $f$ as follows:
 
 $$ 
 \eta^2 = \frac{f^2}{1 + f^2}
 $${#eq-cohensf}
-
-As explained earlier, interaction effects are distorted when the latent variable $\mathcal{Y}$ is transformed to produce the observed responses. These transformations also influence the Type I error rates and statistical power we observe. In this analysis, we focus on evaluating these measures with respect to the effects applied to the latent variable $\mathcal{Y}$. We explicitly make this distinction whenever it is relevant to our discussion. 
 
 ### Hardware platform and iterations
 Our experimental R code is available in our supplementary material. We ran our experiments separately in a cluster of 8 machines Dell R640 Intel Xeon Silver 4112 2.6GHz with 4 cores and 64 GB memory. Our R code was parallelized to use all four cores of each machine. 

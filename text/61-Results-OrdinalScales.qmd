@@ -29,7 +29,7 @@ plotly_error(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "ef
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
 
-**Analysis for large samples.** Let us further explore ART's error rates when sample sizes become larger. As shown in @fig-ordinal-large-samples, error rates explode even when all population effects are null. 
+**Analysis for large samples.** Let us further explore ART's error rates when sample sizes become larger. As shown in @fig-ordinal-large-samples, error rates explode even when all population effects are null. The patterns are similar for all three effects.  
 
 ::: {#fig-ordinal-large-samples}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
