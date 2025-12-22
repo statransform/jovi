@@ -98,15 +98,21 @@ repeat_test_effect_size <- function(
   params,
   formula,
   vars,
-  measure = "eta",
-  iterations = 100
+  measure = c("eta", "cohens"),
+  iterations = 100,
+  is_max = FALSE # If true, the coeffs define maximum effects (to be randomly chosen)
 ) {
   
   family <- match.arg(family)
+  measure <- match.arg(measure)
 
   results <- foreach(rid = 1:iterations, .combine=rbind) %dopar% {
     tryCatch(
       {
+        if(is_max) {
+          coeffs[1:length(coeffs)] = 
+                sapply(1:length(coeffs), function(x){runif(1, min=-coeffs[x], max=coeffs[x])})
+        } 
         data <- { # Check if variances are equal
           if(is.null(params$ratio_sd)) simulate_response(nlevels, within, n, coeffs, sub("_.*", "", family), params)
           else simulate_heteroscedastic_response(nlevels, within, n, coeffs, sub("_.*", "", family), params)
@@ -129,7 +135,7 @@ repeat_test_effect_size <- function(
           groundtruth <- get_groundtruth_effect_sizes(data, formula, vars, measure)
         }
 
-        c(eff_sizes, groundtruth)
+        c(coeffs, eff_sizes, groundtruth)
       }, 
       error = function(cond) {
         # do nothing
@@ -141,9 +147,9 @@ repeat_test_effect_size <- function(
 
   designStr <- paste(nlevels, collapse="x")
 
-  colnames(results) <- c(paste0("par", vars), paste0("rnk", vars), paste0("art", vars), paste0("int", vars), paste0("grt", vars)) 
-  coeffs_prefixed <- setNames(coeffs, paste0("effect", names(coeffs)))
+  colnames(results) <- c( paste0("effect", names(coeffs)), paste0("par", vars), paste0("rnk", vars), paste0("art", vars), paste0("int", vars), paste0("grt", vars)) 
+  #coeffs_prefixed <- setNames(coeffs, paste0("effect", names(coeffs)))
 
-  cbind(n = n, design=designStr, family = family, as.data.frame(as.list(coeffs_prefixed)), round(results,digits=4))
+  as.data.frame(cbind(n = n, design=designStr, family = family, round(results,digits=4)))
 }
 
