@@ -68,11 +68,19 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#effects-proof" id="toc-effects-proof" class="nav-link active" data-scroll-target="#effects-proof"><span class="header-section-number">1</span> Absence of spurious effects when <span class="math inline">\(a_2=0\)</span> and <span class="math inline">\(a_{12} = 0\)</span></a>
+  <li><a href="#effects-proof" id="toc-effects-proof" class="nav-link active" data-scroll-target="#effects-proof"><span class="header-section-number">1</span> On spurious effects when <span class="math inline">\(a_2=0\)</span> and <span class="math inline">\(a_{12} = 0\)</span></a>
   <ul class="collapse">
   <li><a href="#proof" id="toc-proof" class="nav-link" data-scroll-target="#proof">Proof</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   <li><a href="#invariance-under-monotone-transformations" id="toc-invariance-under-monotone-transformations" class="nav-link" data-scroll-target="#invariance-under-monotone-transformations">Invariance under monotone transformations</a></li>
+  </ul></li>
+  <li><a href="#mu" id="toc-mu" class="nav-link" data-scroll-target="#mu"><span class="header-section-number">2</span> Calculation of location parameters</a>
+  <ul class="collapse">
+  <li><a href="#log-normal-model" id="toc-log-normal-model" class="nav-link" data-scroll-target="#log-normal-model">Log-normal model</a></li>
+  <li><a href="#exponential-model" id="toc-exponential-model" class="nav-link" data-scroll-target="#exponential-model">Exponential model</a></li>
+  <li><a href="#poisson-model" id="toc-poisson-model" class="nav-link" data-scroll-target="#poisson-model">Poisson model</a></li>
+  <li><a href="#binomial-model" id="toc-binomial-model" class="nav-link" data-scroll-target="#binomial-model">Binomial model</a></li>
+  <li><a href="#cauchy-model" id="toc-cauchy-model" class="nav-link" data-scroll-target="#cauchy-model">Cauchy model</a></li>
   </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
@@ -120,12 +128,12 @@ div.csl-indent {
 </header>
 
 <section id="effects-proof" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="effects-proof"><span class="header-section-number">1</span> Absence of spurious effects when <span class="math inline">\(a_2=0\)</span> and <span class="math inline">\(a_{12} = 0\)</span></h2>
+<h2 data-number="1" class="anchored" data-anchor-id="effects-proof"><span class="header-section-number">1</span> On spurious effects when <span class="math inline">\(a_2=0\)</span> and <span class="math inline">\(a_{12} = 0\)</span></h2>
 <p>Let <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> be two independent variables, and suppose the conditional distribution of the response <span class="math inline">\(Y | (x_1, x_2)\)</span> depends on these variables only through the linear predictor: <span class="math display">\[
 \ell(x_1, x_2) = a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2
 \]</span></p>
 <p>Assume that the conditional mean can be written as: <span class="math display">\[
-\mu(x_1, x_2) = E(Y|x_1, x_2) = h(\ell(x_1, x_2))
+\mu(x_1, x_2) = E[Y|x_1, x_2] = h(\ell(x_1, x_2))
 \]</span> where <span class="math inline">\(h\)</span> is a monotone function. This function may coincide with the inverse link function <span class="math inline">\(g^{-1}\)</span> in a GLM, but it may also arise from other frameworks, including transformation models or latent-variable constructions. Thus it does not necessarily need to be smooth or invertible; for example, this assumption is not required for the ordinal example discussed later.</p>
 <p>Suppose <span class="math inline">\(a_2 = 0\)</span> and <span class="math inline">\(a_{12} = 0\)</span>. Then:</p>
 <ol type="1">
@@ -166,8 +174,8 @@ div.csl-indent {
 log Y = a_0 + a_1 x_1 + \varepsilon, \qquad
 \varepsilon \sim \mathcal{N}(0, \sigma^2)
 \end{aligned}
-\]</span> so that <span class="math display">\[Y | (x_1, x_2) \sim Lognormal(a_0 + a_1 x_1, \sigma^2)\]</span></p>
-<p>Since the conditional distribution of <span class="math inline">\(Y\)</span> does not depend on <span class="math inline">\(x_2\)</span>, there is no main effect of <span class="math inline">\(x_2\)</span> on the mean, median, or any quantile of the response distribution. In particular, the conditional mean <span class="math display">\[\mu(x_1,x_2) = E(Y|x_1, x_2) = exp(a_0 + a_1 x_1 + \frac{1}{2}\sigma^2)\]</span> remains identical across all levels of <span class="math inline">\(x_2\)</span>.</p>
+\]</span> so that <span class="math display">\[Y | (x_1, x_2) \sim \mathcal{LogN}(a_0 + a_1 x_1, \sigma^2)\]</span></p>
+<p>Since the conditional distribution of <span class="math inline">\(Y\)</span> does not depend on <span class="math inline">\(x_2\)</span>, there is no main effect of <span class="math inline">\(x_2\)</span> on the mean, median, or any quantile of the response distribution. In particular, the conditional mean <span class="math display">\[\mu(x_1,x_2) = E[Y|x_1, x_2] = \text{exp}(a_0 + a_1 x_1 + \frac{1}{2}\sigma^2)\]</span> remains identical across all levels of <span class="math inline">\(x_2\)</span>.</p>
 <p>For the same reasons, there is no interaction on the response scale.</p>
 </section>
 <section id="ordinal-responses" class="level4">
@@ -177,7 +185,7 @@ log Y = a_0 + a_1 x_1 + \varepsilon, \qquad
 \varepsilon \sim \mathcal{N}(0, \sigma^2)\]</span></p>
 <p>and the observed response <span class="math inline">\(Y\)</span> is obtained by applying fixed thresholds: <span class="math display">\[
 \begin{aligned}
-Y = d\ \ \text{if}\ \ \tau_{d-1} &lt; Y^* \leq \tau_k,
+Y = d\ \ \text{if}\ \ \tau_{d-1} &lt; Y^* \leq \tau_d,
 \qquad d = 1,2 ... D
 \end{aligned}
 \]</span> Again, the conditional distribution <span class="math inline">\(Y| (x_1, x_2)\)</span> depends on the independent variables only through <span class="math inline">\(\ell(x_1, x_2)=a_0+a_1 x_1\)</span>, and there is no effect of <span class="math inline">\(x_2\)</span> on either the latent or the observed ordinal scale.</p>
@@ -188,20 +196,126 @@ Y = d\ \ \text{if}\ \ \tau_{d-1} &lt; Y^* \leq \tau_k,
 <h3 class="anchored" data-anchor-id="invariance-under-monotone-transformations">Invariance under monotone transformations</h3>
 <p>Suppose we apply a monotone transformation <span class="math inline">\(T\)</span> directly to the observed responses—such as the rank transformation (RNK) or the inverse normal transformation (INT). Because <span class="math inline">\(T\)</span> is monotone, it preserves the ordering of observations within each condition. The transformed conditional distribution <span class="math inline">\(T(Y) | (x_1, x_2)\)</span> therefore depends on the independent variables only through <span class="math inline">\(\ell(x_1, x_2) = a_0+a_1 x_1\)</span>. Consequently, the mean, median, and all quantiles of <span class="math inline">\(T(Y) | (x_1, x_2)\)</span> remain invariant to <span class="math inline">\(x_2\)</span>, and marginal effects of <span class="math inline">\(x_1\)</span> do not depend on <span class="math inline">\(x_2\)</span>.</p>
 <p>We emphasize that ART is not a monotone transformation. Instead of transforming <span class="math inline">\(Y\)</span> directly, ART first constructs aligned responses by subtracting and adding sample means on the response scale. These alignment terms can vary across levels of <span class="math inline">\(x_2\)</span> or combinations of <span class="math inline">\((x_1, x_2)\)</span>. Therefore, ART is not invariant to nonlinear mean–response relationships.</p>
-<!--
-In conclusion, $T$ does not introduce a main effect of $x_2$ or an interaction between $x_1$ and $x_2$ when $a_2=0$ and $a_{12}=0$.
-
-
-### ART introducing spurious effects 
-ART differs fundamentally from simple monotone transformations. Instead of transforming $Y$ directly, ART first constructs aligned responses by **subtracting and adding sample means on the response scale**, for example:
-
-$$Y^{(B)} = Y - \bar{Y}_{ij} + \bar{Y}_{.j} - \bar{Y}_{..}$$
-or analogous expressions for interactions, and only then applies ranking. The conditional distribution $Y^{(B)} | (x_1, x_2)$ now depends on $x_2$ through the arithmetic mean components even though $a_2 = 0$ and $a_{12}=0$. 
-
-These alignment terms can vary across levels of $x_2$ due to sampling variability alone, and depending on $h$, they can acquire systematic shifts across levels of $x_2$ or combinations of $(x_1, x_2)$, even when the true conditional distribution does not. in particular, the term $\bar{Y}_{.j} - \bar{Y}_{..}$ is constant within each level of $x_2$ and shifts all aligned observations for that level either upward or downward. 
-
-After ranking, observations from one level of $x_2$ tend to receive systematically higher or lower ranks. Our results confirm this problem.
--->
+</section>
+</section>
+<section id="mu" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="mu"><span class="header-section-number">2</span> Calculation of location parameters</h2>
+<p>We recall the linear predictor used to model nonlinear relationships (see the <a href="index.html#statistical-modeling">article</a>):</p>
+<p><span class="math display">\[
+\ell_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j}
+\]</span> where <span class="math inline">\(s_k \sim \mathcal{N}(0, \sigma_s^2)\)</span>. Our goal is to determine <span class="math inline">\(\mu\)</span> such as the expected value of the response equals a pre-specified target value <span class="math inline">\(E[Y_{ijk}] = M\)</span>.</p>
+<p>To simplify notation, we define the fixed-effects component <span class="math display">\[\phi_{ij} = a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j}\]</span></p>
+<p>so that</p>
+<p><span class="math display">\[
+\ell_{ijk} = \mu + s_k + \phi_{ij}
+\]</span></p>
+<p><strong>A useful identity.</strong> Let <span class="math inline">\(X\)</span> be a continuous random variable with probability density function <span class="math inline">\(f_X(x)\)</span>. For any function <span class="math inline">\(g\)</span>, its expectation is defined as</p>
+<p><span class="math display">\[
+E[g(X)] = \int\limits_{-\infty}^\infty g(x) f_X(x) dx
+\]</span></p>
+<p>If <span class="math inline">\(g(x) = e^x\)</span>, then</p>
+<p><span class="math display">\[
+E[e^X] = \int\limits_{-\infty}^\infty e^x f_X(x) dx
+\]</span></p>
+<p>When <span class="math inline">\(X \sim \mathcal{N}(0, \sigma^2)\)</span>, substituting the normal probability density function yields</p>
+<p><span id="eq-useful"><span class="math display">\[
+E[e^X] = \int\limits_{-\infty}^\infty e^x \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\frac{x^2}{2\sigma^2}} dx = e^{\frac{1}{2}\sigma^2}
+\tag{1}\]</span></span></p>
+<section id="log-normal-model" class="level3">
+<h3 class="anchored" data-anchor-id="log-normal-model">Log-normal model</h3>
+<p>When responses are log-normally distributed,</p>
+<p><span class="math display">\[
+\begin{aligned}
+log(Y_{ijk}) = \ell_{ijk} + \varepsilon_{ijk},
+\qquad \varepsilon_{ijk} \sim \mathcal{N}(0, \sigma^2)
+\end{aligned}
+\]</span></p>
+<p>so that</p>
+<p><span class="math display">\[
+Y_{ijk} = e^{\ell_{ijk} + \varepsilon_{ijk}} = e^{\mu + s_k + e_{ij} + \varepsilon_{ijk}} = e^{\mu} \cdot e^{\phi_{ij}} \cdot e^{s_k} \cdot e^{\varepsilon_{ijk}}
+\]</span></p>
+<p>Taking expectations and using independence of components,</p>
+<p><span class="math display">\[
+E[Y_{ijk}] = e^\mu \cdot E[e^{\phi_{ij}}] \cdot E[e^{s_k}] \cdot E[e^{\varepsilon_{ijk}}] = M   
+\]</span></p>
+<p>Solving for <span class="math inline">\(\mu\)</span> gives</p>
+<p><span class="math display">\[
+\mu = log\ M - log\ E[e^{\phi_{ij}}] - log\ E[e^{s_k}] - log\ E[e^{\varepsilon_{ijk}}]
+\]</span></p>
+<p>Because <span class="math inline">\(s_k \sim \mathcal{N}(0, \sigma_s^2)\)</span> and <span class="math inline">\(\epsilon_{ijk} \sim \mathcal{N}(0, \sigma^2)\)</span>, <a href="#eq-useful">Equation&nbsp;1</a> implies</p>
+<p><span class="math display">\[
+\begin{aligned}
+E[e^{s_k}] = e^{\frac{1}{2}\sigma_s^2},
+\qquad E[e^{\varepsilon_{ijk}}] = e^{\frac{1}{2}\sigma^2}
+\end{aligned}
+\]</span></p>
+<p>Furthermore, since <span class="math inline">\(\phi_{ij}\)</span> is deterministic,</p>
+<p><span class="math display">\[E[e^{\phi_{ij}}] = \frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}\]</span> where <span class="math inline">\(m_1\)</span> and <span class="math inline">\(m_2\)</span> are the number of levels of <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span>, respectively.</p>
+<p>Therefore,</p>
+<p><span id="eq-mu-lognornal"><span class="math display">\[
+\mu = log\ M - log(\frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}) - \frac{1}{2}\sigma_s^2 - \frac{1}{2}\sigma^2
+\tag{2}\]</span></span></p>
+</section>
+<section id="exponential-model" class="level3">
+<h3 class="anchored" data-anchor-id="exponential-model">Exponential model</h3>
+<p>For exponential responses with a log link,</p>
+<p><span class="math display">\[
+Y_{ijk} \sim \text{Exp}(\lambda_{ijk} = e^{-\ell_{ijk}})
+\]</span></p>
+<p>The expected value is</p>
+<p><span class="math display">\[
+E[Y_{ijk}] = E[1/\lambda_{ijk}] = E[e^{\ell_{ijk}}]  =  e^{\mu} \cdot E[e^{\phi_{ij}}] \cdot E[e^{s_k}]
+\]</span></p>
+<p>which, as before, it leads to the solution</p>
+<p><span id="eq-mu-exp"><span class="math display">\[
+\mu = log\ M - log(\frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}) - \frac{1}{2}\sigma_s^2
+\tag{3}\]</span></span></p>
+</section>
+<section id="poisson-model" class="level3">
+<h3 class="anchored" data-anchor-id="poisson-model">Poisson model</h3>
+<p>For Poisson responses with a log link, <span class="math display">\[
+Y_{ijk} \sim \mathcal{Pois}(\lambda_{ijk} = e^{\ell_{ijk}})
+\]</span></p>
+<p>The expected value is</p>
+<p><span class="math display">\[
+E[Y_{ijk}] = E[\lambda_{ijk}] = E[e^{\ell_{ijk}}]  =  e^{\mu} \cdot E[e^{\phi_{ij}}] \cdot E[e^{s_k}]
+\]</span> which leads to the same solution as for the exponential distribution: <span id="eq-mu-poisson"><span class="math display">\[
+\mu = log\ M - log(\frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}) - \frac{1}{2}\sigma_s^2
+\tag{4}\]</span></span></p>
+</section>
+<section id="binomial-model" class="level3">
+<h3 class="anchored" data-anchor-id="binomial-model">Binomial model</h3>
+<p>For binomial responses with a logit link,</p>
+<p><span class="math display">\[
+Y_{ijk} \sim \mathcal{B}(\kappa, p_{ijk} = \frac{1}{1 + e^{-\ell_{ijk}}})
+\]</span></p>
+<p>The expected value is now</p>
+<p><span id="eq-mu-binomial"><span class="math display">\[E[Y_{ijk}] = \kappa \cdot E[p_{ijk}] =
+\frac{\kappa}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2}
+\int_{-\infty}^{\infty}
+\frac{1}{1 + e^{-(\mu + \phi_{ij} + s)}}
+\cdot
+\frac{1}{\sqrt{2\pi}\sigma_s}
+e^{-\frac{s^2}{2\sigma_s^2}}\, ds
+= M
+\tag{5}\]</span></span> because we cannot separate the sums from the integral. As no close form exists to analytically derive <span class="math inline">\(\mu\)</span>, we create the function</p>
+<p><span class="math display">\[F(\mu) = \frac{\kappa}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2}
+\int_{-\infty}^{\infty}
+\frac{1}{1 + e^{-(\mu + \phi_{ij} + s)}}
+\cdot
+\frac{1}{\sqrt{2\pi}\sigma_s}
+e^{-\frac{s^2}{2\sigma_s^2}}\, ds
+- M\]</span></p>
+<p>and numerically find its root using R’s <code>uniroot()</code> function.</p>
+</section>
+<section id="cauchy-model" class="level3">
+<h3 class="anchored" data-anchor-id="cauchy-model">Cauchy model</h3>
+<p>Since the Cauchy distribution has no finite mean, we target the median instead:</p>
+<p><span class="math display">\[\text{Median}(Y_{ijk}) = \ell_{ijk} = \mu + \phi_{ij} = M\]</span></p>
+<p>Because our coding is centered, <span class="math inline">\(\sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} \phi_{ij} = 0\)</span>. Therefore,</p>
+<p><span class="math display">\[
+\mu  = M
+\]</span></p>
 </section>
 </section>
 <section id="references" class="level2 unnumbered">

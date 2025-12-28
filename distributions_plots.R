@@ -85,6 +85,43 @@ plot_effects_normal <- function(){
 		 ncol= 5) 
 } 
 
+
+plot_effects_lognormal <- function(){
+	set.seed(200)
+
+	family <- "lnorm"
+  params <- list(sigma_e = 0.2, mean_target = 1, normalize = TRUE, sigma_s = c(0, 0), normalize = TRUE) 
+	plot1 <- plot_densities(effectSize=2,	nlevels=2, family = family, params = params, xlim = c(0, 3), breaks = 0:3)
+
+  params$sigma_e = 0.4
+	plot2 <- plot_densities(effectSize=2,	nlevels=2, family = family, params = params, xlim = c(0, 3), breaks = 0:3)
+
+  params$sigma_e = 0.6
+	plot3 <- plot_densities(effectSize=2,	nlevels=2, family = family, params = params, xlim = c(0, 3), breaks = 0:3)
+
+  params$sigma_e = 0.8
+	plot4 <- plot_densities(effectSize=2,	nlevels=2, family = family, params = params, xlim = c(0, 3), breaks = 0:3)
+
+  params$sigma_e = 1.0
+	plot5 <- plot_densities(effectSize=2,	nlevels=2, family = family, params = params, xlim = c(0, 3), breaks = 0:3)
+
+  params$sigma_e = 1.2
+	plot6 <- plot_densities(effectSize=2,	nlevels=2, family = family, params = params, xlim = c(0, 3), breaks = 0:3)
+
+	centered <- theme(plot.title = element_text(hjust = 0.5, vjust = -1, size = 12))
+
+	ggarrange(
+	  plot1 + ggtitle(TeX("$sigma = 0.2$")) + centered,
+	  plot2 + ggtitle(TeX("$sigma = 0.4$")) + centered,
+	  plot3 + ggtitle(TeX("$sigma = 0.6$")) + centered,
+	  plot4 + ggtitle(TeX("$sigma = 0.8$")) + centered,
+	  plot5 + ggtitle(TeX("$sigma = 1.0$")) + centered,
+	  plot6 + ggtitle(TeX("$sigma = 1.2$")) + centered,
+	ncol= 6)
+
+} 
+
+
 plot_effects_distr <- function(){
 	set.seed(200)
 

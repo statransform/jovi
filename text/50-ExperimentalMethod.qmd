@@ -36,7 +36,7 @@ $$
 \ell_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j}
 $${#eq-linear-model}
 
- - $\mu$ is the grand mean
+ - $\mu$ is the intercept
 
  - $s_k \sim \mathcal{N}(0, \sigma_s^2)$ is the random intercept effect of the *k*-th subject, where $k = 1..n$ 
 
@@ -97,7 +97,7 @@ Since, in practice, $\tau_0 = -\infty$ and $\tau_D = \infty$, generating respons
 ### Effects and population control
 We next detail how we select the parameters of the linear component (see @eq-linear-model) for the various distributions, as well as the thresholds of the ordinal model (see @eq-ordinal-thresholds). 
 
-**Magnitude of effects.** We control the magnitude of effects by varying $a_1$, $a_2$, and, for some experiments (those evaluating power for interactions), $a_{12}$. @fig-effects-normal presents normal distributions ($\sigma^2 = 1$) generated across the range of values of $a_1$ used to evaluate Type I error rates. In these examples, we illustrate effects for a factor with three categorical levels and, for clarity, disregard between-subject variability ($\sigma_k^2 = 0$).
+**Magnitude of effects.** We control the magnitude of effects by varying $a_1$, $a_2$, and, for some experiments (those evaluating power for interactions), $a_{12}$. @fig-effects-normal presents normal distributions ($\sigma^2 = 1$) generated across the range of values of $a_1$ used to evaluate Type I error rates. In these examples, we illustrate effects for a factor with three categorical levels and, for clarity, disregard between-subject variability ($\sigma_s^2 = 0$).
 
 ::: {#fig-effects-normal}
 ```{r, echo=FALSE, message=FALSE, fig.height=1.2, fig.width = 9, warning=FALSE}
@@ -107,7 +107,7 @@ plot_effects_normal()
 Varying $a_1$ to control the magnitude of the main effect of $X_1$. The plots show examples of normal distributions ($\sigma^2=1$) for a factor with three categorical levels. 
 :::
 
-**Grand mean and variance parameters.** We select the mean term $\mu$ to match a target location of the responses. @tbl-locations reports the target location for each distribution, which is typically the overall mean (or the median in the case of the Cauchy distribution). We describe how $\mu$ is derived from these parameters in [Appendix II](appendix_II.html#mu). 
+**Intercept and variance parameters.** Fixing the intercept $\mu$ directly in a nonlinear model generally leads to arbitrary population-level response distributions, because the marginal mean depends on the link function, the response distribution, the variance of the random effects, and the magnitude of the fixed effects. We therefore calibrate the intercept $\mu$ so that the induced location of the responses matches a pre-specified target value. @tbl-locations reports the target location for each distribution, which is typically the overall mean in all cases except for the Cauchy distribution, where the median is used. We detail how $\mu$ is analytically derived from these target values in [Appendix II](appendix_II.html#mu). 
 
 | Normal | Log-normal | Exponential | Cauchy | Poisson | Binomial | Ordinal |
 |:------:|:----------:|:---------:|:-------:|:--------:|:--------:|:--------:|
@@ -121,10 +121,10 @@ Varying $a_1$ to control the magnitude of the main effect of $X_1$. The plots sh
 ```{r, echo=FALSE, message=FALSE, fig.height=1.2, fig.width = 9, warning=FALSE}
 plot_effects_distr()
 ```
-Different ratio distributions generated with $a_1 = 2$ when $X_1$ has three categorical levels (here, $\sigma_k^2 = 0$).
+Different ratio distributions generated with $a_1 = 2$ when $X_1$ has three categorical levels (here, $\sigma_s^2 = 0$).
 :::
 
-In practice, we randomly choose the standard deviation $\sigma_k^2$ --- which determines between-subject variability --- from the interval $[0.1, 0.5]$, drawing each value from a uniform distribution.
+In practice, we randomly choose the standard deviation $\sigma_s^2$ --- which determines between-subject variability --- from the interval $[0.1, 0.5]$, drawing each value from a uniform distribution.
 
 **Thresholds for ordinal scales.** For ordinal data, we evaluate $D =$ 5, 7, or 11 discrete levels. To derive the discretization thresholds $\tau_d$, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of the latent variable $Y^{*}_{ijk}$. We then divide this range into 5, 7, or 11 intervals, following two different strategies: (i) setting thresholds to be *equidistant*; or (ii) considering *flexible* thresholds, randomly drawing their position in the above range.
 

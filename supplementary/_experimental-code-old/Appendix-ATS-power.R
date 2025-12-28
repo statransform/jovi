@@ -13,8 +13,8 @@ library(lmerTest)
 # Also try the ANOVA-type statistic (ATS)
 # https://www.quantargo.com/help/r/latest/packages/nparLD/2.1/nparLD
 library(nparLD)
-# Parallel computation
 
+# Parallel computation
 library(foreach)
 library(doParallel)
 

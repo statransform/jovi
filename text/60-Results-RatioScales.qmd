@@ -11,10 +11,6 @@ library(tidyverse)
 source("utils-data-reading.R")
 source("utils-plotlying.R")
 
-# To remote those: 
-source("dataReaders.R")
-source("plotlying.R")
-
 prefix <- "Type_I_4x3_ratio"
 alpha <- .05
 distributions <- c("norm", "lnorm", "exp", "cauchy", "poisson", "binom")

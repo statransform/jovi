@@ -31,7 +31,7 @@ get_p_values <- function(model, vars, is_aov = TRUE) {
     res <- res  %>% # Get both the between- and within-subjects terms
         filter(term %in% vars) %>% # Filter the relevant rows
         arrange(match(term, vars)) %>% # Order them
-        select(p.value) # And select the p-value
+        dplyr::select(p.value) # And select the p-value
     return(res[[1]])
   } else {
     anov_object <- anova(model)

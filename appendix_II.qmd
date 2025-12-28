@@ -20,7 +20,7 @@ csl: canadian-journal-of-philosophy.csl
 tbl-cap-location: top
 ---
 
-## Absence of spurious effects when $a_2=0$ and $a_{12} = 0${#effects-proof}
+## On spurious effects when $a_2=0$ and $a_{12} = 0${#effects-proof}
 Let $x_1$ and $x_2$ be two independent variables, and suppose the conditional distribution of the response $Y | (x_1, x_2)$ depends on these variables only through the linear predictor:
 $$
 \ell(x_1, x_2) = a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2
@@ -28,7 +28,7 @@ $$
 
 Assume that the conditional mean can be written as:
 $$
-\mu(x_1, x_2) = E(Y|x_1, x_2) = h(\ell(x_1, x_2))
+\mu(x_1, x_2) = E[Y|x_1, x_2] = h(\ell(x_1, x_2))
 $$
 where $h$ is a monotone function. This function may coincide with the inverse link function $g^{-1}$ in a GLM, but it may also arise from other frameworks, including transformation models or latent-variable constructions. Thus it does not necessarily need to be smooth or invertible; for example, this assumption is not required for the ordinal example discussed later.
 
@@ -86,10 +86,10 @@ log Y = a_0 + a_1 x_1 + \varepsilon, \qquad
 \end{aligned} 
 $$
 so that 
-$$Y | (x_1, x_2) \sim Lognormal(a_0 + a_1 x_1, \sigma^2)$$
+$$Y | (x_1, x_2) \sim \mathcal{LogN}(a_0 + a_1 x_1, \sigma^2)$$
 
 Since the conditional distribution of $Y$ does not depend on $x_2$, there is no main effect of $x_2$ on the mean, median, or any quantile of the response distribution. In particular, the conditional mean
-$$\mu(x_1,x_2) = E(Y|x_1, x_2) = exp(a_0 + a_1 x_1 + \frac{1}{2}\sigma^2)$$
+$$\mu(x_1,x_2) = E[Y|x_1, x_2] = \text{exp}(a_0 + a_1 x_1 + \frac{1}{2}\sigma^2)$$
 remains identical across all levels of $x_2$. 
 
 For the same reasons, there is no interaction on the response scale.
@@ -103,7 +103,7 @@ $$Y^* = a_0 + a_1 x_1 + \varepsilon, \qquad
 and the observed response $Y$ is obtained by applying fixed thresholds: 
 $$
 \begin{aligned}
-Y = d\ \ \text{if}\ \ \tau_{d-1} < Y^* \leq \tau_k, 
+Y = d\ \ \text{if}\ \ \tau_{d-1} < Y^* \leq \tau_d, 
 \qquad d = 1,2 ... D
 \end{aligned} 
 $$ 
@@ -117,21 +117,164 @@ Suppose we apply a monotone transformation $T$ directly to the observed response
 
 We emphasize that ART is not a monotone transformation. Instead of transforming $Y$ directly, ART first constructs aligned responses by subtracting and adding sample means on the response scale. These alignment terms can vary across levels of $x_2$ or combinations of $(x_1, x_2)$. Therefore, ART is not invariant to nonlinear mean–response relationships.
 
-<!--
-In conclusion, $T$ does not introduce a main effect of $x_2$ or an interaction between $x_1$ and $x_2$ when $a_2=0$ and $a_{12}=0$.
+## Calculation of location parameters {#mu}
+We recall the linear predictor used to model nonlinear relationships (see the [article](index.html#statistical-modeling)):
 
+$$ 
+\ell_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j}
+$$
+where $s_k \sim \mathcal{N}(0, \sigma_s^2)$. Our goal is to determine $\mu$ such as the expected value of the response equals a pre-specified target value $E[Y_{ijk}] = M$.
 
-### ART introducing spurious effects 
-ART differs fundamentally from simple monotone transformations. Instead of transforming $Y$ directly, ART first constructs aligned responses by **subtracting and adding sample means on the response scale**, for example:
+To simplify notation, we define the fixed-effects component
+$$\phi_{ij} = a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j}$$
 
-$$Y^{(B)} = Y - \bar{Y}_{ij} + \bar{Y}_{.j} - \bar{Y}_{..}$$
-or analogous expressions for interactions, and only then applies ranking. The conditional distribution $Y^{(B)} | (x_1, x_2)$ now depends on $x_2$ through the arithmetic mean components even though $a_2 = 0$ and $a_{12}=0$. 
+so that
 
-These alignment terms can vary across levels of $x_2$ due to sampling variability alone, and depending on $h$, they can acquire systematic shifts across levels of $x_2$ or combinations of $(x_1, x_2)$, even when the true conditional distribution does not. in particular, the term $\bar{Y}_{.j} - \bar{Y}_{..}$ is constant within each level of $x_2$ and shifts all aligned observations for that level either upward or downward. 
+$$ 
+\ell_{ijk} = \mu + s_k + \phi_{ij}
+$$
 
-After ranking, observations from one level of $x_2$ tend to receive systematically higher or lower ranks. Our results confirm this problem.
--->
+**A useful identity.** Let $X$ be a continuous random variable with probability density function $f_X(x)$. For any function $g$, its expectation is defined as
 
+$$
+E[g(X)] = \int\limits_{-\infty}^\infty g(x) f_X(x) dx
+$$
+
+If $g(x) = e^x$, then
+
+$$
+E[e^X] = \int\limits_{-\infty}^\infty e^x f_X(x) dx
+$$
+
+When $X \sim \mathcal{N}(0, \sigma^2)$, substituting the normal probability density function yields
+
+$$
+E[e^X] = \int\limits_{-\infty}^\infty e^x \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\frac{x^2}{2\sigma^2}} dx = e^{\frac{1}{2}\sigma^2}
+$$ {#eq-useful}
+
+### Log-normal model
+When responses are log-normally distributed, 
+
+$$
+\begin{aligned}
+log(Y_{ijk}) = \ell_{ijk} + \varepsilon_{ijk},
+\qquad \varepsilon_{ijk} \sim \mathcal{N}(0, \sigma^2)
+\end{aligned} 
+$$
+
+so that
+
+$$ 
+Y_{ijk} = e^{\ell_{ijk} + \varepsilon_{ijk}} = e^{\mu + s_k + e_{ij} + \varepsilon_{ijk}} = e^{\mu} \cdot e^{\phi_{ij}} \cdot e^{s_k} \cdot e^{\varepsilon_{ijk}} 
+$$
+
+Taking expectations and using independence of components,
+
+$$
+E[Y_{ijk}] = e^\mu \cdot E[e^{\phi_{ij}}] \cdot E[e^{s_k}] \cdot E[e^{\varepsilon_{ijk}}] = M   
+$$
+
+Solving for $\mu$ gives
+
+$$
+\mu = log\ M - log\ E[e^{\phi_{ij}}] - log\ E[e^{s_k}] - log\ E[e^{\varepsilon_{ijk}}]
+$$
+
+Because $s_k \sim \mathcal{N}(0, \sigma_s^2)$ and $\epsilon_{ijk} \sim \mathcal{N}(0, \sigma^2)$, @eq-useful implies
+
+$$
+\begin{aligned}
+E[e^{s_k}] = e^{\frac{1}{2}\sigma_s^2},
+\qquad E[e^{\varepsilon_{ijk}}] = e^{\frac{1}{2}\sigma^2}
+\end{aligned} 
+$$
+
+Furthermore, since $\phi_{ij}$ is deterministic, 
+
+$$E[e^{\phi_{ij}}] = \frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}$$
+where $m_1$ and $m_2$ are the number of levels of $X_1$ and $X_2$, respectively.
+
+Therefore,
+
+$$
+\mu = log\ M - log(\frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}) - \frac{1}{2}\sigma_s^2 - \frac{1}{2}\sigma^2
+$$ {#eq-mu-lognornal}
+
+### Exponential model
+For exponential responses with a log link,
+
+$$
+Y_{ijk} \sim \text{Exp}(\lambda_{ijk} = e^{-\ell_{ijk}})
+$$
+
+The expected value is
+
+$$
+E[Y_{ijk}] = E[1/\lambda_{ijk}] = E[e^{\ell_{ijk}}]  =  e^{\mu} \cdot E[e^{\phi_{ij}}] \cdot E[e^{s_k}]
+$$
+
+which, as before, it leads to the solution
+
+$$
+\mu = log\ M - log(\frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}) - \frac{1}{2}\sigma_s^2
+$$ {#eq-mu-exp}
+
+### Poisson model
+For Poisson responses with a log link,
+$$
+Y_{ijk} \sim \mathcal{Pois}(\lambda_{ijk} = e^{\ell_{ijk}})
+$$
+
+The expected value is
+
+$$
+E[Y_{ijk}] = E[\lambda_{ijk}] = E[e^{\ell_{ijk}}]  =  e^{\mu} \cdot E[e^{\phi_{ij}}] \cdot E[e^{s_k}]
+$$
+which leads to the same solution as for the exponential distribution:
+$$
+\mu = log\ M - log(\frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}) - \frac{1}{2}\sigma_s^2
+$$ {#eq-mu-poisson}
+
+### Binomial model
+For binomial responses with a logit link,
+
+$$
+Y_{ijk} \sim \mathcal{B}(\kappa, p_{ijk} = \frac{1}{1 + e^{-\ell_{ijk}}})
+$$
+
+The expected value is now
+
+$$E[Y_{ijk}] = \kappa \cdot E[p_{ijk}] = 
+\frac{\kappa}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2}
+\int_{-\infty}^{\infty}
+\frac{1}{1 + e^{-(\mu + \phi_{ij} + s)}}
+\cdot
+\frac{1}{\sqrt{2\pi}\sigma_s}
+e^{-\frac{s^2}{2\sigma_s^2}}\, ds
+= M
+$$ {#eq-mu-binomial}
+because we cannot separate the sums from the integral. As no close form exists to analytically derive $\mu$, we create the function
+
+$$F(\mu) = \frac{\kappa}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2}
+\int_{-\infty}^{\infty}
+\frac{1}{1 + e^{-(\mu + \phi_{ij} + s)}}
+\cdot
+\frac{1}{\sqrt{2\pi}\sigma_s}
+e^{-\frac{s^2}{2\sigma_s^2}}\, ds
+- M$$
+
+and numerically find its root using R's ``uniroot()`` function.
+
+### Cauchy model
+Since the Cauchy distribution has no finite mean, we target the median instead:
+
+$$\text{Median}(Y_{ijk}) = \ell_{ijk} = \mu + \phi_{ij} = M$$
+
+Because our coding is centered, $\sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} \phi_{ij} = 0$. Therefore,
+
+$$
+\mu  = M
+$$
 
 ## References {.unnumbered}
 

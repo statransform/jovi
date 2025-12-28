@@ -86,7 +86,7 @@ time <- system.time({
       foreach(n = Ns, .combine=rbind) %do% {
         foreach(effId = 1:nrow(effects), .combine=rbind) %do% {
           # The test function is parallelized (using multiple cores)
-          repeat_test_median(
+          repeat_test_custom(
             nlevels=design, 
             within=within, 
             n=n, 
@@ -95,7 +95,10 @@ time <- system.time({
             params=use_parameters(family),
             formula=formula,
             vars=vars,
-            iterations = R
+            iterations = R,
+            methods = c("PAR", "ART", "ART-MED", "INT"),
+            methods_alt = c("PAR", "ARTmean", "ARTmedian", "INT"),
+            compare_function = compare_p_values_median
           )
         }
       }

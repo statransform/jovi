@@ -18,7 +18,9 @@ library(nparLD)
 library(foreach)
 library(doParallel)
 
-source("data-generators.R") # Import the data-generation functions
+source("utils-data-generation.R")
+source("utils-analysis.R")
+source("utils-extra.R")
 
 getLmerPValues <- function(model, vars, lmer = TRUE) {
 	return(suppressMessages(anova(model)[vars, ifelse(lmer, 6, 5)])) # For aov models the table is different

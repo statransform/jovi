@@ -38,176 +38,178 @@ library(plotly)
 </style>
 ```
 
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(dplyr)
 library(tidyverse)
+
 source("utils-data-reading.R")
 source("utils-plotlying.R")
 ```
 
-### Effect size estimates {#effect-sizes}
-Transformations --- even monotonic ones --- alter both the absolute magnitude of effects and the total variance of the data. A natural question, therefore, is how to interpret effect size estimates derived from rank transformations and whether such estimates are meaningful and comparable across methods. Nevertheless, @Kay:art-effect-sizes provides a tutorial for deriving standardized effect sizes from ART, and many of the papers we reviewed report such estimates. This practice motivates a more systematic investigation.
-
-**Log-normal distributions.** We begin by examining log-normal responses. Consider a $4 \times 3$ within-subjects design with $n = 20$, in which the effect of the first factor $X_1$ is null ($a_1 = 0$) and there is no interaction ($a_{12} = 0$). @fig-eta-squared displays the partial $\eta^2$ estimates produced by each method for the effect of $X_1$ as the magnitude of the effect on the second factor $X_2$ increases. These estimates are compared to those from a ground-truth analysis, defined here as ANOVA applied to the log-transformed responses.
-
-::: {#fig-eta-squared}
-```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
-data <- read.csv("results/eta_squared.csv", sep=",", header=TRUE, strip.white=TRUE)
-data <- data[data$family == "lnorm", ]
-data$effectX2 <- factor(data$effectX2)
-
-ylab = "X1 - partial eta squared"
-xlab = "X2 - magnitude of main effect (a2)"
-
-margins <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
-cbPalette = c("#8888ff", "#888888", "#E69F00", "#009E73", "#FF5E00")
-cbPalette2 = c("#8888ff88", "#88888888", "#E69F0088", "#009E7388", "#FF5E0088")
-
-df <- data[data$effectX1 == 0,]
-
-fig1 <- plot_ly(df, x = ~effectX2, y = ~grtX1, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
-fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
-fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
-fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
-fig.art <- plot_ly(df, x = ~effectX2, y = ~artX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'ART', marker = list(color = cbPalette2[5]), fillcolor = cbPalette2[5], line = list(color = cbPalette[5])) %>% layout(xaxis = list(title = NA))
-
-fig <- subplot(fig1, fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY = T) %>% 
-  layout(annotations = list(x = 0.5, y = -0.25, yshift = 0, xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F, text = xlab), margin = margins) %>%
-	config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>%  layout(legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5, colors = cbPalette), yaxis = list(title = ylab)) %>% layout(
-    hovermode = "x unified",  # Shared hover on the x-axis
-    yaxis = list(spikemode = "across", spikesnap = "cursor"),
-    xaxis = list(fixedrange=T)
-  )
-
-fig
+```{=html}
+<style>
+.math.inline .MathJax  {
+  font-size: 105% !important;
+}
+</style>
 ```
-Boxplots summarizing the $\eta^2$ estimates obtained with each method from 300 simulated datasets ($n=20$). The population effect of $X1$ is null, and responses follow **log-normal distributions**. Hover over the plots to compare the methods.
+
+We present complementary results and new experiments that investigate additional scenarios. We also compare INT and RNK with other nonparametric methods. Unless explicitly mentioned in each section, we follow the experimental methodology presented in the main article. At the end of each section, we summarize our conclusions.
+
+## Generalizations of nonparametric tests {#generalized}
+
+Finally, we evaluate the generalizations of nonparametric tests recommended by Lüpsen [-@luepsen:2018; -@luepsen:2023] as implemented in his *np.anova* function [@luepsen_R]. Specifically, we examine the generalization of the van der Waerden test (VDW) and the generalization of the Kruskal-Wallis and Friedman tests (KWF). 
+
+These implementations require random slopes to be included in the error term of the model. Concretely, we use ``Error(Subject/(X1*X2))`` for the two-factor within-participants design and ``Error(Subject/X2)`` for the mixed design. We use the same modeling approach for all other methods to ensure comparability.
+
+**Type I error rates: Main effects**. @fig-vdWaerden-designs-main shows the Type I error rates for the main effect of $X_2$. While all methods perform well under the within-subjects and mixed designs, the error rates of VDW and KWF drop sharply as the effect of $X_1$ increases under the between-subjects design. As shown below, this behavior reflects a severe loss of power for these two methods in these conditions.
+
+::: {#fig-vdWaerden-designs-main}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "Type_I_vdWaerden"
+alpha = 0.05
+
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+methods = c("RNK", "INT", "VDW", "KWF")
+palette = c("#E69F00", "#009E73", "#FF70AB", "#888888")
+
+df <- read_data(prefix, alpha, effectType = 1, distributions, methods = methods)
+df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 8.1, nticks=8, cbPalette = palette)
+```
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
 :::
 
-We observe that ART is the only method for which the estimated effect sizes for $X_1$ are influenced by the magnitude of the effect on $X_2$. These results clearly demonstrate that ART's alignment mechanism fails in nonlinear models with skewed distributions and leads to confounding across effects. 
+**Type I error rates: Interactions**. @fig-vdWaerden-designs-interaction-1 presents the Type I error rates for the interaction in the presence of a single main effect. Again, the error rates of VDW and KWF decrease rapidly, now in both the between-subjects and mixed designs. We also observe inflation of the error rates of RNK and INT for large effects under discrete distributions.
 
-@fig-eta-squared-2 presents partial $\eta^2$ estimates when the effect of $X_1$ is no longer null ($a_1 = 1$). PAR performs poorly for these data, consistently underestimating effect sizes. RNK also slightly underestimates effects. ART also tends to underestimate effects when $a_2 = 0$; however, as $a_2$ increases, its estimates become more variable and exhibit an overall tendency to increase. INT yields the most precise estimates and is only mildly affected when $a_2 = 8$.
+::: {#fig-vdWaerden-designs-interaction-1}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- read_data(prefix, alpha, effectType = 2, distributions, methods = methods)
+df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 
-::: {#fig-eta-squared-2}
-```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
-df <- data[data$effectX1 == 1,]
-
-fig1 <- plot_ly(df, x = ~effectX2, y = ~grtX1, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
-fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
-fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
-fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
-fig.art <- plot_ly(df, x = ~effectX2, y = ~artX1, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'ART', marker = list(color = cbPalette2[5]), fillcolor = cbPalette2[5], line = list(color = cbPalette[5])) %>% layout(xaxis = list(title = NA))
-
-fig <- subplot(fig1, fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY = T) %>% 
-  layout(annotations = list(x = 0.5, y = -0.25, yshift = 0, xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F, text = xlab), margin = margins) %>%
-	config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>%  layout(legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5, colors = cbPalette), yaxis = list(title = ylab)) %>% layout(
-    hovermode = "x unified",  # Shared hover on the x-axis
-    yaxis = list(spikemode = "across", spikesnap = "cursor"),
-    xaxis = list(fixedrange=T)
-  )
-
-fig
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX2", max = 8.1, nticks=8, cbPalette = palette)
 ```
-Boxplots summarizing partial $\eta^2$ estimates obtained with each method from 300 simulated datasets ($n=20$). The population effect of $X1$ is non-null ($a_1 = 1$), and responses again follow **log-normal distributions**. Hover over the plots to compare the methods.
+Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_2$ of the main effect of $X_2$ ($n = 20$) 
 :::
 
-**Systematic comparison to ground truth estimates**. We conduct an additional experiment to compare the methods to the ground truth across a wider range of effect magnitudes for the normal, log-normal, and ordinal distributions (the latter with five levels and flexible thresholds). For ordinal data, the ground truth is defined as ANOVA applied to the latent variable (i.e., the data prior to discretization). We now use Cohen’s $f$ as a measure of effect size, which is expected to be proportional to the true effect magnitude. Without loss of generality, we focus on the main effect of $X_1$ and fix the sample size to $n=20$.
+@fig-vdWaerden-designs-interaction-2 shows the results when both $a_1$ and $a_2$ increase. In these settings, all four methods struggle as effect magnitudes grow, though their behavior varies across distributions and experimental designs. Depending on the configuration, the methods either inflate positive rates or deflate them below nominal levels. INT appears to be the most stable method for continuous distributions, but its positive rates increase more rapidly under discrete distributions.    
 
-@fig-effect-main-scatterplots-1 illustrates the relationship between the Cohen's $f$ estimated by each method and the corresponding ground-truth estimate, as $a_1$ and $a_2$ vary independently within the range $[-2, 2]$. This produces Cohen’s $f$ values between $0$ and $1$ for the $4 \times 3$ within-subject and $2 \times 3$ between-subject designs, and a wider range for the $2 \times 4$ mixed design. Proximity to the black diagonal indicates closer agreement with the ground truth. Points above the diagonal indicate overestimation of the effect size, whereas points below indicate underestimation.
-
-::: {#fig-effect-main-scatterplots-1}
-```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
-source("cohens_f_plots.R")
-prefix <- "cohens_f_2"
-df <- readly_datapoints(prefix,  distributions=c("norm", "lnorm", "likert"), dnames = c("Normal", "Log-normal", "Ordinal (5 levels)"))
-fig <- plotly_scatter(df, xlab = "Ground truth", ylab= "Cohen's f", xvar = "grtX1", max = 1.1)
-
-fig
+::: {#fig-vdWaerden-designs-interaction-2}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- read_data(prefix, alpha, effectType = 0, distributions, methods = methods)
+df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "magnitude of main effects", ytitle = 'Positives (%)', var = "rateX1X2", xvar = "effectX1", max = 104, nticks=8, cbPalette = palette)
 ```
-Scatterplots showing the relationship between effect size estimates (Cohen's $f$) obtained with each method and those from the ground-truth analysis for the main effect of $X_1$, when $a_1$ and $a_2$ vary independently within the range $[-2, 2]$. 
+Positive rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ ($n = 20$). *Note: These values correspond to Type I error rates under the null hypothesis $a_{12} = 0$; alternative definitions of the null hypothesis may lead to different results.* 
 :::
 
-Under log-normal distributions, PAR tends to severely underestimate effect sizes, whereas ART produces estimates that are widely dispersed on both sides of the ground-truth values. INT yields the most precise estimates, followed by RNK. However, neither method provides accurate estimates for ordinal data. This limitation largely reflects the restricted resolution of the ordinal scale itself: with only five discrete levels, it cannot adequately represent the full range of variation in the latent variable, leading all methods to underestimate effect sizes. The flexible nature of the thresholds in the distributions we tested makes effect size estimation even more challenging. 
+**Power: Main effects**. @fig-vdWaerden-power-main-1 presents power results for detecting the main effect of $X_1$. Although differences are generally small, INT emerges as the most powerful method in most configurations. In several cases (e.g., log-normal distributions in the within-subjects and mixed designs), the power of VDW and KWF lags behind that of RNK and INT.
 
-@fig-effect-main-scatterplots-2 presents the same relationship for a larger range of effects, with $a_1$ and $a_2$ varying within $[-8, 8]$. 
+::: {#fig-vdWaerden-power-main-1}
+<div id="plot-power-vd.1">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "Power_vdWaerden"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 
-::: {#fig-effect-main-scatterplots-2}
-```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
-prefix <- "cohens_f_8"
-
-df <- readly_datapoints(prefix,  distributions=c("norm", "lnorm", "likert"), dnames = c("Normal", "Log-normal", "Ordinal (5 levels)"))
-fig <- plotly_scatter(df, xlab = "Ground truth", ylab= "Cohen's f", xvar = "grtX1", max = 4.2)
-
-fig
+data <- read_data(prefix, alpha = .05, effectType = 3, distributions, methods = methods)
+df <- reshape_by_design(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX1", max = 104,  ytitle = 'Power (%)', cbPalette = palette)
 ```
-Scatterplots showing the relationship between effect size estimates (Cohen's $f$) obtained with each method and those from the ground-truth analysis for the main effect of $X_1$, when $a_1$ and $a_2$ vary independently within the range $[-8, 8]$. 
+</div>
+
+<div id="plot-power-vd.2">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- data %>% arrange(design,family,effectX1,rateX1)  %>% group_by(design,family,effectX1) %>% mutate(rank = rank(rateX1))
+df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_power_by_design(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX1", xvar = "effectX1", max = 4.2, ytitle = 'Power - ranking', cbPalette = palette)
+```
+</div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-vd.2").classList.add("hidden"); }); </script>
+
+<button id="btnvd1" style="background-color: #f0f0f0; border: 1px solid #ccc; color: #333; font-size: 0.9em;
+    padding: 4px 10px; border-radius: 6px; cursor: pointer; float: right;"
+  onclick="const plot = document.getElementById('plot-power-vd.1');
+  plot.classList.toggle('hidden');
+  document.getElementById('plot-power-vd.2').classList.toggle('hidden');
+  btnvd1.innerText = plot.classList.contains('hidden') ? 'show percent' : 'show ranking';
+">
+  show ranking
+</button>
+
+Power ($\alpha = .05$) for detecting the **main effect of $X_1$** as a function of the magnitude of effect $a_1$ ($n=20$).
 :::
 
-In this broader range, all three rank-based methods --- although RNK to a lesser extent --- struggle to recover large effects, even when the underlying distribution is normal. However, we acknowledge that accurately estimating effects of such magnitudes (e.g., when Cohen's $f > 2$ or $\eta^2 > 0.8$) is of limited practical importance.
+We also report power results for the second factor $X_2$, which confirm that VDW and KWF offer no clear advantage, particularly when compared with INT.
 
-ART fails entirely under log-normal data, regardless of effect magnitude. Finally, all methods produce highly variable effect size estimates for ordinal data.
+::: {#fig-vdWaerden-power-main-2}
+<div id="plot-power-vd.3">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "Power_vdWaerden"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 
-**Interactions**. Finally, we present additional results illustrating how rank-based methods can fail to accurately estimate interaction effects. @fig-eta-squared-interaction shows partial $\eta^2$ estimates for the interaction term under normal distributions, as both $a_1$ and $a_2$ increase. Once again, RNK substantially distorts the estimated interaction effect. Although INT mitigates this distortion, the problem reemerges as the main effects become larger.  
-
-::: {#fig-eta-squared-interaction}
-```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
-data <- read.csv("results/eta_squared.csv", sep=",", header=TRUE, strip.white=TRUE)
-df <- data[data$family == "norm" & data$effectX1 == data$effectX2, ]
-df$effectX2 <- factor(df$effectX2)
-
-ylab = "interaction - partial eta squared"
-xlab = "magnitude of main effects: a1 and a2"
-
-margins <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
-cbPalette = c("#8888ff", "#888888", "#E69F00", "#009E73", "#FF5E00")
-cbPalette2 = c("#8888ff88", "#88888888", "#E69F0088", "#009E7388", "#FF5E0088")
-
-fig1 <- plot_ly(df, x = ~effectX2, y = ~grtX1X2, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
-fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1X2, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
-fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
-fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
-fig.art <- plot_ly(df, x = ~effectX2, y = ~artX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'ART', marker = list(color = cbPalette2[5]), fillcolor = cbPalette2[5], line = list(color = cbPalette[5])) %>% layout(xaxis = list(title = NA))
-
-fig <- subplot(fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY = T) %>% 
-  layout(annotations = list(x = 0.5, y = -0.25, yshift = 0, xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F, text = xlab), margin = margins) %>%
-	config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>%  layout(legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5, colors = cbPalette), yaxis = list(title = ylab), xaxis = list(fixedrange=T)) %>% layout(
-    hovermode = "x unified",  # Shared hover on the x-axis
-    yaxis = list(spikemode = "across", spikesnap = "cursor")
-  )
-         
-fig
+data <- read_data(prefix, alpha = .05, effectType = 4, distributions, methods = methods)
+df <- reshape_by_design(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX2", max = 104,  ytitle = 'Power (%)', cbPalette = palette)
 ```
-Boxplots summarizing partial $\eta^2$ estimates for interaction effects from 300 simulated datasets ($n=20$). The population interaction effect is null, and responses follow **normal distributions**. Hover over the plots to compare the methods.
+</div>
+
+<div id="plot-power-vd.4">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- data %>% arrange(design,family,effectX2,rateX2)  %>% group_by(design,family,effectX2) %>% mutate(rank = rank(rateX2))
+df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_power_by_design(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX2", xvar = "effectX2", max = 4.2, ytitle = 'Power - ranking', cbPalette = palette)
+```
+</div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-vd.4").classList.add("hidden"); }); </script>
+
+<button id="btnvd2" style="background-color: #f0f0f0; border: 1px solid #ccc; color: #333; font-size: 0.9em;
+    padding: 4px 10px; border-radius: 6px; cursor: pointer; float: right;"
+  onclick="const plot = document.getElementById('plot-power-vd.3');
+  plot.classList.toggle('hidden');
+  document.getElementById('plot-power-vd.4').classList.toggle('hidden');
+  btnvd2.innerText = plot.classList.contains('hidden') ? 'show percent' : 'show ranking';
+">
+  show ranking
+</button>
+
+Power ($\alpha = .05$) for detecting the **main effect of $X_2$** as a function of the magnitude of effect $a_2$ ($n=20$).
 :::
 
-@fig-eta-squared-ordinal presents results for an ordinal scale with five flexible levels. In this case, effect size estimates become even more distorted across all methods.
+**Power: Interactions**. We also report power results for detecting interaction effects in @fig-vdWaerden-power-interaction. These results further confirm the overall advantage of INT across all designs.
 
-::: {#fig-eta-squared-ordinal}
-```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
-df <- data[data$family == "likert" & data$effectX1 == data$effectX2, ]
-df$effectX2 <- factor(df$effectX2)
+::: {#fig-vdWaerden-power-interaction}
+<div id="plot-power-vd.5">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "Power_vdWaerden"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 
-ylab = "interaction - partial eta squared"
-xlab = "magnitude of main effects: a1 and a2"
-
-margins <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
-cbPalette = c("#8888ff", "#888888", "#E69F00", "#009E73", "#FF5E00")
-cbPalette2 = c("#8888ff88", "#88888888", "#E69F0088", "#009E7388", "#FF5E0088")
-
-fig1 <- plot_ly(df, x = ~effectX2, y = ~grtX1X2, type = 'box', boxpoints = 'all', name = 'ground truth', hovertemplate = " ", marker = list(color = cbPalette2[1]), fillcolor = cbPalette2[1], line = list(color = cbPalette[1]))  %>% layout(xaxis = list(title = NA))
-fig.par <- plot_ly(df, x = ~effectX2, y = ~parX1X2, type = 'box', boxpoints = 'all', name = 'PAR', hovertemplate = " ", marker = list(color = cbPalette2[2]), fillcolor = cbPalette2[2], line = list(color = cbPalette[2])) %>% layout(xaxis = list(title = NA))
-fig.rnk <- plot_ly(df, x = ~effectX2, y = ~rnkX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'RNK', marker = list(color = cbPalette2[3]), fillcolor = cbPalette2[3], line = list(color = cbPalette[3])) %>% layout(xaxis = list(title = NA))
-fig.int <- plot_ly(df, x = ~effectX2, y = ~intX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'INT', marker = list(color = cbPalette2[4]), fillcolor = cbPalette2[4], line = list(color = cbPalette[4])) %>% layout(xaxis = list(title = NA))
-fig.art <- plot_ly(df, x = ~effectX2, y = ~artX1X2, type = 'box', boxpoints = 'all', hovertemplate = " ", name = 'ART', marker = list(color = cbPalette2[5]), fillcolor = cbPalette2[5], line = list(color = cbPalette[5])) %>% layout(xaxis = list(title = NA))
-
-fig <- subplot(fig1, fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY = T) %>% 
-  layout(annotations = list(x = 0.5, y = -0.25, yshift = 0, xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F, text = xlab), margin = margins) %>%
-	config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>%  layout(legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5, colors = cbPalette), yaxis = list(title = ylab), xaxis = list(fixedrange=T)) %>% layout(
-    hovermode = "x unified",  # Shared hover on the x-axis
-    yaxis = list(spikemode = "across", spikesnap = "cursor")
-  )
-         
-fig
+data <- read_data(prefix, alpha = .05, effectType = 5, distributions, methods = methods)
+df <- reshape_by_design(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1X2", max = 104,  ytitle = 'Power (%)', cbPalette = palette)
 ```
-Boxplots summarizing partial $\eta^2$ estimates for interaction effects from 300 simulated datasets ($n=20$). The population interaction effect is null, and responses are **ordinal with 5 flexible levels**. Hover over the plots to compare the methods.
+</div>
+
+<div id="plot-power-vd.6">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- data %>% arrange(design,family,effectX1X2,rateX1X2)  %>% group_by(design,family,effectX1X2) %>% mutate(rank = rank(rateX1X2))
+df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_power_by_design(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX1X2", xvar = "effectX1X2", max = 4.2, ytitle = 'Power - ranking', cbPalette = palette)
+```
+</div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-vd.6").classList.add("hidden"); }); </script>
+
+<button id="btnvd3" style="background-color: #f0f0f0; border: 1px solid #ccc; color: #333; font-size: 0.9em;
+    padding: 4px 10px; border-radius: 6px; cursor: pointer; float: right;"
+  onclick="const plot = document.getElementById('plot-power-vd.5');
+  plot.classList.toggle('hidden');
+  document.getElementById('plot-power-vd.6').classList.toggle('hidden');
+  btnvd3.innerText = plot.classList.contains('hidden') ? 'show percent' : 'show ranking';
+">
+  show ranking
+</button>
+
+Power ($\alpha = .05$) for detecting the **interaction effect $X_1 \times X_2$** as a function of the magnitude of effect $a_{12}$ ($n=20$).
 :::
+

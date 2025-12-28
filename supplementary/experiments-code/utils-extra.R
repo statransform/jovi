@@ -1,4 +1,4 @@
-# Extra functions for analysis and simulation for additional methods: ART with media alignment, etc.
+# Extra functions for analysis and simulation for additional methods: ART with media alignment, ATS, etc.
 # Author: Theophanis Tsandilas, Dec 2025
 
 # Custom implementation of ART for repeated measures with two factors: Y ~ X1*X2 + Error(subject)
@@ -50,11 +50,98 @@ compare_p_values_median <- function(df,
   )
 }
 
+############################################
+# Code for the ATS statistic
+get_ATS_p_values <- function(model) {
+  return(unname(model$ANOVA.test[,3]))
+}
+
+# Overwrite the function in utils-analysis.R (with implementation of ATS)
+compare_p_values_ATS <- function(df, 
+  formula = Y ~ X1*X2 + Error(factor(subject)), 
+  vars = c("X1", "X2", "X1:X2") # Specify the terms of interest. P-values will be returned with the specified order
+){  
+  model_par <- suppressMessages(do.call(aov, list(formula, df))) # Parametric
+  model_ats <- suppressMessages(nparLD(update(formula, . ~ . - Error(factor(subject))), data=as.data.frame(df), subject="subject", order.warning=F, description=FALSE))
+  model_rnk <- suppressMessages(do.call(aov, list(update(formula, rank(.) ~ .), df))) # RNK
+  model_int <- suppressMessages(do.call(aov, list(update(formula, INT(.) ~ .), df))) # INT
+
+  c(PAR = suppressMessages(get_p_values(model_par, vars, is_aov = TRUE)), 
+    ATS = suppressMessages(get_ATS_p_values(model_ats)), 
+    RNK = suppressMessages(get_p_values(model_rnk, vars, is_aov = TRUE)), 
+    INT = suppressMessages(get_p_values(model_int, vars, is_aov = TRUE))
+  )
+}
+
+
+############################################
+# Comparison of RNK and INT methods against the multifactorial generalizations of the van der Waerden test 
+# and the Kruskal-Wallis and Friedman tests
+# See: http://www.uni-koeln.de/~luepsen/R/
+# See: http://www.uni-koeln.de/~luepsen/R/manual.pdf
+
+get_p_values_gen <- function(model, vars) {
+  pattern <- paste0("^(", paste(vars, collapse = "|"), ")(\\s|$)")
+  model[grepl(pattern, rownames(model)), "Pr(>Chi)"]
+}
+
+get_p_values_aov <- function(model, vars, has_error = TRUE) {
+  if(has_error) return(unname(unlist(get_p(model))))
+  else return(anova(model)[vars, "Pr(>F)"])
+}
+
+# Overwrite the function in utils-analysis.R
+compare_p_values_gen <- function(df, 
+  formula = Y ~ X1*X2 + Error(subject), 
+  vars = c("X1", "X2", "X1:X2") # Specify the terms of interest. P-values will be returned with the specified order
+){  
+  df$subject = factor(df$subject)
+  model_rnk <- suppressMessages(do.call(aov, list(update(formula, rank(.) ~ .), df))) # RNK
+  model_int <- suppressMessages(do.call(aov, list(update(formula, INT(.) ~ .), df))) # INT
+  model_vdw <- suppressMessages(np.anova(formula, data = as.data.frame(df), method=1)) # van der Waerden test
+  model_kwf <- suppressMessages(np.anova(formula, data = as.data.frame(df), method=0)) # Kruskal-Wallis and Friedman tests
+
+  has_error_term <- sum(grepl("Error", attr(terms(formula), "term.labels")))
+
+  c(
+    RNK = suppressMessages(get_p_values_aov(model_rnk, vars, has_error = has_error_term)), 
+    INT = suppressMessages(get_p_values_aov(model_int, vars, has_error = has_error_term)),
+    VDW = suppressMessages(get_p_values_gen(model_vdw, vars)),
+    KWF = suppressMessages(get_p_values_gen(model_kwf, vars))
+  )
+}
+
+
+# Non parametric tests
+rank.test <- function(df) {
+  nlevels <- length(levels(df[,"X1"]))
+  paired <- nrow(df) > length(df$subject)
+
+  # Do either the wilcoxon or the friedman (more than two levels)
+  if(paired) return (ifelse(nlevels==2, wilcox.test(Y~X1, df, paired=TRUE)$p.value, friedman.test(Y~X1|subject, df)$p.value)) 
+  else return (kruskal.test(Y~X1, df)$p.value) 
+}
+
+compare_p_values_single <- function(df, 
+  formula = Y ~ X1 + Error(subject), 
+  vars = c("X1") # Specify the terms of interest. P-values will be returned with the specified order
+){  
+  model_par <- suppressMessages(do.call(aov, list(formula, df))) # Parametric
+  model_rnk <- suppressMessages(do.call(aov, list(update(formula, rank(.) ~ .), df))) # RNK
+  model_int <- suppressMessages(do.call(aov, list(update(formula, INT(.) ~ .), df))) # INT
+
+  c(PAR = suppressMessages(get_p_values(model_par, vars, is_aov = TRUE)),  
+    RNK = suppressMessages(get_p_values(model_rnk, vars, is_aov = TRUE)), 
+    INT = suppressMessages(get_p_values(model_int, vars, is_aov = TRUE)),
+    NON = suppressMessages(rank.test(df))
+  )
+}
+
 
 ############################################################################
-# Tests over a large number of iterations - adapted for ART median alignment
+# Tests over a large number of iterations - for custom methods
 ############################################################################
-repeat_test_median <- function(
+repeat_test_custom <- function(
   nlevels=c(4,3), 
   within = c(1,1),
   n=20, 
@@ -63,7 +150,10 @@ repeat_test_median <- function(
   params,
   formula,
   vars,
-  iterations = 1000
+  iterations = 1000,
+  methods = c("PAR", "RNK", "ART", "INT"),
+  methods_alt = methods,
+  compare_function = compare_p_values
 ) {
   results <- foreach(rid = 1:iterations, .combine=rbind) %dopar% {
     tryCatch(
@@ -75,8 +165,8 @@ repeat_test_median <- function(
         if(!is.null(params$ratio_missing)) { # Are there missing data?
           data <- removeCells(data, params$ratio_missing)
         }
-        
-        compare_p_values_median(data, formula, vars)
+  
+        do.call(compare_function, list(data, formula, vars))
       }, 
       error = function(cond) {
         # do nothing
@@ -96,16 +186,18 @@ repeat_test_median <- function(
   dummies <- rep(0, ndummies) # Complete with zeros irrelevant rate results. Useful when producing results for multiple designs with different numbers of factors
   # Split the results into separate rows 
   return(tribble(~n, ~design, ~family, ~method, ~alpha, ~effect, ~rate,
-      n, designStr, family, "PAR", 0.05, coeffs, c(res.05[grep("PAR", names(res.05))], dummies),
-      n, designStr, family, "ART", 0.05, coeffs, c(res.05[grep("ARTmean", names(res.05))], dummies),  
-      n, designStr, family, "ART-MED", 0.05, coeffs, c(res.05[grep("ARTmedian", names(res.05))], dummies),
-      n, designStr, family, "INT", 0.05, coeffs, c(res.05[grep("INT", names(res.05))], dummies),
+      n, designStr, family, methods[1], 0.05, coeffs, c(res.05[grep(methods_alt[1], names(res.05))], dummies),
+      n, designStr, family, methods[2], 0.05, coeffs, c(res.05[grep(methods_alt[2], names(res.05))], dummies),  
+      n, designStr, family, methods[3], 0.05, coeffs, c(res.05[grep(methods_alt[3], names(res.05))], dummies),
+      n, designStr, family, methods[4], 0.05, coeffs, c(res.05[grep(methods_alt[4], names(res.05))], dummies),
 
-      n, designStr, family, "PAR", 0.01, coeffs, c(res.01[grep("PAR", names(res.01))], dummies),  
-      n, designStr, family, "ART", 0.01, coeffs, c(res.01[grep("ARTmean", names(res.01))], dummies),  
-      n, designStr, family, "ART-MED", 0.01, coeffs, c(res.01[grep("ARTmedian", names(res.01))], dummies),
-      n, designStr, family, "INT", 0.01, coeffs, c(res.01[grep("INT", names(res.01))], dummies)
+      n, designStr, family, methods[1], 0.01, coeffs, c(res.01[grep(methods_alt[1], names(res.01))], dummies),  
+      n, designStr, family, methods[2], 0.01, coeffs, c(res.01[grep(methods_alt[2], names(res.01))], dummies),  
+      n, designStr, family, methods[3], 0.01, coeffs, c(res.01[grep(methods_alt[3], names(res.01))], dummies),
+      n, designStr, family, methods[4], 0.01, coeffs, c(res.01[grep(methods_alt[4], names(res.01))], dummies)
     ) %>% {if(!is.null(params$ratio_sd)) mutate(., sd_ratio=params$ratio_sd, .before=4) else .} %>% # Adding column for heterscedastic data (if relevant)
       {if(!is.null(params$ratio_missing)) mutate(., missing_ratio=params$ratio_missing, .before=4) else .} # Adding column for missing data (if relevant)
   )
 }
+
+

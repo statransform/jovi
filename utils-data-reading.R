@@ -29,7 +29,6 @@ read_data <- function(prefix, alpha = .05, effectType = 0,
 		df <- df[(df$effectX1X2 > 0 & df$effectX1 > 0) | (df$effectX1X2 == 0 & df$effectX1 == 0),]
 	}
 
-
 	if(is.na(alpha)) return(df)
 	else return(df[df$alpha == alpha,])
 }
@@ -101,16 +100,8 @@ reshape_by_design <- function(df, dnames = c("Normal", "Log-normal", "Exponentia
 	# Different column for each design
 	df <- reshape(df, idvar=c(groupvars, effectvars), timevar = "design", direction = "wide")
 	df <- df %>% group_by(family) %>%  mutate(family=dnames[cur_group_id()])
-	df$family <- factor(df$family, levels = dnames)
+	df$family <- factor(df$family, levels = dnames)		
 
 	df
 }
 
-
-#prefix <- "Type_I_4x3_ratio"
-#distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-#dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-
-#df <- read_data(prefix, alpha=0.05, effectType = 3, distributions)
-#df1 <- df %>% arrange(design,family,effectX1,rateX1)  %>% group_by(design,family,effectX1) %>% mutate(rank = rank(rateX1))
-#df <- as.data.frame(df1) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))

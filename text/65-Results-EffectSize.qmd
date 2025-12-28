@@ -35,7 +35,7 @@ fig <- subplot(fig1, fig.par, fig.rnk, fig.int, fig.art, shareX = TRUE, shareY =
 
 fig
 ```
-Boxplots summarizing the $\eta^2$ estimates obtained with each method from 300 simulated datasets ($n=20$). The population effect of $X1$ is null, and responses follow **log-normal distributions**. Hover over the plots to compare the methods.
+Boxplots summarizing the partial $\eta^2$ estimates obtained with each method from 300 simulated datasets ($n=20$). The population effect of $X1$ is null, and responses follow **log-normal distributions**. Hover over the plots to compare the methods.
 :::
 
 We observe that ART is the only method for which the estimated effect sizes for $X_1$ are influenced by the magnitude of the effect on $X_2$. These results clearly demonstrate that ART's alignment mechanism fails in nonlinear models with skewed distributions and leads to confounding across effects. 
@@ -97,7 +97,7 @@ fig
 Scatterplots showing the relationship between effect size estimates (Cohen's $f$) obtained with each method and those from the ground-truth analysis for the main effect of $X_1$, when $a_1$ and $a_2$ vary independently within the range $[-8, 8]$. 
 :::
 
-In this broader range, all three rank-based methods --- although RNK to a lesser extent --- struggle to recover large effects, even when the underlying distribution is normal. However, we acknowledge that accurately estimating effects of such magnitudes (e.g., when Cohen's $f > 2$ or $\eta^2 > 0.8$) is of limited practical importance.
+In this broader range, all three rank-based methods --- although RNK to a lesser extent --- struggle to recover large effects, even when the underlying distribution is normal. However, we acknowledge that accurately estimating effects of such magnitudes (e.g., when Cohen's $f > 2$ or partial $\eta^2 > 0.8$) is of limited practical importance.
 
 ART fails entirely under log-normal data, regardless of effect magnitude. Finally, all methods produce highly variable effect size estimates for ordinal data.
 

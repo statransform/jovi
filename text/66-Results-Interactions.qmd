@@ -1,7 +1,7 @@
 ### Interactions under parallel main effects {#interactions}
-Let us now examine interaction effects when both coefficients $a_1$ and $a_2$ increase in parallel. In this scenario, the interpretation of an interaction effect becomes ambiguous in nonlinear models. Here, we define the null hypothesis in terms of the coefficients of the linear component of the model (see @eq-linear-model), following the recommendation of @Greene:2010 --- that is, $a_{12} = 0$.
+Let us now examine interaction effects when both coefficients $a_1$ and $a_2$ increase in parallel. In this scenario, the interpretation of an interaction effect becomes ambiguous in nonlinear models. Therefore, we refrain from labeling positive rates as Type I error rates. However, if the null hypothesis is defined in terms of the coefficients of the linear component of the model (see @eq-linear-model), following the recommendation of @Greene:2010 --- that is, $a_{12} = 0$ --- then all these values can be interpreted as Type I error rates.
 
-**Ratio scales**. @fig-ratio-interaction-2 presents Type I error rates for ratio scales. 
+**Ratio scales**. @fig-ratio-interaction-2 presents results for ratio scales. 
 
 ::: {#fig-ratio-interaction-2}
 ```{r, echo=FALSE, message=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -12,22 +12,22 @@ prefix <- "Type_I_4x3_ratio"
 df <- readly_data(prefix, alpha, 0, distributions, dnames)
 
 #xlab <- TeX("\\text{main effect of factors }X_1\\text{ and }X_2\\text{ }(a_1 = a_2)")
-plotly_error(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
+plotly_error(df, xlab = "magnitude of main effects", ytitle = 'Positives (%)', var = "rateX1X2", xvar = "effectX1", max = 105)
 ```
-Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$. *Note: Type I errors are defined based on the null hypothesis $a_{12} = 0$. A different definition may lead to different results.* 
+Positive rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$. *Note: These values correspond to Type I error rates under the null hypothesis $a_{12} = 0$; alternative definitions of the null hypothesis may lead to different results.* 
 :::
 
-Error rates become exceptionally high in many cases, reaching up to 100%. These results require careful interpretation. As discussed in [Section 4](#interpretation), interaction effects in nonlinear models can be interpreted in two distinct ways, and the results produced by the different methods are not alwyas consistent with our chosen definition. We therefore examine the outcomes for each method in turn:
+Positive rates become exceptionally high in many cases, reaching up to 100%. These results require careful interpretation. As discussed in [Section 4](#interpretation), interaction effects in nonlinear models can be interpreted in two distinct ways, and the results produced by the different methods are not always consistent with our chosen definition. We therefore examine the outcomes for each method in turn:
 
-- *PAR*. Error rates are high for all non-normal distributions (with the exception of the Cauchy distribution) and increase further as sample size grows. This behavior arises because the null hypothesis for this method is defined on the scale of the response variable, rather than on the scale of the linear model.
+- *PAR*. Positive rates are high for all non-normal distributions (with the exception of the Cauchy distribution) and increase further as sample size grows. This behavior arises because the null hypothesis for this method is defined on the scale of the response variable, rather than on the scale of the linear model.
 
-- *RNK.* Error rates increase dramatically once main effects exceed a certain magnitude. This well-known issue stems from the way rank transformations distort interaction effects (see @fig-interactions-rank), even when the underlying distributions are normal.
+- *RNK.* Positive rates increase dramatically once main effects exceed a certain magnitude. This well-known issue stems from the way rank transformations distort interaction effects (see @fig-interactions-rank), even when the underlying distributions are normal.
 
-- *INT.* It performs better than RNK in continuous distributions, with errors rates increasing only when $a_1$ and $a_2$ become large. However, under the Poisson and binomial distributions, INT performs worse than RNK. Interestingly, INT is particularly robust under the Cauchy distribution.
+- *INT.* It performs better than RNK in continuous distributions, with rates increasing only when $a_1$ and $a_2$ become large. However, under the Poisson and binomial distributions, INT performs worse than RNK. Interestingly, INT is particularly robust under the Cauchy distribution.
 
-- *ART.* ART maintains correct error rates only when the population distributions are normal. For all other distributions, error rates increase rapidly as effect sizes grow. Two factors may account for this behavior: (i) a lack of robustness to violations of the method’s assumptions, as also observed in our earlier experiments; and (ii) issues related to interaction interpretation. These findings confirm that ART is not scale-invariant and interprets interactions relative to the scale of the observed data.
+- *ART.* ART maintains correct positive rates only when the population distributions are normal. For all other distributions, rates increase rapidly as effect sizes grow. Two factors may account for this behavior: (i) a lack of robustness to violations of the method’s assumptions, as also observed in our earlier experiments; and (ii) issues related to interaction interpretation. These findings confirm that ART is not scale-invariant and interprets interactions relative to the scale of the observed data.
 
-**Ordinal scales.** @fig-ordinal-interaction-2 presents our results for ordinal data. No method maintains low error rates under all conditions. We note that ART consistently performs worse than PAR. INT performs worse than ART and PAR in one specific case ($a_2, a_2 = 8$ in a scale with 11 equidistant levels), but overall, it exhibits a better behavior than all other methods. Once again, the high error rates can be partly explained by insufficient statistical robustness and ambiguities in how the methods interpret interaction effects.
+**Ordinal scales.** @fig-ordinal-interaction-2 presents our results for ordinal data. No method maintains low positive rates under all conditions. We note that ART consistently performs worse than PAR. INT performs worse than ART and PAR in one specific case ($a_2, a_2 = 8$ in a scale with 11 equidistant levels), but overall, it exhibits a better behavior than all other methods. Once again, the high positive rates can be partly explained by insufficient statistical robustness and ambiguities in how the methods interpret interaction effects.
 
 ::: {#fig-ordinal-interaction-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -36,12 +36,12 @@ distributions <- c("likert_5", "likert_5_flex", "likert_7", "likert_7_flex", "li
 dnames <- c("5 - equidistant", "5 - flexible", "7 - equidistant", "7 - flexible", "11 - equidistant", "11 - flexible")
 
 df <- readly_data(prefix, alpha, 0, distributions, dnames)
-plotly_error(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
+plotly_error(df, xlab = "magnitude of main effects", ytitle = 'Positives (%)', var = "rateX1X2", xvar = "effectX1", max = 105)
 ```
-Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$. *Note: Type I errors are defined based on the null hypothesis $a_{12} = 0$. A different definition may lead to different results.*
+Positive rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$. *Note: These values correspond to Type I error rates under the null hypothesis $a_{12} = 0$; alternative definitions of the null hypothesis may lead to different results.* 
 :::
 
-**Other designs.** Our findings in @fig-designs-interaction-2 further demonstrate that all methods struggle to accurately detect interactions. INT shows unusually low error rates in certain configurations (e.g., $2 \times 3$ and $2 \times 2 \times 2$), suggesting potential difficulty in detecting subtle interaction effects when main effects are large. RNK displays a similar pattern for the $2 \times 2 \times 2$ design. In addition, both RNK and INT exhibit higher error rates under discrete distributions, in some cases exceeding those observed for ART.
+**Other designs.** Our findings in @fig-designs-interaction-2 further demonstrate that all methods struggle to accurately detect interactions. INT shows unusually low rates in certain configurations (e.g., $2 \times 3$ and $2 \times 2 \times 2$), suggesting potential difficulty in detecting subtle interaction effects when main effects are large. RNK displays a similar pattern for the $2 \times 2 \times 2$ design. In addition, both RNK and INT exhibit higher rates under discrete distributions, in some cases exceeding those observed for ART.
 
 ::: {#fig-designs-interaction-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -51,9 +51,9 @@ dnames <- c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordin
 
 df <- read_data(prefix, alpha, effectType = 0, distributions)
 df <- reshape_by_design(df, dnames)
-plotly_error_by_design(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
+plotly_error_by_design(df, xlab = "magnitude of main effects", ytitle = 'Positives (%)', var = "rateX1X2", xvar = "effectX1", max = 105)
 ```
-Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$  ($n = 20$). *Note: Type I errors are defined based on the null hypothesis $a_{12} = 0$. A different definition may lead to different results.*
+Positive rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$  ($n = 20$). *Note: These values correspond to Type I error rates under the null hypothesis $a_{12} = 0$; alternative definitions of the null hypothesis may lead to different results.* 
 :::
 
 These results illustrate the complexity and pitfalls of interpreting interaction effects under assumption violations --- regardless of the method used.

@@ -13,9 +13,9 @@ plot_unequal_variances()
 Varying the ratio $r_{sd}$ of standard deviations across the levels of $X_1$. The plots show examples of population distributions for factors with two categorical levels.    
 :::
 
-**Main effects**. We begin by investigating how the four methods detect main effects of $X_1$. Interpreting results in this setting is challenging because the underlying populations differ in variance while sharing the same means (and medians). For ordinal scales, differences in variance may also manifest as differences in observed means [@Liddell:2018]. In this experiment, we define the null hypothesis in terms of mean differences on the latent variable, but we emphasize that the results should be interpreted with caution.
+**Main effects**. We begin by investigating how the four methods detect main effects of $X_1$. Interpreting results in this setting is challenging because the underlying populations differ in variance while sharing the same means (and medians). For ordinal scales, differences in variance may also manifest as differences in observed means [@Liddell:2018]. To highlight these interpretation issues,we therefor label the observed rates of positives as *Positives (%)*. These rates can nonetheless be interpreted as Type I error rates if the null hypothesis is defined in terms of mean differences on the latent variable.
 
-@fig-unequal-main-1 presents the results. Under normal distributions, and depending on the experimental design, the different methods either slightly inflate or slightly deflate Type I error rates as $r_{sd}$ increases, with no method clearly outperforming the others. For ordinal scales, larger values of $r_{sd}$ primarily affect conditions with flexible thresholds. This effect is particularly pronounced for PAR, although all methods are affected.
+@fig-unequal-main-1 presents the results. Under normal distributions, and depending on the experimental design, the different methods either slightly inflate or slightly deflate the positive rates as $r_{sd}$ increases, with no method clearly outperforming the others. For ordinal scales, larger values of $r_{sd}$ primarily affect conditions with flexible thresholds. This effect is particularly pronounced for PAR, although all methods are affected.
 
 ::: {#fig-unequal-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -25,9 +25,9 @@ dnames = c("Normal", "Equidistant (5 levels)", "Flexible (5 levels)", "Equidista
 
 df <- read_data(prefix, alpha = 0.05, effectType = 1, distributions)
 df <- reshape_by_design(df, dnames, effectvars = c("sdratio", "effectX1","effectX2","effectX1X2"))
-plotly_error_by_design_2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX1", xvar = "sdratio", max = 41)
+plotly_error_by_design_2(df, xlab = "max ratio of standard deviations between levels of X1", ytitle = 'Positives (%)', var = "rateX1", xvar = "sdratio", max = 41)
 ```
-Type I error rates ($\alpha = .05$) for the **main effect of $X_1$** as the ratio of standard deviations $r_{sd}$ for $X_1$ increases ($n=20$). When $r_{sd} > 1$, the underlying populations are no longer identical, and different interpretations of the null hypothesis may lead to different outcomes.
+Positive rates ($\alpha = .05$) for the **main effect of $X_1$** as the ratio of standard deviations $r_{sd}$ for $X_1$ increases ($n=20$). *Note: When $r_{sd} > 1$, the underlying populations are no longer identical, and different interpretations of the null hypothesis may lead to different outcomes.*
 :::
 
 We also examine the influence of unequal variances across the levels of $X_1$ on the Type I error rate for $X_2$, as shown in @fig-unequal-main-2. In this case, there is no ambiguity in the interpretation of effects because the populations defined by $X_2$ are identical.
