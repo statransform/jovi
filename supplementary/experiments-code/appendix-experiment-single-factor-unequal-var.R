@@ -65,8 +65,6 @@ Ns <- c(20)
 # 5000 iterations
 R <- 5000
 
-R <- 4
-
 filename = "Type_I_single_factor"
 
 # Set the seed for reproducibility
@@ -103,14 +101,8 @@ time <- system.time({
     }
 })
 
-# split the effects and rates columns (currently vectors) into individual columns
-res <- results %>% unnest_wider(effect, names_sep = "_") %>% 
-  mutate(rate = lapply(rate, function(x) setNames(as.numeric(x), vars))) %>%
-  unnest_wider(rate, names_sep = "_")  %>%
-  rename_with(~ gsub("[:_]", "", .x)) # Just rename the columns by erasing the "_" and ":""
-
 # Store the results
 csvfile <- paste("logs/", filename, format(Sys.time(), "_%s"), ".csv", sep="")
-write.csv(res, file = csvfile, row.names=FALSE, quote=F)
+write.csv(results, file = csvfile, row.names=FALSE, quote=F)
 
 

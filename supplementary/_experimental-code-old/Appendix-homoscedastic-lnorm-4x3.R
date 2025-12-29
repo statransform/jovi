@@ -17,7 +17,6 @@ getLmerPValues <- function(model, vars) {
 	return(anova(model)[vars, 6])
 }
 
-
 getARTPValues <- function(model, vars) {
 	return(anova(model)[vars, 5]) # For within-subjects
 }

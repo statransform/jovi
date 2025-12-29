@@ -114,62 +114,7 @@ We acknowledge that @elkin:2021 diverged from the modeling approach described by
 
 @Wagenmakers:2007 conducted an analysis of nine independent experiments to empircally investigate this pattern in response time distributions. They confirmed that standard deviations were proportional to the mean. The model we presented earlier (see @eq-generalized-model) is in line with these observations. Even when the standard deviation of the error term $\varepsilon_{ijk}$ is constant, the standard deviation of observed log-normal distributions increases linearly with their mean. @fig-example (right) shows this pattern in our illustrative example, where the standard deviation of time responses increases proportionally with task difficulty. 
 
-However, a question remains: Is ART’s failure in handling such models due solely to heteroscedasticity issues? For example, consider the two time distributions in @fig-homoscedastic-model, which --- despite having different shapes --- share the same standard deviation. Would ART perform correctly in this case? 
-
-::: {#fig-homoscedastic-model}
-```{r, echo=FALSE, message=FALSE, fig.height=2.5, fig.width = 9, warning=FALSE}
-library(plotly)
-
-palette <- c("#E69F00", "#009E73")
-
-sdlog <- function(mean, sd) {
-	sqrt(log(1 + sd^2/mean^2))	
-}
-
-meanlog <- function(mean, sd) {
-	log(mean^2/sqrt(sd^2 + mean^2))
-}
-
-xs <- seq(0, 10, length.out = 1000)
-
-sd <- 1 # This is the common standard deviation
-m1 <- 0.8
-m2 <- 1.4
-
-logm1 <- meanlog(m1, sd)
-logm2 <- meanlog(m2, sd)
-
-logsd1 <- sdlog(m1, sd)
-logsd2 <- sdlog(m2, sd)
-
-y1s <- dlnorm(xs, logm1, logsd1)
-y2s <- dlnorm(xs, logm2, logsd2)
-
-x1 <- 0.36
-x2 <- 1.30
-
-annot1 <- paste("Log-normal: mean = ", m1, ", sd = ", sd)
-annot2 <- paste("Log-normal: mean = ", m2, ", sd = ", sd)
-
-fig <- plot_ly() %>%  
-      add_lines(x = xs, y = y1s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot1, hoverinfo = 'text', line=list(color=palette[1])) %>%
-      add_lines(x = xs, y = y2s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot2, hoverinfo = 'text', line=list(color=palette[2])) %>%      
-      add_annotations(x = x1, y = max(y1s), text = "easy", xref = "x", yref = "y", showarrow = F, font = list(color = palette[1]), xanchor = 'left') %>% 
-      add_annotations(x = x2, y = max(y2s), text = "hard", xref = "x", yref = "y", showarrow = F, font = list(color = palette[2]), xanchor = 'left') %>%   
-      layout(
-        showlegend = FALSE,
-        xaxis = list(title = "Time (min)", range = c(0, 4.5), showgrid = F, showticks = T, ticks="outside", zeroline = F), 
-        yaxis = list(showgrid = F, showticklabels = F, showline = F, range=c(0, max(y1s) + .05), fixedrange=T)
-      ) %>% 
-	      config(displayModeBar = TRUE, scrollZoom = FALSE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale", "hoverclosest", 'hoverCompare'))  %>% layout(dragmode='pan')
-
-fig
-
-```
-Log-normal distributions with equal variances but different means. Notice that their shapes are distinct. 
-:::
-
-While we do not directly address this question in the main paper, we include additional results in [Appendix I](appendix_I.html#log-normal-distributions-with-equal-variances) showing that as long as distribution shapes differ across levels, ART tends to confound effects. Naturally, as the shapes become more similar, the problem diminishes. In conclusion, heteroscedasticity may exacerbate the problem, but it is not its sole cause.
+We will show that ART confounds effects under unequal variances regardless of whether the underlying distribution is skewed. Thus, the problem also arises under normal distributions.
 
 ### Discrete distributions
 As discussed earlier, @luepsen:2017 found that ART frequently fails when reponses are discrete. The problem becomes more pronounced for variables with few discrete levels and as the sample size increases. The author provides a detailed analysis of why this happens, summarized as follows:

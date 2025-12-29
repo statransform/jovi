@@ -200,48 +200,6 @@ Positive rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2$** 
 ART’s robustness issues become less severe as log-normal distributions approach normality. However, even when variance is relatively small, Type I error rates can still become unacceptably large.
 
 
-## Log-normal distributions with equal variances
-As we explain in the article, skewed distributions naturally lead to unequal variances, with the standard deviation of response times typically proportional to the mean. Since ART confounds effects under conditions of unequal variance, an important question remains: *Does ART’s difficulty with continuous skewed distributions stem solely from issues of heteroscedasticity?*
-
-To address this, we present results from an additional experiment using log-normal distributions in which we directly control the population parameters of the observed distributions (rather than those of the latent variable) to ensure constant variances. Specifically, given a mean $\mu$ and a fixed standard deviation $\sigma$ for the responses, the corresponding parameters of the log-normal distribution are:
-
-$\sigma_{log} = \sqrt{log(1 + \frac{\sigma^2}{\mu^2})}$ and $\mu_{log} = \log(\frac{\mu^2}{\sqrt{\sigma^2 + \mu^2}})$
-
-We again consider a $4 \times 3$ within-subjects design with $n = 20$, setting the main effect of the first factor to $a_1 = 2$. We then measure the Power (effect of $X_1$) and Type I error rates (effects $X_2$ and $X_1 \times X_2$) of the methods across three standard deviations: $\sigma = 1$, $\sigma = 2$, and $\sigma = 3$.
-
-The following table presents our results. Once again, ART inflates Type I error rates for both the effect of $X_2$ and its interaction with $X_1$, with error rates increasing as the common standard deviation grows. In contrast, PAR shows a loss in statistical power, while RNK and INT remain robust.
-
-::: {#tbl-homoscedastic layout-ncol=3}
-|     | PAR | RNK | INT | ART |
-|:-----:|----:|----:|----:|----:|
-|$X_1$| 100 | 100 | 100 | 100 |
-|$X_2$| 5.0 | 4.9 | 5.4 | 7.6 |
-|$X_1\times X_2$| 3.6 | 4.2 | 4.6 | 5.7 |
-
-: $\sigma = 1$ 
-
-| PAR | RNK | INT | ART |
-|----:|----:|----:|----:|
-| 98.8 | 100 | 100 | 100 |
-| 4.0 | 5.1  | 5.3 | 12.1 |
-| 3.5 | 5.3 |  5.1 | 9.3  |
-
-: $\sigma = 2$ 
-
-| PAR | RNK | INT | ART |
-|----:|----:|----:|----:|
-| 94.0 | 100 | 100 | 100 |
-| 3.6 | 4.4  | 4.7 | 17.8 |
-| 3.0 | 4.7  | 5.0 | 11.2 |
-
-: $\sigma = 3$ 
-
-Percentage of positives (%) over 5000 repetitions ($\alpha = .05$). For $X_1$, values reflect statistical power. For $X_2$ and $X_1 \times X_2$, they represent Type I error rates.
-:::
-
-### Conclusion
-Heteroscedasticity alone cannot explain ART's failures under log-normal distributions. ART's alignment method is based on the assumption that the shape of the distribution (log-normal here) is identical across all factor levels. This is not the case in the above scenarios where distribution shapes change across the levels of $X_1$, causing the method to break down.
-
 ## Binomial distributions {#binomial}
 We examine a broader range of parameter settings for the binomial distribution. Although we focus on the lower range of the success probability $p$, we expect analogous results for their symmetric values $1-p$. Specifically, we test $p=.05$, $.1$, and $.2$, and for each value we consider $\kappa=5$ and $10$ Bernoulli trials. 
 
@@ -603,134 +561,85 @@ Although ATS appears to be a valid alternative, it does not offer clear performa
 
 ## Generalizations of nonparametric tests {#generalized}
 
-Finally, we evaluate the generalizations of nonparametric tests recommended by Lüpsen [-@luepsen:2018; -@luepsen:2023] as implemented in his *np.anova* function [@luepsen_R]. Specifically, we evaluate the generalization of the van der Waerden test (VDW), and the generalization of the Kruskal-Wallis and Friedman test (KWF). Their implementation uses R's *aov* function and requires considering random slopes in the error term of the model, that is, using ``Error(s/(x1*x2))`` for the two-factor within-participants design and ``Error(s/x2)`` for the mixed design, where ``s`` is the subject identifier variable. We also used the *aov* function and the same formulation of the error term for all other methods.
+Finally, we evaluate the generalizations of nonparametric tests recommended by Lüpsen [-@luepsen:2018; -@luepsen:2023] as implemented in his `np.anova` function [@luepsen_R]. Specifically, we examine the generalization of the van der Waerden test (VDW) and the generalization of the Kruskal-Wallis and Friedman tests (KWF). 
 
-**Type I error rates: Main effects**. @fig-vdWaerden-designs-main presents Type I error rates for the main effect of $X_2$. While all methods perform well under the within-subjects and mixed designs, the error rates of VDW and KWF drop drastically as the effect of $X_1$ grows under the between-subjects design. We will see below that the power of these methods evaporates in these cases. 
+These implementations require random slopes to be included in the error term of the model. Concretely, we use ``Error(Subject/(X1*X2))`` for the two-factor within-participants design and ``Error(Subject/X2)`` for the mixed design. We use the same modeling approach for all other methods to ensure comparability.
+
+**Type I error rates: Main effects**. @fig-vdWaerden-designs-main shows the Type I error rates for the main effect of $X_2$. While all methods perform well under the within-subjects and mixed designs, the error rates of VDW and KWF drop sharply as the effect of $X_1$ increases under the between-subjects design. As shown below, this behavior reflects a severe loss of power for these two methods in these conditions. We omit results for the other factor ($X_1$ as $a_2$ increases) as we observe very similar trends.
 
 ::: {#fig-vdWaerden-designs-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "Appendix_test-vdWaerden"
+prefix <- "Type_I_vdWaerden"
 alpha = 0.05
 
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert")
 dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 methods = c("RNK", "INT", "VDW", "KWF")
 palette = c("#E69F00", "#009E73", "#FF70AB", "#888888")
 
-df <- readData(prefix, n = 20, alpha, effectType = 1, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+df <- read_data(prefix, alpha, effectType = 1, distributions, methods = methods)
+df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 7.1, nticks=8, cbPalette = palette)
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 8.1, nticks=8, cbPalette = palette)
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
 :::
 
-**Type I error rates: Interactions**. @fig-vdWaerden-designs-interaction-1 presents the Type I error rates for the interaction, in the presence of a single main effect. Once again, the error rates of VDW and KWF decrease rapidly in both the between-subjects and mixed designs. @fig-vdWaerden-designs-interaction-2 shows the results when both main effects are present. Under the within-subjects design, KWF is the poorest-performing technique. While VDW outperforms RNK, it remains inferior to INT. For the between-subjects and mixed designs, KFW and VDW yield low or near-zero error rates when main effects are large, likely due to their extreme loss of power in these scenarios.
+**Type I error rates: Interactions**. @fig-vdWaerden-designs-interaction-1 presents the Type I error rates for the interaction in the presence of a single main effect. Again, the error rates of VDW and KWF decrease rapidly, now in both the between-subjects and mixed designs. We also observe inflation of the error rates of RNK and INT for large effects under discrete distributions.
 
 ::: {#fig-vdWaerden-designs-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-df <- readData(prefix, n = 20, alpha, effectType = 2, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+df <- read_data(prefix, alpha, effectType = 2, distributions, methods = methods)
+df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX2", max = 7.1, nticks=8, cbPalette = palette)
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX2", max = 8.1, nticks=8, cbPalette = palette)
 ```
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_2$ of the main effect of $X_2$ ($n = 20$) 
 :::
 
+@fig-vdWaerden-designs-interaction-2 shows the results when both $a_1$ and $a_2$ increase. In these settings, all four methods struggle as effect magnitudes grow, though their behavior varies across distributions and experimental designs. Depending on the configuration, the methods either inflate positive rates or deflate them below nominal levels. INT appears to be the most stable method for continuous distributions, but its positive rates increase more rapidly under discrete distributions.    
+
 ::: {#fig-vdWaerden-designs-interaction-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-
-df <- readData(prefix, n = 20, alpha, effectType = 0, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 104, nticks=8, cbPalette = palette)
+df <- read_data(prefix, alpha, effectType = 0, distributions, methods = methods)
+df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "magnitude of main effects", ytitle = 'Positives (%)', var = "rateX1X2", xvar = "effectX1", max = 104, nticks=8, cbPalette = palette)
 ```
-Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ ($n = 20$)
+Positive rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ ($n = 20$). *Note: These values correspond to Type I error rates under the null hypothesis $a_{12} = 0$; alternative definitions of the null hypothesis may lead to different results.* 
 :::
 
-
-**Power: Main effects**. @fig-vdWaerden-power-main-1 presents power results for detecting the main effect of $X_1$. For the within-subjects and mixed design, KFW and VDW exhibit a lower power than RNK and INT, but differences are generally small. Although VDW appears as powerful as INT under the between-subjects design, this only occurs when the effect of the second factor is zero. As shown in @fig-vdWaerden-power-main-1B, the power of both KFD and VDW drops drastically as the effect of $X_2$ increases for this design.   
-
-::: {#fig-vdWaerden-power-main-1}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-alpha <- .05
-
-prefix <- "Appendix_test-vdWaerden-Power"
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-
-df <- readData(prefix, n = 20, alpha, effectType = 3, distributions, methods = methods)
-
-df <- df %>% arrange(design,distr,effectX1,rateX1)  %>% group_by(design,distr,effectX1) %>% mutate(rank = rank(rateX1))
-df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-
-#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyPowerByDesign(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX1", xvar = "effectX1", max = 4.2, ytitle = 'Power (%) - ranking', cbPalette = palette)
-```
-Ranking of methods for their power ($\alpha = .05$) to detect the **main effect of $X_1$** as a function of the magnitude of effect $a_1$ ($n=20$). Hover over the charts to inspect their power ($\%$).
-:::
+**Power: Main effects**. We examine how power is affected by increasing the magnitude of the effect on the second factor. As shown in @fig-vdWaerden-power-main-1B, the power of all methods decreases, but KWF and VDW appear especially problematic under the between-subjects design (across all distributions) and the mixed design (for the log-normal and exponential distributions). INT once again emerges as the best-performing method, with the exception of the $2 \times 4$ mixed design under the Poisson and Binomial distributions, for which VDW and KWF exhibit a better behavior.
 
 ::: {#fig-vdWaerden-power-main-1B}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 alpha <- .05
-prefix <- "Appendix_test-vdWaerden-Power-Multieffect"
+prefix <- "Power_vdWaerden_multieffect"
 
-df <- readData(prefix, n = 20, alpha, effectType = 3, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+df <- read_data(prefix, alpha, effectType = 3, distributions, methods = methods)
+df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX2", ytitle ="Power (%)", max = 104, nticks=6, cbPalette = palette)
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX2", ytitle ="Power (%)", max = 104, nticks=6, cbPalette = palette)
 ```
-Power ($\alpha = .05$) to detect the **main effect of $X_1$** ($a_1 = 0.8$) as a function of the magnitude of effect $a_2$ of the main effect of $X_2$ ($n=20$).
+Power ($\alpha = .05$) for detecting the **main effect of $X_1$** ($a_1 = 0.8$) as a function of the magnitude of effect $a_2$ of the main effect of $X_2$ ($n=20$).
 :::
 
-@fig-vdWaerden-power-main-2 also presents results for the main effect of $X_1$, where we observe once again that the generalized tests cannot compete with the more powerful INT, or even with RNK.  
-
-::: {#fig-vdWaerden-power-main-2}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "Appendix_test-vdWaerden-Power"
-df <- readData(prefix, n = 20, alpha, effectType = 4, distributions, methods = methods) 
-
-df <- df %>% arrange(design,distr,effectX2,rateX2)  %>% group_by(design,distr,effectX2) %>% mutate(rank = rank(rateX2))
-df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-
-#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyPowerByDesign(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX2", xvar = "effectX2", max = 4.2, ytitle = 'Power (%) - ranking', cbPalette = palette)
-```
-Ranking of methods for their power ($\alpha = .05$) to detect the **main effect of $X_2$** as a function of the magnitude of effect $a_2$ ($n=20$). Hover over the charts to inspect their power ($\%$).
-:::
-
-**Power: Interactions**. We also present results on the power of methods to detect interactions in @fig-vdWaerden-power-interaction, confirming the advantage of INT across all designs.
-@fig-vdWaerden-power-interactionB provides a clearer picture of how power is affected by the presence of a main effect. We observe that the power of all methods drops as the main effect of $X_2$ increases, but this trend is more pronounced for KFD and VDW, particularly for the between-subjects and mixed designs. 
-
-::: {#fig-vdWaerden-power-interaction}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-df <- readData(prefix, n = 20, alpha, effectType = 5, distributions, methods = methods)
-
-df <- df %>% arrange(design,distr,effectX1X2,rateX1X2)  %>% group_by(design,distr,effectX1X2) %>% mutate(rank = rank(rateX1X2))
-df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-
-#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyPowerByDesign(df, xlab = "magnitude of interaction effect", var = "rank", hovervar = "rateX1X2", xvar = "effectX1X2", max = 4.2, ytitle = 'Power (%) - ranking', cbPalette = palette)
-```
-Ranking of methods for their power ($\alpha = .05$) to detect the **interaction effect $X_1 \times X_2$** as a function of the magnitude of effect $a_{12}$ ($n=20$). Hover over the charts to inspect their power ($\%$).
-:::
+**Power: Interactions**. Figure @fig-vdWaerden-power-interactionB shows how the power for detecting the interation effect is affected by the presence of a main effect. We observe that the power of all methods decreases as the main effect of $X_2$ increases, but this decline is substantially more pronounced for KWF and VDW, particularly in the between-subjects and mixed designs.
 
 ::: {#fig-vdWaerden-power-interactionB}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 alpha <- .05
-prefix <- "Appendix_test-vdWaerden-Power-Multieffect"
+prefix <- "Power_vdWaerden_multieffect"
 
-df <- readData(prefix, n = 20, alpha, effectType = 5, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+df <- read_data(prefix, alpha, effectType = 5, distributions, methods = methods)
+df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX2", ytitle ="Power (%)", max = 104, nticks=6, cbPalette = palette)
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX2", ytitle ="Power (%)", max = 104, nticks=6, cbPalette = palette)
 ```
-Power ($\alpha = .05$) to detect the **interaction effect** ($a_{12} = 1.5$) as a function of the magnitude of effect $a_2$ of the main effect of $X_2$ ($n=20$).
+Power ($\alpha = .05$) for detecting the **interaction effect** ($a_{12} = 1.5$) as a function of the magnitude of effect $a_2$ of the main effect of $X_2$ ($n=20$).
 :::
 
 ### Conclusion
-Our results do not support Lüpsen's [-@luepsen:2018; -@luepsen:2023] conclusions. The behavior of the generalized nonparametric tests presents issues in numerous scenarios. While these tests exhibit lower error rates under specific conditions, this is due to a significant loss of power when other effects are at play. Therefore, we advise against the use of these methods.
+Our results do not support the conclusions of Lüpsen [-@luepsen:2018; -@luepsen:2023]. The generalized nonparametric tests exhibit serious limitations across a wide range of scenarios. Although these methods sometimes lead to lower Type I error rates, this behavior is largely due to a substantial loss of statistical power when other effects are present. Consequently, we do not recommend the use of these methods.
 
 ## References {.unnumbered}
 

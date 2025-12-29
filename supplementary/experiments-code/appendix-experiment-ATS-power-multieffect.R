@@ -1,10 +1,8 @@
 # Author: Theophanis Tsandilas, Dec 2025
 # Inria & Université Paris-Saclay
 
-# Comparison of the power of RNK and INT methods against the multifactorial generalizations of the van der Waerden test 
-# and the Kruskal-Wallis and Friedman tests: http://www.uni-koeln.de/~luepsen/R/
-# 4x3 within-subjects, 2x3 within-subjects, and 2x4 mixed-subjects
-# In this condition, we assess how an effect on X2 affects the power for detetign main effects on X1 and interactions X1 x X2
+# Experiment evaluating the Power of the ATS method
+# 4x3 within-subjects and 2x4 mixed-subjects
 # We fix n=20
 
 rm(list=ls())
@@ -14,12 +12,13 @@ library(foreach)
 library(doParallel)
 library(tidyr)
 
-source("np.anova.R") # From http://www.uni-koeln.de/~luepsen/R/
+# Try the ANOVA-type statistic (ATS)
+# https://www.quantargo.com/help/r/latest/packages/nparLD/2.1/nparLD
+library(nparLD)
 
 source("utils-data-generation.R")
 source("utils-analysis.R")
 source("utils-extra.R")
-library("POSSA") # to get access to the get_p function
 
 ################################
 # Distribution parameters used in simulation
@@ -47,16 +46,11 @@ use_parameters <- function(family){
   params
 }
 
-# (1) 4 x 3 within-subjects, (2) 2x3 within-subjects, and (3) 2 x 4 mixed design (one between-subjects and one repeated-measures factor)
-designs <- list(c(4,3), c(2,3), c(2,4))
-within <- list(c(1,1), c(0,0), c(0,1))
+# (1) 4 x 3 within-subjects, (2) 2 x 4 mixed design (one between-subjects and one repeated-measures factor)
+designs <- list(c(4,3), c(2,4))
+within <- list(c(1,1), c(0,1))
 
-# Notice that I include slope random effects in my models, which is required by the np.anova functions  
-formula1 = Y ~ X1*X2 + Error(subject/(X1*X2))
-formula2 = Y ~ X1*X2 
-formula3 = Y ~ X1*X2 + Error(subject/X2) 
-formulas <- c(formula1, formula2, formula3)
-
+formula = Y ~ X1*X2 + Error(factor(subject)) 
 vars = c("X1", "X2", "X1:X2") 
 
 # Continuous distributions (equal variance, full) and discrete distribution: binom (size = 10, prob = 0.1) and Poisson
@@ -88,6 +82,7 @@ effects <- matrix(c(0.6, 0, 0,
             8, 0, 1.5
           ), ncol = 3, byrow = TRUE)
 
+
 colnames(effects) <- vars
 
 # Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
@@ -97,16 +92,14 @@ Ns <- c(20)
 # 5000 iterations
 R <- 5000
 
-filename = "Power_vdWaerden_multieffect"
+filename = "Power_ATS_multieffect"
 
 # Set the seed for reproducibility
-set.seed(3207)
+set.seed(5129)
 
 #Parallel: https://nceas.github.io/oss-lessons/parallel-computing-in-r/parallel-computing-in-r.html
 CoresNum <- 4
 registerDoParallel(CoresNum)  # use multicore, set to the number of our cores
-
-options (contrasts=c("contr.sum","contr.poly")) # See http://www.uni-koeln.de/~luepsen/R/manual.pdf
 
 time <- system.time({ 
     results <- foreach(desId = 1:length(designs), .combine=rbind) %do% { 
@@ -121,11 +114,11 @@ time <- system.time({
               coeffs=effects[effId,],
               family=family,
               params=use_parameters(family),
-              formula=formulas[[desId]],
+              formula=formula,
               vars=vars,
               iterations = R,
-              methods = c("RNK", "INT", "VDW", "KWF"),
-              compare_function = compare_p_values_gen
+              methods = c("PAR", "RNK", "ATS", "INT"),
+              compare_function = compare_p_values_ATS
             )
           }
         }

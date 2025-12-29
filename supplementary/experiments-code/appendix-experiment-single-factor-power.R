@@ -1,9 +1,8 @@
 # Author: Theophanis Tsandilas, Dec 2025
 # Inria & Université Paris-Saclay
 
-# Experiment evaluating the Type I error rate of the ATS method
-# 4x3 within-subjects and 2x4 mixed-subjects
-# We fix n=20
+# Comparing single-factor non-parametric methods 
+# Testing single-factor designs with 2,3 or 4 levels (both within-subjects and between-subjects) 
 
 rm(list=ls())
 
@@ -11,10 +10,6 @@ rm(list=ls())
 library(foreach)
 library(doParallel)
 library(tidyr)
-
-# Try the ANOVA-type statistic (ATS)
-# https://www.quantargo.com/help/r/latest/packages/nparLD/2.1/nparLD
-library(nparLD)
 
 source("utils-data-generation.R")
 source("utils-analysis.R")
@@ -46,48 +41,29 @@ use_parameters <- function(family){
   params
 }
 
-# (1) 4 x 3 within-subjects, (2) 2 x 4 mixed design (one between-subjects and one repeated-measures factor)
-designs <- list(c(4,3), c(2,4))
-within <- list(c(1,1), c(0,1))
+# Testing single-factor designs with 2,3 or 4 levels (both within-subjects and between-subjects) 
+designs <- list(2, 3, 4, 2, 3, 4)
+within <- list(1, 1, 1, 0, 0, 0)
 
-formula = Y ~ X1*X2 + Error(factor(subject)) 
-vars = c("X1", "X2", "X1:X2") 
+formula = Y ~ X1 + Error(factor(subject)) 
+vars = c("X1") 
 
-# Continuous distributions (equal variance, full) and discrete distribution: binom (size = 10, prob = 0.1) and Poisson
 distributions <- c("norm", "lnorm", "exp", "binom", "poisson", "likert")
 
-# Various combinations of effects
-effects <- matrix(c(0, 0, 0,
-            0.5, 0.5, 0,
-            1, 1, 0,
-            2, 2, 0,
-            4, 4, 0,
-            8, 8, 0,
-            0.5, 0, 0,
-            1, 0, 0,
-            2, 0, 0,
-            4, 0, 0,
-            8, 0, 0,
-            0, 0.5, 0,
-            0, 1, 0,
-            0, 2, 0,
-            0, 4, 0,
-            0, 8, 0), 
-           ncol = 3, byrow = TRUE)
-
+# Various effects
+effects <- matrix(c(0, 0.5, 1.0, 1.5), ncol = 1, byrow = TRUE)
 colnames(effects) <- vars
 
-# Cell sizes (n in the paper) -- for within-subject designs, it's also the number of subjects
-#Ns <- c(10, 20, 30) 
+# Cell sizes (n in the paper)
 Ns <- c(20) 
 
 # 5000 iterations
 R <- 5000
 
-filename = "Type_I_ATS"
+filename = "Power_single_factor"
 
 # Set the seed for reproducibility
-set.seed(3207)
+set.seed(4031)
 
 #Parallel: https://nceas.github.io/oss-lessons/parallel-computing-in-r/parallel-computing-in-r.html
 CoresNum <- 4
@@ -97,7 +73,7 @@ time <- system.time({
     results <- foreach(desId = 1:length(designs), .combine=rbind) %do% { 
       foreach(family = distributions, .combine=rbind) %do% {
         foreach(n = Ns, .combine=rbind) %do% {
-          foreach(effId = 1:nrow(effects), .combine=rbind) %do% {
+          foreach(effId = 1:length(effects), .combine=rbind) %do% {
             # The test function is parallelized (using multiple cores)
             repeat_test_custom(
               nlevels=designs[[desId]], 
@@ -109,8 +85,8 @@ time <- system.time({
               formula=formula,
               vars=vars,
               iterations = R,
-              methods = c("PAR", "RNK", "ATS", "INT"),
-              compare_function = compare_p_values_ATS
+              methods = c("PAR", "RNK", "INT", "NON"),
+              compare_function = compare_p_values_single
             )
           }
         }
@@ -118,14 +94,9 @@ time <- system.time({
     }
 })
 
-# split the effects and rates columns (currently vectors) into individual columns
-res <- results %>% unnest_wider(effect, names_sep = "_") %>% 
-  mutate(rate = lapply(rate, function(x) setNames(as.numeric(x), vars))) %>%
-  unnest_wider(rate, names_sep = "_")  %>%
-  rename_with(~ gsub("[:_]", "", .x)) # Just rename the columns by erasing the "_" and ":""
 
 # Store the results
 csvfile <- paste("logs/", filename, format(Sys.time(), "_%s"), ".csv", sep="")
-write.csv(res, file = csvfile, row.names=FALSE, quote=F)
+write.csv(results, file = csvfile, row.names=FALSE, quote=F)
 
 

@@ -180,7 +180,12 @@ repeat_test_custom <- function(
   res.05 <- round(colMeans(results<.05, na.rm = TRUE), digits = 4) # alpha = .05
   res.01 <- round(colMeans(results<.01, na.rm = TRUE), digits = 4) # alpha = .01
 
-  designStr <- paste(nlevels, collapse="x")
+  if(length(nlevels) == 1) {
+    designStr <- paste(ifelse(within, "within", "between"), nlevels, sep="-")
+  }
+  else {
+    designStr <- paste(nlevels, collapse="x")
+  }
 
   ndummies <- length(vars) - length(res.05)/4
   dummies <- rep(0, ndummies) # Complete with zeros irrelevant rate results. Useful when producing results for multiple designs with different numbers of factors
