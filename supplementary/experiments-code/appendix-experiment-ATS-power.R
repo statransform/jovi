@@ -57,20 +57,31 @@ vars = c("X1", "X2", "X1:X2")
 distributions <- c("norm", "lnorm", "exp", "binom", "poisson", "likert")
 
 # Various combinations of effects
-effects <- matrix(c(
-          0, 0, 0.5,
-          0, 0, 1,
-          0, 0, 1.5,
-          0, 0, 2,
-          0.2, 0, 0,
-          0.4, 0, 0,
-          0.6, 0, 0,
-          0.8, 0, 0,
-          0, 0.2, 0,
-          0, 0.4, 0,
-          0, 0.6, 0,
-          0, 0.8, 0), 
-          ncol = 3, byrow = TRUE)
+effects <- matrix(c(0.6, 0, 0,
+            0.6, 1, 0,
+            0.6, 2, 0,
+            0.6, 4, 0,
+            0.6, 8, 0,
+        
+            0, 0.6, 0,
+            1, 0.6, 0,
+            2, 0.6, 0,
+            4, 0.6, 0,
+            8, 0.6, 0,
+
+            0, 0, 1.5,
+            0, 1, 1.5,
+            0, 2, 1.5,
+            0, 4, 1.5,
+            0, 8, 1.5,
+
+            0, 0, 1.5,
+            1, 0, 1.5,
+            2, 0, 1.5,
+            4, 0, 1.5,
+            8, 0, 1.5
+          ), ncol = 3, byrow = TRUE)
+
 
 colnames(effects) <- vars
 
@@ -81,7 +92,7 @@ Ns <- c(20)
 # 5000 iterations
 R <- 5000
 
-filename = "Power_ATS"
+filename = "Power_ATS_multieffect"
 
 # Set the seed for reproducibility
 set.seed(5129)

@@ -4,6 +4,7 @@
 # Comparison of the power of RNK and INT methods against the multifactorial generalizations of the van der Waerden test 
 # and the Kruskal-Wallis and Friedman tests: http://www.uni-koeln.de/~luepsen/R/
 # 4x3 within-subjects, 2x3 within-subjects, and 2x4 mixed-subjects
+# In this condition, we assess how an effect on X2 affects the power for detetign main effects on X1 and interactions X1 x X2
 # We fix n=20
 
 rm(list=ls())
@@ -62,20 +63,30 @@ vars = c("X1", "X2", "X1:X2")
 distributions <- c("norm", "lnorm", "exp", "binom", "poisson", "likert")
 
 # Various combinations of effects
-effects <- matrix(c(
-          0, 0, 0.5,
-          0, 0, 1,
-          0, 0, 1.5,
-          0, 0, 2,
-          0.2, 0, 0,
-          0.4, 0, 0,
-          0.6, 0, 0,
-          0.8, 0, 0,
-          0, 0.2, 0,
-          0, 0.4, 0,
-          0, 0.6, 0,
-          0, 0.8, 0), 
-          ncol = 3, byrow = TRUE)
+effects <- matrix(c(0.6, 0, 0,
+            0.6, 1, 0,
+            0.6, 2, 0,
+            0.6, 4, 0,
+            0.6, 8, 0,
+        
+            0, 0.6, 0,
+            1, 0.6, 0,
+            2, 0.6, 0,
+            4, 0.6, 0,
+            8, 0.6, 0,
+
+            0, 0, 1.5,
+            0, 1, 1.5,
+            0, 2, 1.5,
+            0, 4, 1.5,
+            0, 8, 1.5,
+
+            0, 0, 1.5,
+            1, 0, 1.5,
+            2, 0, 1.5,
+            4, 0, 1.5,
+            8, 0, 1.5
+          ), ncol = 3, byrow = TRUE)
 
 colnames(effects) <- vars
 
@@ -86,7 +97,7 @@ Ns <- c(20)
 # 5000 iterations
 R <- 5000
 
-filename = "Power_vdWaerden"
+filename = "Power_vdWaerden_multieffect"
 
 # Set the seed for reproducibility
 set.seed(3207)

@@ -115,7 +115,7 @@ compare_p_values_gen <- function(df,
 # Non parametric tests
 rank.test <- function(df) {
   nlevels <- length(levels(df[,"X1"]))
-  paired <- nrow(df) > length(df$subject)
+  paired <- nrow(df) > length(unique(df$subject))
 
   # Do either the wilcoxon or the friedman (more than two levels)
   if(paired) return (ifelse(nlevels==2, wilcox.test(Y~X1, df, paired=TRUE)$p.value, friedman.test(Y~X1|subject, df)$p.value)) 

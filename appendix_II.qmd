@@ -109,15 +109,17 @@ Y = d\ \ \text{if}\ \ \tau_{d-1} < Y^* \leq \tau_d,
 $$ 
 Again, the conditional distribution $Y| (x_1, x_2)$ depends on the independent variables only through $\ell(x_1, x_2)=a_0+a_1 x_1$, and there is no effect of $x_2$ on either the latent or the observed ordinal scale. 
 
-In this case, the mapping from $\ell$ to the observed response is monotone but not strictly monotone and is therefore non-invertible. As a result, a true effect of $x_2$ on the latent variable (i.e., $a_2 \neq 0$) may be attenuated or entirely unobservable on the ordinal response scale. This does not affect Type I error rates, provided the null hypothesis is defined on the latent scale and the thresholds are fixed, because the absence of a latent effect implies the absence of an effect on the observed scale. However, power and effect sizes can be reduced when effects are assessed on the ordinal scale, reflecting the loss of information due to discretization.  
-
+In this case, the mapping from $\ell$ to the observed response is monotone but not strictly monotone and is therefore non-invertible. As a result, a true effect of $x_2$ on the latent variable (i.e., $a_2 \neq 0$) may be attenuated or entirely unobservable on the ordinal response scale. This does not affect Type I error rates, provided the null hypothesis is defined on the latent scale and the thresholds are fixed, because the absence of a latent effect implies the absence of an effect on the observed scale. However, power and effect sizes can be reduced when effects are assessed on the ordinal scale because discretizing the original values leads to loss of information.
 
 ### Invariance under monotone transformations 
-Suppose we apply a monotone transformation $T$ directly to the observed responses---such as the rank transformation (RNK) or the inverse normal transformation (INT). Because $T$ is monotone, it preserves the ordering of observations within each condition. The transformed conditional distribution $T(Y) | (x_1, x_2)$ therefore depends on the independent variables only through $\ell(x_1, x_2) = a_0+a_1 x_1$. Consequently, the mean, median, and all quantiles of $T(Y) | (x_1, x_2)$ remain invariant to $x_2$, and marginal effects of $x_1$ do not depend on $x_2$. 
+Suppose we apply a monotone transformation $T$ directly to the observed responses --- such as the rank transformation (RNK) or the inverse normal transformation (INT). Because $T$ is monotone, it preserves the ordering of observations within each condition. The transformed conditional distribution $T(Y) | (x_1, x_2)$ therefore depends on the independent variables only through $\ell(x_1, x_2) = a_0+a_1 x_1$. Consequently, the mean, median, and all quantiles of $T(Y) | (x_1, x_2)$ remain invariant to $x_2$, and marginal effects of $x_1$ do not depend on $x_2$. 
 
 We emphasize that ART is not a monotone transformation. Instead of transforming $Y$ directly, ART first constructs aligned responses by subtracting and adding sample means on the response scale. These alignment terms can vary across levels of $x_2$ or combinations of $(x_1, x_2)$. Therefore, ART is not invariant to nonlinear mean–response relationships.
 
 ## Calculation of location parameters {#mu}
+
+We explain how we compute the intercept $\mu$ of the linear component of our models, given our  target distribution parameters on the response scale. We emphasize that we have empirically validated the correctness of the equations presented here. 
+
 We recall the linear predictor used to model nonlinear relationships (see the [article](index.html#statistical-modeling)):
 
 $$ 
