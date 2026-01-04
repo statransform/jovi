@@ -35,14 +35,16 @@ library(gridExtra)
 library(lmerTest)
 library(tidyverse)
 library(plotly)
+library(dplyr)
 ```
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 # Source code for reading data from experimental results and for plotting
-source("dataReaders.R")
-source("plotting.R")
-source("effects_plot.R")
-source("interactions_plot.R")
+source("utils-interactions_plots.R")
+source("utils-data-reading.R")
+source("utils-plotlying.R")
+source("utils-distributions_plots.R")
+source("utils-cohens_f_plots.R")
 ```
 
 ```{=html}

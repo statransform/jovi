@@ -58,69 +58,69 @@ source("utils-plotlying-single.R")
 We present complementary results and new experiments that investigate additional scenarios. We also compare INT and RNK with other nonparametric methods. Unless explicitly mentioned in each section, we follow the experimental methodology presented in the main article. At the end of each section, we summarize our conclusions.
 
 ## Nonparametric tests in single-factor designs {#nonparametric-tests}
-We compare PAR, RNK, and INT to nonparamatric tests for within- and between-subjects single-factor designs, where the factor has two, three, or four levels. Depending on the design, we use different nonparametric tests. For within-subjects designs, we use the Wilcoxon sign-rank test if the factor has two levels (*2 within*) and the Friedman test if the factor has three (*3 within*) or four (*4 within*) levels. For between-subjects designs (*2 between*, *3 between*, and *4 between*), we use the Kruskal–Wallis test.
+We compare PAR, RNK, and INT to classical nonparametric tests for single-factor designs with both within- and between-subjects structures, where the factor has two, three, or four levels. Depending on the design, different nonparametric tests are used. For within-subjects designs, we apply the Wilcoxon signed-rank test when the factor has two levels (2 *within*), and the Friedman test when the factor has three (3 *within*) or four (4 *within*) levels. For between-subjects designs (2 *between*, 3 *between*, and 4 *between*), we use the Kruskal–Wallis test.
 
-**Power**. @fig-nonparametric-power compares the power of the various methods as the magnitude of the main effect increases, where we use the abbreviation *NON* to designate a nonparametric test. We observe that primarily INT, but also RNK, generally exhibit better power than the nonparametric tests. Differences are more pronounced for within-subjects designs, corroborating Conover's [-@Conover:2012] observation that the rank transformation results in a test that is superior to the Friedman test under certain conditions. 
+**Type I error rates and power**. @fig-nonparametric-power compares the proportion of positive test results as a function of effect magnitude, using the label *NON* to denote the corresponding nonparametric test. When the true effect is null, this proportion represents the Type I error rate; under non-null effects, it represents statistical power. 
 
-::: {#fig-nonparametric-power}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-read_single <- function(prefix, alpha, distributions, methods, POWER = FALSE) {
-  	df <- read.csv(paste("results/", prefix, ".csv" , sep=""), sep=",", header=TRUE, strip.white=TRUE)
-	  df$family <- factor(df$family, levels=distributions)
-	  df$method <- factor(df$method, levels=methods)
+For null effects, all nonparametric tests exhibit appropriate Type I error control across all distributions. Under non-null effects, power differences are generally small for between-subjects designs (Kruskal–Wallis test) and for within-subjects designs with two levels (Wilcoxon signed-rank test). However, we find substantial differences for within-subjects designs with three or four levels, where the Friedman test is used. These findings corroborate Conover’s [-@Conover:2012] observation that rank-transformed ANOVA can outperform the Friedman test under certain conditions. Overall, INT emerges as the most powerful method.
 
-    if(POWER) {
-      df <- df[df$effect >= 0,]
-    }
-    else {
-      df <- df[df$effect == 0,]
-    }
-
-    if(is.na(alpha)) return(df)
-    else return(df[df$alpha == alpha,])
-}
-
-prefix <- "Power_single_factor"
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 alpha = 0.05
-
 distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert")
 dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 methods = c("PAR", "RNK", "INT", "NON")
 palette = c("#888888", "#E69F00", "#009E73", "#FF70AB")
 
+prefix <- "Power_single_factor"
 df <- read_single(prefix, alpha, distributions, methods = methods, POWER = TRUE)
-#df <- reshapeByDesign(df, dnames, effectvars = c("effect"))
 df <- df %>% arrange(design,family,effect,rate)  %>% group_by(design,family,effect) %>% mutate(rank = rank(rate))
 
 df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effect"))
-plotly_power_by_design_single(df, xlab = "magnitude of effect", var = "rank", xvar = "effect", max = 4.3, cbPalette = palette)
 ```
-Ranking of methods comparing their power ($\alpha = .05$) as a function of the magnitude of effect ($n = 20$). 
-:::
 
-We expect that the accuracy of ANOVA on rank-transformed values will decrease with smaller samples. However, our tests with smaller samples of $n=10$ show that INT remains robust and still outperforms other nonparametric methods. Although it is possibe to couple INT with permutation testing for higher accuracy [@Beasley:2009], we have not explored this possibility here.
-
-**Type I error rate under equal and unequal variances**. @fig-nonparametric-unequal-var presents the rate of positives under conditions of equal ($r_{sd} = 0$) and unequal variances ($r_{sd} > 0$). While this rate can be considered a Type I error rate when variances are equal, interpreting it under other conditions requires special attention because the hypothesis of interest may differ among methods. Parametric ANOVA is particularly sensitive to unequal variances when distributions are skewed because it tests differences among means. While the normal distributions of the latent space have the same means, this is not the case with the skewed distributions of the transformed variable, which have the same median but different means. All nonparametric methods we tested use ranks, which preserve medians and mitigate this problem. However, their rate of positives can still exceed $5\%$ under certain conditions.
-
-For between-subjects designs, we observe that the Kruskal–Wallis test and RNK yield very similar results. This is not surprising, as RNK is known to be a good approximation of the Kruskal–Wallis test [@Conover:2012]. INT's positive rates are similar, although slightly higher under the binomial distribution. For within-subjects designs, differences among methods are more pronounced. The Wilcoxon sign-rank test (*2 within*) inflates rates well above $5\%$, demonstrating that the test is not a pure test of medians. In contrast, the Friedman test (*3 within* and *4 within*) provides the best control among all methods. 
-
-
-:: {#fig-nonparametric-unequal-var}
+::: {#fig-nonparametric-power}
+<div id="plot-power-single-1">
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "Appendix_test-One-Factor-Unequal-Var"
-
-df <- read_data(prefix, alpha, effectType = -1, distributions, methods = methods)
-df <- df[df$effectX1 == 0.6,]
-df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-
-df <- readSingle(prefix, n = 20, alpha, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("sd_ratio", "effect"))
-
-plotlyErrorByDesign_v3(df, xlab = "max ratio of standard deviations", var = "rates", xvar = "sd_ratio", ytitle = 'Positives (%)', max = 24.2, nticks=8, cbPalette = palette)
+plotly_error_by_design_single(df, xlab = "magnitude of effect", ytitle = "Positives (%)", var = "rate", xvar = "effect", max = 103, cbPalette = palette)
 ```
-Positives rates ($\alpha = .05$) as a function of the maximum ratio $r_{sd}$ of standard deviations between levels ($n = 20$). 
+</div>
+
+<div id="plot-power-single-2">
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+plotly_power_by_design_single(df, xlab = "magnitude of effect", var = "rank", xvar = "effect", ytitle = "Positives - ranking", max = 4.3, cbPalette = palette)
+```
+</div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-single-2").classList.add("hidden"); }); </script>
+
+<button id="btn_single" style="background-color: #f0f0f0; border: 1px solid #ccc; color: #333; font-size: 0.9em;
+    padding: 4px 10px; border-radius: 6px; cursor: pointer; float: right;"
+  onclick="const plot = document.getElementById('plot-power-single-1');
+  plot.classList.toggle('hidden');
+  document.getElementById('plot-power-single-2').classList.toggle('hidden');
+  btn_single.innerText = plot.classList.contains('hidden') ? 'show percent' : 'show ranking';
+">
+  show ranking
+</button>
+
+Ratio of positives ($\alpha = .05$) as a function of effect magnitude ($n=20$). For null effects, the ratio represents the Type I error rate. Otherwise, it corresponds to statistical power. 
 :::
 
+**Type I error rate under equal and unequal variances**. @fig-nonparametric-unequal-var reports positive rates under conditions of equal ($r_{sd} = 0$) and unequal variances ($r_{sd} > 0$). We focus on normally distributed data and ordinal scales with five and eleven levels. When variances are equal, the positive rate can be interpreted as the Type I error rate. Under unequal variances, interpretation requires caution because the underlying null hypotheses may differ across methods. 
+
+For between-subjects designs, the Kruskal–Wallis test and RNK produce nearly identical results, as expected, since RNK is a close approximation of the Kruskal–Wallis test [@Conover:2012]. For within-subjects designs, the differences among methods are more pronounced, with RNK generally yielding the highest positive rates among nonparametric approaches. Across ordinal scales with flexible thresholds, all methods produce positive rates exceeding $5\%$, which is unsurprising given that unequal variances alter the interpretation of effects in these conditions.
+
+::: {#fig-nonparametric-unequal-var}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "Type_I_single_factor"
+distributions = c("norm", "likert_5", "likert_5_flex", "likert_7", "likert_7_flex")
+dnames = c("Normal", "Equidistant (5 levels)", "Flexible (5 levels)", "Equidistant (7 levels)", "Flexible (7 levels)")
+
+df <- read_single(prefix, alpha, distributions, methods = methods)
+df <- reshape_by_design(df, dnames, effectvars = c("sd_ratio", "effect"))
+
+plotly_error_by_design_single(df, xlab = "max ratio of standard deviations", ytitle = "Positives (%)", var = "rate", xvar = "sd_ratio", max = 14.2, cbPalette = palette)
+```
+Positives rates ($\alpha = .05$) as a function of the maximum ratio $r_{sd}$ of standard deviations between levels ($n = 20$). Depending on the null hypothesis of interest, these values may be interpreted as Type I error rates.
+:::
 
 ### Conclusion
-We do not see significant benefits in using dedicated nonparametric tests over RNK or INT. INT can replace nonparametric tests even for single-factor designs. If, after transforming the data, the assumptions of homoscedasticity or sphericity are still not met, applying common correction procedures (e.g., a Greenhouse–Geisser correction for sphericity violations) on the transformed data can reduce the risk of Type I errors.
+We find no substantial advantages in using classical nonparametric tests over RNK or INT. In particular, INT effectively replaces conventional nonparametric tests even in single-factor designs, while offering superior power and broader applicability.

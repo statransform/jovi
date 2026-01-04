@@ -75,10 +75,7 @@ The ART procedure was proposed as an alternative to the rank transformation [@co
 
 ::: {#fig-interactions-rank}
 ```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 7, warning=FALSE}
-source("interactions_plot.R")
 library("ARTool")
-
-#library(plotly)
 
 INT <- function(x){
 	qnorm((rank(x) - 0.5)/length(x))
@@ -194,59 +191,3 @@ By contrast, interpretation is unambiguous in the following siutations:
 Proofs of these statements are provided in [Appendix II](appendix_II.html#spurious-absence). In these scenarios, error rates are comparable across methods, regardless of whether the null hypothesis is defined in terms of the coefficients of the linear model or the observed effects on the response scale. For example, the divergence in ART's results in our illustrative example (see @fig-example) cannot be attributed to interpretation issues, since the sample was drawn from a population with no effect of *Technique* ($a_{1} = 0$) and no interaction ($a_{12}=0$). 
 
 Throughout the remainder of the article, we explicitly distinguish between situations in which effect interpretation is unambiguous and those in which it is not. Because different methods may rely on different assumptions about the null hypothesis, we analyze ambiguous cases separately. However, we emphasize that the existing literature offers no guidance on how ART should be expected to behave when the definition of a main or interaction effect is ambiguous. Early evaluations of ART focused on linear models. Although @elkin:2021 consider nonlinear models, they do not address how main and interaction effects should be interpreted when the definition of the null hypothesis depends on the scale of responses.
-
-<!--
-### Our approach {#approach}
-Responses in a generalized linear model can follow arbitrary distributions. A key challenge is how to simulate such distributions while maintaining control over the parameters of the linear submodel. We address this by adopting a latent variable modeling approach, in which a normally distributed latent variable is transformed into the observed response variable.
-
-**Latent variables.** We assume there is a single latent variable $\mathcal{Y}$ that is distinct from the variable $Y$ we observe. For example, the latent variable may represent a population's performance potential, working memory capacity, the perceived utility of a new technology, or quality of life. For convenience, we assume that this latent variable is linear, continuous, and normally distributed. This is a common assumption in latent variable modeling, e.g., in diffusion-decision models that predict response time and error in two-choice decision tasks [@Ratcliff_diffusion:2008], and in ordinal models [@Liddell:2018]. This assumption allows us to define null hypotheses within a shared, normalized space, regardless of the scale of the observed data.
-
-**Observed variables.** Then, the response variable $Y$ is derived from this latent variable through a monotonic transformation, thus $Y = \mathcal{T}(\mathcal{Y})$, where $\mathcal{T}(y_1) \le \mathcal{T}(y_2)$ if and only if $y_1 \le y_2$. A transformation for example occurs when study participants perform a selection task or repond to a Likert-scale item through a questionnaire. @fig-conversions shows how we transform normal distributions to log-normal, binomial, and ordinal scales.
-
-::: {#fig-conversions}
-```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 9, warning=FALSE}
-source("conversions_plot.R")
-
-n <- 2000
-
-xs <- c(rnorm(n, mean = 1.5, sd = 1), rnorm(n, mean = -1.5, sd = 1))
-
-ys1 <- norm2lnorm(xs, meanlog = 0, sdlog = 1, mu = 0, sd = sd(xs))
-plot1 <- plotConversion(xs, ys1, ylab = "Log-normal scale", ymax = 10)
-
-ys2 <- norm2binom(xs, size = 10, prob=.1)
-plot2 <- plotConversion(xs, ys2, ymin = - 0.3, ylab = "Binomial scale", as.density = F)
-
-ys3 <- toOrdinal(xs, thresholds = c(-2.5, -1, 0, 2.5))
-plot3 <- plotConversion(xs, ys3, ymin = 0.7, ymax = 5.3, ylab = "Ordinal scale", as.density = F)
-
-fig <- cowplot::plot_grid(plot1, plot2, plot3, ncol= 3) 
-
-fig
-```
-Transformation of normal latent variables to other continuous or discrete scales: log-normal (left), binomial (middle), and ordinal (right).  
-:::
-
-To transform the latent variable to a ratio scale (e.g., a log-normal and binomial scale), we adopt the distribution conversion approach of *faux* v1.2.1 [@faux], an R package for experimental simulations. We first derive the cumulative density distribution of the latent variable. We then use the inverse quantile function of the target distribution to derive the observed variable. For example, in @fig-conversions (left), where we transform the latent variable to a log-normal scale with parameters $\mu = 0$ and $\sigma = 1$, we use the following R function:  
-
-```{r}
-norm2lnorm <- function(x, meanlog = 0, sdlog = 1, mu = mean(x), sd = sd(x), ...) {
-	 p <- pnorm(x, mu, sd) 
- 	 qlnorm(p, meanlog, sdlog, ...) 
-}
-```
-For the binomial scale of @fig-conversions (left), we use instead the inverse quantile function of the binomial distribution ```qbinom(p,size,prob)``` with parameters ```size = 10``` and ```prob = .1```, which respectively represent the number of Bernoulli trials and their success probability.
-
-To transform the latent variable to an ordinal scale, we implement an ordered-probit model, as explained by @Liddell:2018. According to this model, we discretize the latent variable with thresholds that determine the ordinal levels of interest. For our example in @fig-conversions (right), we use as threshold the values $(-2.5, -1, 0, 2.5)$, defining an ordinal scale of five levels. Observe that these thresholds are not equidistant. 
-
-**Interpreting effects.** Our approach allows us to simulate main and interaction effects on the latent variable $\mathcal{Y}$ and observe how these effects manifest on the transformed variable $Y = \mathcal{T}(\mathcal{Y})$. 
-
-As discussed earlier, we make clear distinction between the following two scenarios: 
-
-1. The definition of the null hypothesis remains the same regardless of whether we evaluate effects on the latent variable $\mathcal{Y}$ or the response variable $Y$. 
-
-2. The definition of the null hypothesis changes with the scale: a null effect on the latent variable $\mathcal{Y}$ may not remain null when evaluated on the response variable $Y$. 
-
-Unless we explicitely mention interpretation issues, we focus on the first scenario. Note that in the case of discrete response variables, the function $\mathcal{T}$ is monotonic but not *strictly* monotonic, since it involves a loss of information. Consequently, an effect on the latent variable may not be observable in the responses, or the observed magnitude of the effect may appear reduced.
-
--->

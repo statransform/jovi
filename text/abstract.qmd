@@ -7,7 +7,7 @@ The Aligned Rank Transform (ART) is a popular statistical method, commonly used 
 This research aims to clarify the contradictory findings from previous studies by reevaluating the robustness and effectiveness of ART. Its complementary goal is to investigate the performance of alternative nonparametric methods.
 
 ###### Methods
-We conducted a series of Monte Carlo experiments to systematically evaluate ART across various data distributions and experimental designs. Our comparative analysis includes two alternative transformation methods: the simple rank transformation and the inverse normal transformation, along with parametric ANOVA without transformation. Additionally, we present supplementary experiments involving other competitive nonparametric methods in the [appendix](appendix.html).
+We conducted a series of Monte Carlo experiments to systematically evaluate ART across various data distributions and experimental designs. Our comparative analysis includes two alternative transformation methods: the simple rank transformation and the inverse normal transformation, along with parametric ANOVA without transformation. Additionally, we present supplementary experiments involving other competitive nonparametric methods in the [appendix](appendix_I.html).
 
 Our experimental methodology builds upon a latent variable modeling approach, enabling us to simulate main and interaction effects across diverse distributions and address interpretation issues related to these effects. In addition to Monte Carlo experiments, we explore the behavior of ART through illustrative examples and reanalyze data from previous user studies.
 

@@ -71,7 +71,6 @@ Boxplots summarizing partial $\eta^2$ estimates obtained with each method from 3
 
 ::: {#fig-effect-main-scatterplots-1}
 ```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
-source("cohens_f_plots.R")
 prefix <- "cohens_f_2"
 df <- readly_datapoints(prefix,  distributions=c("norm", "lnorm", "likert"), dnames = c("Normal", "Log-normal", "Ordinal (5 levels)"))
 fig <- plotly_scatter(df, xlab = "Ground truth", ylab= "Cohen's f", xvar = "grtX1", max = 1.1)

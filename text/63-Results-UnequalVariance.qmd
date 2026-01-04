@@ -7,7 +7,6 @@ We examine three two-factor designs: (i) a $4 \times 3$ within-subjects design; 
 
 ::: {#fig-unequal}
 ```{r, echo=FALSE, message=FALSE, fig.height=1.5, fig.width = 9, warning=FALSE}
-source("distributions_plots.R")
 plot_unequal_variances()
 ```
 Varying the ratio $r_{sd}$ of standard deviations across the levels of $X_1$. The plots show examples of population distributions for factors with two categorical levels.    

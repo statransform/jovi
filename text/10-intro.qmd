@@ -72,7 +72,13 @@ We opt for a multiverse analysis [@Dragicevic:2019] to analyze the data, where w
 
 4. *Inverse normal transformation (INT).* The data are transformed by using their normal scores. This rank-based method is simple to implement and has been commonly used in some disciplines. However, it has also received criticism [@Beasley:2009].  
 
-For comparison, we also report the results of the regular parametric ANOVA with no transformation (*PAR*). For each ANOVA analysis, we use a linear mixed-effects model, treating the participant identifier as a random effect. To simplify our analysis and like @elkin:2021, we consider random intercepts but no random slopes. For example, we use the following R code to create the model for the log-transformed response: 
+For comparison, we also report the results of the regular parametric ANOVA with no transformation (*PAR*). To simplify our analysis and like @elkin:2021, we consider random intercepts but no random slopes. For example, we use the following R code to create the model for the log-transformed response: 
+
+```{r, echo=TRUE, warning=FALSE}
+m.log <- aov(log(Time) ~ Difficulty*Technique + Error(Participant), data = df)
+```
+
+Alternatively, we can use a linear mixed-effects model, treating the participant identifier as a random effect:
 
 ```{r, echo=TRUE, warning=FALSE}
 m.log <- lmer(log(Time) ~ Difficulty*Technique + (1|Participant), data = df)
@@ -83,7 +89,7 @@ The table below presents the *p*-values for the main effects of the two factors 
 |        | PAR  | LOG  | ART | RNK | INT |
 |--------|------|------|-----|-----|-----|
 | Difficulty  | $1.8 \times 10^{-26}$ | $8.1 \times 10^{-47}$  |  $9.0 \times 10^{-43}$ | $4.3 \times 10^{-46}$ | $4.4 \times 10^{-44}$ |
-| Technique   | $.10$ | $.18$  | $.00061$ | $.38$ | $.17$ |
+| Technique   | $.10$ | $.18$  | $.00062$ | $.38$ | $.17$ |
 | Difficulty $\times$ Technique | $.056$ | $.10$ | $.0017$ | $.24$ | $.23$ |
 : *p*-values for main and interaction effects {.sm}
 
@@ -154,4 +160,4 @@ The above example does not reflect a rare phenomenon. We will show that ART's er
 
 The paper is structured as follows. [Section 2](#background) introduces nonparametric tests and rank transformations, and explains how ART is constructed. It also provides a summary of previous experimental results regarding the robustness of ART and other related rank-based procedures, along with a survey of recent studies using ART. [Section 3](#assumptions) clarifies the method's distributional assumptions. [Section 4](#interpretation) investigates issues regarding effect interpretation and introduce our distribution simulation approach. [Section 5](#methodology) outlines our experimental methodology, while [Section 6](#findings) presents our findings. [Section 7](#casestudies) revisits results of previous studies employing ART and  illustrates how its application can lead to erroneous conclusions. [Section 8](#recommendations) offers recommendations for researchers. Finally, [Section 9](#conclusions) concludes the paper.
 
-In addition to the main sections of the paper, we provide an [appendix](appendix.html) with results from additional Monte Carlo experiments.
+In addition to the main sections of the paper, we provide an appendix (see [Appendix I](appendix_I.html)) with results from additional Monte Carlo experiments.

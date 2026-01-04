@@ -6,11 +6,6 @@ We first evaluate Type I error rates for ratio scales. We test a 4 $\times$ 3 wi
 
 ::: {#fig-ratio-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-library(dplyr)
-library(tidyverse)
-source("utils-data-reading.R")
-source("utils-plotlying.R")
-
 prefix <- "Type_I_4x3_ratio"
 alpha <- .05
 distributions <- c("norm", "lnorm", "exp", "cauchy", "poisson", "binom")

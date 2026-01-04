@@ -30,7 +30,7 @@ We emphasize that the ARTool raises a warning for such unbalanced designs:
 
 > *F values of ANOVAs on aligned responses not of interest are not all ~0. ART may not be appropriate.*
 
-Our tests in the [appendix](appendix.html) show that ART's Type I error rates for main effects increase further in unbalanced designs with missing data.
+Our tests in [Appendix I](appendix_I.html#missing) show that ART's Type I error rates for main effects increase further in unbalanced designs with missing data.
 
 **Monte Carlo simulation.** What if the experimental design were balanced, and such issues did not emerge? What risks would arise from using ART with such binary responses? To delve into this issue, we conduct a new Monte Carlo experiment.
 

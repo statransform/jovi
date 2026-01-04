@@ -101,7 +101,6 @@ We next detail how we select the parameters of the linear component (see @eq-lin
 
 ::: {#fig-effects-normal}
 ```{r, echo=FALSE, message=FALSE, fig.height=1.2, fig.width = 9, warning=FALSE}
-source("distributions_plots.R")
 plot_effects_normal()
 ```
 Varying $a_1$ to control the magnitude of the main effect of $X_1$. The plots show examples of normal distributions ($\sigma^2=1$) for a factor with three categorical levels. 

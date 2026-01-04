@@ -2,6 +2,22 @@
 
 library(plotly)
 
+read_single <- function(prefix, alpha, distributions, methods, POWER = FALSE) {
+  	df <- read.csv(paste("results/", prefix, ".csv" , sep=""), sep=",", header=TRUE, strip.white=TRUE)
+	  df$family <- factor(df$family, levels=distributions)
+	  df$method <- factor(df$method, levels=methods)
+
+    if(POWER) {
+      df <- df[df$effect >= 0,]
+    }
+    else {
+      df <- df[df$effect == 0,]
+    }
+
+    if(is.na(alpha)) return(df)
+    else return(df[df$alpha == alpha,])
+}
+
 # This is for alterative graphs for a different set of designs : 2x3, 2x4, 4x3 (writing more generic code with plotly is painful)
 plotly_error_by_design_single <- function(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", min = 0, max = 100, ytitle = 'Type I errors (%)', cbPalette = c("#888888", "#E69F00", "#009E73", "#FF5E00"), nticks=8){
 	# aesthetics
@@ -59,7 +75,7 @@ plotly_error_by_design_single <- function(df, xlab = "magnitude of main effects"
 
 
 # This is for alterative graphs for a different set of designs : 2x3, 2x4, 4x3 specific to Power charts (writing more generic code with plotly is painful)
-plotly_power_by_design_single <- function(df, xlab = "magnitude of main effects", var = "rank", hovervar="rate", xvar = "effectX", max = 100, ytitle = 'Power (%) - Ranking', cbPalette = c("#888888", "#E69F00", "#009E73", "#FF5E00")){
+plotly_power_by_design_single <- function(df, xlab = "magnitude of main effects", var = "rank", hovervar="rate", xvar = "effectX", max = 100, ytitle = 'Power - ranking', cbPalette = c("#888888", "#E69F00", "#009E73", "#FF5E00")){
 	# aesthetics
 	symbols <- c("asterisk", "x", "star-diamond", "star-triangle-up")
 	margins <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
