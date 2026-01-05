@@ -97,7 +97,7 @@ Since, in practice, $\tau_0 = -\infty$ and $\tau_D = \infty$, generating respons
 ### Effects and population control
 We next detail how we select the parameters of the linear component (see @eq-linear-model) for the various distributions, as well as the thresholds of the ordinal model (see @eq-ordinal-thresholds). 
 
-**Magnitude of effects.** We control the magnitude of effects by varying $a_1$, $a_2$, and, for some experiments (those evaluating power for interactions), $a_{12}$. @fig-effects-normal presents normal distributions ($\sigma^2 = 1$) generated across the range of values of $a_1$ used to evaluate Type I error rates. In these examples, we illustrate effects for a factor with three categorical levels and, for clarity, disregard between-subject variability ($\sigma_s^2 = 0$).
+**Magnitude of effects.** We control the magnitude of effects by varying $a_1$, $a_2$, and, for some experiments (those evaluating power for interactions), $a_{12}$. @fig-effects-normal presents normal distributions ($\sigma = 1$) generated across the range of values of $a_1$ used to evaluate Type I error rates. In these examples, we illustrate effects for a factor with three categorical levels and, for clarity, disregard between-subject variability ($\sigma_s = 0$).
 
 ::: {#fig-effects-normal}
 ```{r, echo=FALSE, message=FALSE, fig.height=1.2, fig.width = 9, warning=FALSE}
