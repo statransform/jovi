@@ -1,11 +1,11 @@
-## Experimental results (deprecated since we changed our experimental method)
+## Experimental results
 
-This folder presents the raw files generated from our experimental scripts and used for the analysis of our JoVI article and appendix. The suffix *_10*, *_20*, and *_30* in the filenames corresponds to the sample size (size of experimental cell) used, as we ran the experiments separately for each sample size. 
+This folder presents the raw files generated from our experimental scripts and used for the analysis of our JoVI article and appendix.
 
 The log files generally contain the following columns: 
 - The sample size *n*.
 - The experimental *design*, such as *4x3* and *2x3*.
-- The data distribution (*distr*), such as *norm*, *lnorm*, and *binom*.
+- The data distribution (*family*), such as *norm*, *lnorm*, and *binom*.
 - The compared *method*, such as *PAR*, *RNK*, *INT*, and *ART*. 
 - The *alpha* level, which is either *0.05* or *0.01*.
 - The magnitude of main effects (e.g., *effectX1* and *effectX2*) and interaction effects (e.g., *effectX1X2*)
