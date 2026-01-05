@@ -4,8 +4,8 @@ We can now detail our experimental method. We evaluate the standard parametric a
 
 **Distributions.** We evaluate both *ratio* and *ordinal* data, drawn from the following distributions: 
 
-1. *Normal distribution* $\mathcal{N}(\mu, \sigma^2)$, where $\mu$ is its mean and $\sigma^2$ is its standard deviation. For most experiments where variances are equal, we set $\sigma^2 = 1$.
-2. *Log-normal distribution* $\mathcal{LogN}(\mu, \sigma^2)$, where $\mu$ is its mean and $\sigma^2$ is its standard deviation at the logarithmic scale. The log-normal distribution is a good model for various measures bounded by zero, such as task-completion times. We set $\sigma^2 = 1$ in our main experiments but evaluate a wider range of parameters in [Appendix I](appendix_I.html#lognormal).
+1. *Normal distribution* $\mathcal{N}(\mu, \sigma^2)$, where $\mu$ is its mean and $\sigma$ is its standard deviation. For most experiments where variances are equal, we set $\sigma = 1$.
+2. *Log-normal distribution* $\mathcal{LogN}(\mu, \sigma^2)$, where $\mu$ is its mean and $\sigma$ is its standard deviation at the logarithmic scale. The log-normal distribution is a good model for various measures bounded by zero, such as task-completion times. We set $\sigma = 1$ in our main experiments but evaluate a wider range of parameters in [Appendix I](appendix_I.html#lognormal).
 3. *Exponential distribution* $Exp(\lambda)$, where $\lambda$ is its rate. The exponential distribution naturally emerges when describing the time elapsed between events. For example, we could use it to model the time a random person spends with a public display, or the waiting time before a new person approaches to interact with the display, when the average waiting time is $\frac{1}{\lambda}$.  
 4. *Cauchy distribution* $\mathcal{Cauchy}(x_0, \gamma)$, where $x_0$ defines its location (median) and $\gamma$ defines its scale. The Cauchy distribution is the distribution of the ratio of two independent normally distributed random variables. It rarely emerges in practice. However, it is commonly used in statistics to test the robustness of statistical procedures because both its mean and variance are undefined. As we discussed earlier, past evaluations of ART [@Mansouri:1995; @elkin:2021] show that the method fails under the Cauchy distribution. We set $\gamma = 1$.
 5. *Poisson distribution* $\mathcal{Pois}(\lambda)$, where $\lambda$ is its rate. It expresses the probability of a given number of events in a fixed interval of time. For example, we could use it to model the number of people who interact with a public display in an hour, when the average rate is $\lambda$ people per hour.
@@ -103,7 +103,7 @@ We next detail how we select the parameters of the linear component (see @eq-lin
 ```{r, echo=FALSE, message=FALSE, fig.height=1.2, fig.width = 9, warning=FALSE}
 plot_effects_normal()
 ```
-Varying $a_1$ to control the magnitude of the main effect of $X_1$. The plots show examples of normal distributions ($\sigma^2=1$) for a factor with three categorical levels. 
+Varying $a_1$ to control the magnitude of the main effect of $X_1$. The plots show examples of normal distributions ($\sigma = 1$) for a factor with three categorical levels. 
 :::
 
 **Intercept and variance parameters.** Fixing the intercept $\mu$ directly in a nonlinear model generally leads to arbitrary population-level response distributions, because the marginal mean depends on the link function, the response distribution, the variance of the random effects, and the magnitude of the fixed effects. We therefore calibrate the intercept $\mu$ so that the induced location of the responses matches a pre-specified target value. @tbl-locations reports the target location for each distribution, which is typically the overall mean in all cases except for the Cauchy distribution, where the median is used. We detail how $\mu$ is analytically derived from these target values in [Appendix II](appendix_II.html#mu). 
@@ -120,10 +120,10 @@ Varying $a_1$ to control the magnitude of the main effect of $X_1$. The plots sh
 ```{r, echo=FALSE, message=FALSE, fig.height=1.2, fig.width = 9, warning=FALSE}
 plot_effects_distr()
 ```
-Different ratio distributions generated with $a_1 = 2$ when $X_1$ has three categorical levels (here, $\sigma_s^2 = 0$).
+Different ratio distributions generated with $a_1 = 2$ when $X_1$ has three categorical levels (here, $\sigma_s = 0$).
 :::
 
-In practice, we randomly choose the standard deviation $\sigma_s^2$ --- which determines between-subject variability --- from the interval $[0.1, 0.5]$, drawing each value from a uniform distribution.
+In practice, we randomly choose the standard deviation $\sigma_s$ --- which determines between-subject variability --- from the interval $[0.1, 0.5]$, drawing each value from a uniform distribution.
 
 **Thresholds for ordinal scales.** For ordinal data, we evaluate $D =$ 5, 7, or 11 discrete levels. To derive the discretization thresholds $\tau_d$, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of the latent variable $Y^{*}_{ijk}$. We then divide this range into 5, 7, or 11 intervals, following two different strategies: (i) setting thresholds to be *equidistant*; or (ii) considering *flexible* thresholds, randomly drawing their position in the above range.
 
