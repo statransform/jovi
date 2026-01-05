@@ -93,7 +93,7 @@ The table below presents the *p*-values for the main effects of the two factors 
 | Difficulty $\times$ Technique | $.056$ | $.10$ | $.0017$ | $.24$ | $.23$ |
 : *p*-values for main and interaction effects {.sm}
 
-The disparity in findings between ART and the three alternative transformation methods is striking. ART suggests that all three effects are statistically significant. What adds to the intrigue is the fact that ART's *p*-values for *Technique* and its interaction with *Difficulty* are orders of magnitude lower than the *p*-values obtained from all other methods. We will observe similar discrepancies if we conduct contrast tests with the ART procedure [@elkin:2021], though we leave this as an exercise for the reader.
+The disparity in findings between ART and the three alternative transformation methods is striking. ART suggests that three is strong statistical evidence for all three effects. What adds to the intrigue is the fact that ART's *p*-values for *Technique* and its interaction with *Difficulty* are orders of magnitude lower than the *p*-values obtained from all other methods. We will observe similar discrepancies if we conduct contrast tests with the ART procedure [@elkin:2021], though we leave this as an exercise for the reader.
 
 We also examine effect size measures, which are commonly reported in scientific papers. The table below presents results for partial $\eta^2$, which describes the ratio of variance explained by a variable or an interaction: 
 

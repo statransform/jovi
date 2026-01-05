@@ -32,7 +32,7 @@ $$
 $$
 where $h$ is a monotone function. This function may coincide with the inverse link function $g^{-1}$ in a GLM, but it may also arise from other frameworks, including transformation models or latent-variable constructions. Thus it does not necessarily need to be smooth or invertible; for example, this assumption is not required for the ordinal example discussed later.
 
-Suppose $a_2 = 0$ and $a_{12} = 0$. Then:
+**Proposition.** Suppose $a_2 = 0$ and $a_{12} = 0$. Then:
 
 1. The independent variable $x_2$ has no effect on the response scale.
 2. There is no interaction between $x_1$ and $x_2$ on the response scale.
