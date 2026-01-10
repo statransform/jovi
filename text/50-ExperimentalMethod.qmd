@@ -54,7 +54,7 @@ $${#eq-linear-model}
 
 **Encoding the levels of factors.** To encode the levels of the two factors $x_{1i} \in X_1$ and $x_{2j} \in X_2$ we proceed as follows: 
 
-1. We normalize the distance between their first and their second levels such that $x_{12} - x_{11} = 1$ and $x_{22} - x_{21} = 1$. This approach enables us to conveniently control for the main and interaction effects by simply varying the parameters $a_1$, $a_2$, and $a_{12}$.
+1. We normalize the distance between their first and their second levels, such that $x_{12} - x_{11} = 1$ and $x_{22} - x_{21} = 1$. This approach enables us to conveniently control for the main and interaction effects by simply varying the parameters $a_1$, $a_2$, and $a_{12}$.
 
 2. For the remaining levels, we randomly sample from a uniform distribution that spans the range between these two extreme levels, i.e., between $x_{11}$ and $x_{12}$ for $X_1$, and between $x_{21}$ and $x_{22}$ for $X_2$. This approach allows us to generate and evaluate a substantial variety of configurations, each representing different relative effects between levels.  
 
@@ -148,7 +148,7 @@ Statistical significance testing requires setting a significance threshold known
 
 When the null hypothesis is ambiguous, we report *positive rates*, noting that their interpretation as Type I error rates depends on how the null hypothesis is defined. Nevertheless, we generally recommend Greene's [-@Greene:2010] interpretation, which is based on the coefficients of the underlying model.
 
-We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. For log-normal and ordinal distributions, we also assess effect size estimates, where we use as ground truth the estimates of a parametric ANOVA conducted either on the logarithmic scale of the data (for log-normal) or latent variable $Y^*$ (for ordinal). While partial $\eta^2$ is the most commonly used effect size measure, we also evaluate Cohen's $f$, as its expected value is proportional to the real magnitude of effect. However, $\eta^2$ can be directly derived from Cohen's $f$ as follows:
+We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. For log-normal and ordinal distributions, we also assess effect size estimates, where we use as ground truth the estimates of a parametric ANOVA conducted either on the logarithmic scale of the data (for log-normal) or latent variable $Y^*$ (for ordinal). While partial $\eta^2$ is the most commonly used effect size measure, we also evaluate Cohen's $f$, as its expected value is proportional to the real magnitude of the effect. However, $\eta^2$ can be directly derived from Cohen's $f$ as follows:
 
 $$ 
 \eta^2 = \frac{f^2}{1 + f^2}

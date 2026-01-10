@@ -5,7 +5,7 @@ We evaluate the statistical power of the four methods on the three two-factor de
 
 @fig-power-main-1 presents the results for $X_1$. In many configurations, differences in power across methods are modest. To facilitate comparison, we also report method rankings; readers are encouraged to interact with the figures for precise power estimates. 
 
-PAR achieves the highest power under the normal and exponential distributions, but its power is particularly low under the log-normal distribution. ART initially appears advantageous under the the log-normal, binomial, and ordinal distributions for small effects, likely reflecting inflated Type I errors under these conditions. As $a_1$ grows larger, ART's relative advantage diminishes, and it ultimately becomes the least powerful method. Finally, INT consistently outperforms RNK and ranks highly across all conditions.
+PAR achieves the highest power under the normal and exponential distributions, but its power is particularly low under the log-normal distribution. ART initially appears advantageous under the log-normal, binomial, and ordinal distributions for small effects, likely reflecting inflated Type I errors under these conditions. As $a_1$ grows larger, ART's relative advantage diminishes, and it ultimately becomes the least powerful method. Finally, INT consistently outperforms RNK and ranks highly across all conditions.
 
 ::: {#fig-power-main-1}
 <div id="plot-power-1.1">
