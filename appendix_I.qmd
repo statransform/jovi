@@ -53,7 +53,7 @@ source("utils-distributions_plots.R")
 We present complementary results and new experiments that investigate additional scenarios. We also compare INT and RNK with other nonparametric methods. Unless explicitly mentioned in each section, we follow the experimental methodology presented in the main article. At the end of each section, we summarize our conclusions.
 
 ## Results for $\alpha = .01$ {#alpha}
-Although we only presented results for $\alpha = .05$ in the main article, we observe the same trends for other significance levels. The following figures show the Type I error rates of the methods for the $4 \times 3$ within-subjects design when $\alpha = .01$. Note that error rates are not proportional to the $\alpha$ level.
+Although we only presented results for $\alpha = .05$ in the main article, we observe the same trends for other significance levels. The following figures show the Type I error rates of the methods for the $4 \times 3$ within-subject design when $\alpha = .01$. Note that error rates are not proportional to the $\alpha$ level.
 For results from other experiments, we refer readers to our raw result files.  
 
 **Main effects**. @fig-ratio-main presents Type I error rates for the main effect of $X_2$ as the magnitude of the main effect of $X_1$ increases.
@@ -107,7 +107,7 @@ Results for $\alpha = .01$ are consistent with our results for $\alpha = .05$.
 ## Missing data {#missing}
 We evaluate how missing data affect the performance of the four methods. Specifically, we consider scenarios in which a random sample of $10\%$, $20\%$, or $30\%$ of the observations is missing. Our analysis is restricted to normal distributions and includes two conditions: (i) equal variances and (ii) unequal variances across the levels of the factor to effects are applied ($X_1$ in our experiments), with the maximum ratio of standard deviations fixed to $r_{sd}=2$.
 
-Missing observations lead to unbalanced designs, for which Type I hypothesis tests obtained using the `aov()` function are difficult to interpret. Accordingly, we use LMER and conduct Type III tests [@Kuznetsova:2017], focusing on a $4 \times 3$ within-subjects design and a $2 \times 4$ mixed design.  
+Missing observations lead to unbalanced designs, for which Type I hypothesis tests obtained using the `aov()` function are difficult to interpret. Accordingly, we use LMER and conduct Type III tests [@Kuznetsova:2017], focusing on a $4 \times 3$ within-subject design and a $2 \times 4$ mixed design.  
 
 We emphasize, however, that our scenarios do not include systematic imbalances arising from missing data concentrated in specific factor levels.  
 
@@ -170,7 +170,7 @@ plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX2", 
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_{1}$ of the main effect of $X_1$ ($n=20$)
 :::
 
-**Interaction effects**. We observe similar patterns for the Type I error rates of interaction effects in the presence of a single main effect. Notice that PAR's error rates are highly unstable. They appears inflated under the within-subjects design and deflated under other configurations. 
+**Interaction effects**. We observe similar patterns for the Type I error rates of interaction effects in the presence of a single main effect. Notice that PAR's error rates are highly unstable. They appears inflated under the within-subject design and deflated under other configurations. 
 
 ::: {#fig-lognormal-interaction1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -199,7 +199,7 @@ ART’s robustness issues become less severe as log-normal distributions approac
 ## Binomial distributions {#binomial}
 We examine a broader range of parameter settings for the binomial distribution. Although we focus on the lower range of the success probability $p$, we expect analogous results for their symmetric values $1-p$. Specifically, we test $p=.05$, $.1$, and $.2$, and for each value we consider $\kappa=5$ and $10$ Bernoulli trials. 
 
-**Main effects**. The results for main effects are presented in @fig-binom-main. For the within-subjects design, we find that ART’s Type I error rates increase as the number of trials decreases and as the probability of success approaches zero, reaching extremely high levels when $\kappa = 5$ and $p=.05$. However, trends change across designs. The other methods maintain good control of Type I error rates. 
+**Main effects**. The results for main effects are presented in @fig-binom-main. For the within-subject design, we find that ART’s Type I error rates increase as the number of trials decreases and as the probability of success approaches zero, reaching extremely high levels when $\kappa = 5$ and $p=.05$. However, trends change across designs. The other methods maintain good control of Type I error rates. 
 
 ::: {#fig-binom-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -215,7 +215,7 @@ plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX2", 
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_{1}$ of the main effect of $X_1$ ($n=20$)
 :::
 
-**Interaction effects**. @fig-binom-interaction1 shows similar patterns for the Type I error rates of interaction effects in the presence of a single main effect. In the within-subjects design, however, PAR, RNK, and INT also tend to inflate error rates when $a_1 > 2$, although to a much smaller extent than ART.
+**Interaction effects**. @fig-binom-interaction1 shows similar patterns for the Type I error rates of interaction effects in the presence of a single main effect. In the within-subject design, however, PAR, RNK, and INT also tend to inflate error rates when $a_1 > 2$, although to a much smaller extent than ART.
 
 ::: {#fig-binom-interaction1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -245,7 +245,7 @@ ART performs extremely poorly for binomial data, producing very high Type I erro
 In all experiments assessing Type I error rates reported in our article, we assumed no interaction effects. However, we also need to understand whether weak or strong interaction effects could affect the sensitivity of the methods in detecting main effects. Unfortunately, the interpretation of main effects may become ambiguous when interactions are present. 
 
 ### Illustrative example 
-To understand the problem, let us take a [dataset](removable_main.csv) from a fictional experiment (within-participants design with $n = 24$) that evaluates the performance of two techniques (*Tech A* and *Tech B*) under two task difficulty levels (*easy* vs. *hard*). @fig-example-interactions visualizes the means for each combination of the levels of the factors, using the original scale of measurements (left) and a logarithmic scale (right). Note that time measurements were drawn from log-normal distributions.
+To understand the problem, let us take a [dataset](removable_main.csv) from a fictional experiment (within-subject design with $n = 24$) that evaluates the performance of two techniques (*Tech A* and *Tech B*) under two task difficulty levels (*easy* vs. *hard*). @fig-example-interactions visualizes the means for each combination of the levels of the factors, using the original scale of measurements (left) and a logarithmic scale (right). Note that time measurements were drawn from log-normal distributions.
 
 ::: {#fig-example-interactions}
 ```{r, echo=FALSE, message=FALSE, fig.height=3.5, fig.width = 9, warning=FALSE}
@@ -278,7 +278,7 @@ PAR detects a main effect of *Technique* ($\alpha = .05$), as does ART, which yi
 As a general principle, it makes little sense to interpret main effects when crossing patterns emerge due to a strong interaction. In this scenario, the researchers should instead compare techniques within each level of *Difficulty*. Accordingly, we can conclude that *Technique A* is slower on *easy* tasks but faster on *hard* tasks in this experiment.
 
 ### Experiment
-To better understand how the different methods detect main in the presence of interactions, we conduct a dedicated experiment. We focus on a $2 \times 2$ within-subjects experimental designs and examine perfectly symmetric cross-interactions. 
+To better understand how the different methods detect main in the presence of interactions, we conduct a dedicated experiment. We focus on a $2 \times 2$ within-subject experimental designs and examine perfectly symmetric cross-interactions. 
 
 **Interaction effect only**. We first examine how the interaction effect alone influences the Type I error rate for $X_1$ (or $X_2$, since the design is fully symmetric). In this configuration, no interpretation issues arise: the true main effects are null under any reasonable definition of the null hypothesis.
 
@@ -314,7 +314,7 @@ Positive rates ($\alpha = .05$) for the **main effect of $X_2$** as a function o
 When strong interaction effects are present, the interpretation of main effects becomes especially problematic, particularly when those interactions co-occur with nonzero main effects. ART may even inflate Type I error rates in scenarios where such interpretation issues would not ordinarily be expected. More generally, these results underscore that main effects should be interpreted with great caution in the presence of strong interactions.
 
 ## ART with median alignment {#median-alignment}
-We evaluate a modified implementation of ART (ART-MED), where we use medians instead of means to align ranks. This approach draws inspiration from results by @Salter:1993, showing that median alignment corrects ART's instable behavior under the Cauchy distribution. We only test the $4 \times 3$ within-participants design for sample sizes $n=10$, $20$, and $30$. For this experiment, we omit the RNK method and only present results for non-normal distributions. 
+We evaluate a modified implementation of ART (ART-MED), where we use medians instead of means to align ranks. This approach draws inspiration from results by @Salter:1993, showing that median alignment corrects ART's instable behavior under the Cauchy distribution. We only test the $4 \times 3$ within-subject design for sample sizes $n=10$, $20$, and $30$. For this experiment, we omit the RNK method and only present results for non-normal distributions. 
 
 We emphasize that @Salter:1993 only apply mean and median alignment to interactions. Our implementation for main effects is based on the alignment approach of @wobbrock:2011, where we simply replace means by medians --- we are not aware of more adapted methods. 
 
@@ -366,11 +366,11 @@ Using median rather than mean alignment in ART substantially improves the method
 
 
 ## Nonparametric tests in single-factor designs {#nonparametric-tests}
-We compare PAR, RNK, and INT to classical nonparametric tests for single-factor designs with both within- and between-subjects structures, where the factor has two, three, or four levels. Depending on the design, different nonparametric tests are used. For within-subjects designs, we apply the Wilcoxon signed-rank test when the factor has two levels (2 *within*), and the Friedman test when the factor has three (3 *within*) or four (4 *within*) levels. For between-subjects designs (2 *between*, 3 *between*, and 4 *between*), we use the Kruskal–Wallis test.
+We compare PAR, RNK, and INT to classical nonparametric tests for single-factor designs with both within- and between-subject structures, where the factor has two, three, or four levels. Depending on the design, different nonparametric tests are used. For within-subject designs, we apply the Wilcoxon signed-rank test when the factor has two levels (2 *within*), and the Friedman test when the factor has three (3 *within*) or four (4 *within*) levels. For between-subject designs (2 *between*, 3 *between*, and 4 *between*), we use the Kruskal–Wallis test.
 
 **Type I error rates and power**. @fig-nonparametric-power compares the proportion of positive test results as a function of effect magnitude, using the label *NON* to denote the corresponding nonparametric test. When the true effect is null, this proportion represents the Type I error rate; under non-null effects, it represents statistical power. 
 
-For null effects, all nonparametric tests exhibit appropriate Type I error control across all distributions. Under non-null effects, power differences are generally small for between-subjects designs (Kruskal–Wallis test) and for within-subjects designs with two levels (Wilcoxon signed-rank test). However, we find substantial differences for within-subjects designs with three or four levels, where the Friedman test is used. These findings corroborate Conover’s [-@Conover:2012] observation that rank-transformed ANOVA can outperform the Friedman test under certain conditions. Overall, INT emerges as the most powerful method.
+For null effects, all nonparametric tests exhibit appropriate Type I error control across all distributions. Under non-null effects, power differences are generally small for between-subject designs (Kruskal–Wallis test) and for within-subject designs with two levels (Wilcoxon signed-rank test). However, we find substantial differences for within-subject designs with three or four levels, where the Friedman test is used. These findings corroborate Conover’s [-@Conover:2012] observation that rank-transformed ANOVA can outperform the Friedman test under certain conditions. Overall, INT emerges as the most powerful method.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 alpha = 0.05
@@ -414,7 +414,7 @@ Ratio of positives ($\alpha = .05$) as a function of effect magnitude ($n=20$). 
 
 **Type I error rate under equal and unequal variances**. @fig-nonparametric-unequal-var reports positive rates under conditions of equal ($r_{sd} = 0$) and unequal variances ($r_{sd} > 0$). We focus on normally distributed data and ordinal scales with five and eleven levels. When variances are equal, the positive rate can be interpreted as the Type I error rate. Under unequal variances, interpretation requires caution because the underlying null hypotheses may differ across methods. 
 
-For between-subjects designs, the Kruskal–Wallis test and RNK produce nearly identical results, as expected, since RNK is a close approximation of the Kruskal–Wallis test [@Conover:2012]. For within-subjects designs, the differences among methods are more pronounced, with RNK generally yielding the highest positive rates among nonparametric approaches. Across ordinal scales with flexible thresholds, all methods produce positive rates exceeding $5\%$, which is unsurprising given that unequal variances alter the interpretation of effects in these conditions.
+For between-subject designs, the Kruskal–Wallis test and RNK produce nearly identical results, as expected, since RNK is a close approximation of the Kruskal–Wallis test [@Conover:2012]. For within-subject designs, the differences among methods are more pronounced, with RNK generally yielding the highest positive rates among nonparametric approaches. Across ordinal scales with flexible thresholds, all methods produce positive rates exceeding $5\%$, which is unsurprising given that unequal variances alter the interpretation of effects in these conditions.
 
 ::: {#fig-nonparametric-unequal-var}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -435,11 +435,11 @@ We find no substantial advantages in using classical nonparametric tests over RN
 
 
 ## ANOVA-type statistic (ATS) {#ATS}
-We compare PAR, RNK, and INT to the ANOVA-type statistic (ATS) [@Brunner_ATS:2001] for two-factor designs. We use its implementation in the R package *nparLD* [@nparLD], which does not support between-subjects designs. Thus, we only evaluate it for the $4 \times 3$ within-subjects and the $2 \times 4$ mixed designs. We consider several combinations of effects, which allows us to assess the trade-offs among these methods in greater detail.
+We compare PAR, RNK, and INT to the ANOVA-type statistic (ATS) [@Brunner_ATS:2001] for two-factor designs. We use its implementation in the R package *nparLD* [@nparLD], which does not support between-subject designs. Thus, we only evaluate it for the $4 \times 3$ within-subject and the $2 \times 4$ mixed designs. We consider several combinations of effects, which allows us to assess the trade-offs among these methods in greater detail.
 
 **Type I error rates: Main effects**. @fig-ATS-designs-main-X1 and @fig-ATS-designs-main-X2 present Type I error rates for the main effects of each factor as the magnitude of the effect on the other factor increases.  
 
-Depending on the design and the factor, the three nonparametric methods methods exhibit different patterns, with no clear winner. In some configurations (the main effect of $X_1$ in the mixed design and the main effect of $X_2$ in the within-subjects design), the error rates of ATS tend to be slightly above $5\%$. However, unlike the other methods --- whose error rates drop well below nominal levels under the Poisson distribution as the effect of $X_1$ increases --- ATS does not appear to be affected in these cases.
+Depending on the design and the factor, the three nonparametric methods methods exhibit different patterns, with no clear winner. In some configurations (the main effect of $X_1$ in the mixed design and the main effect of $X_2$ in the within-subject design), the error rates of ATS tend to be slightly above $5\%$. However, unlike the other methods --- whose error rates drop well below nominal levels under the Poisson distribution as the effect of $X_1$ increases --- ATS does not appear to be affected in these cases.
 
 ::: {#fig-ATS-designs-main-X1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -471,7 +471,7 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a functi
 
 **Type I error rates: Interactions**. @fig-ATS-designs-interaction-X1 @fig-ATS-designs-interaction-X2 presents Type I error rates for the interaction in the presence of a single main effect. 
 
-PAR appears to be the most unstable method, substantially inflating error rates in several conditions. ATS performs best for the mixed design, with Type I error rates remaining very close to the nominal $5%$ level. However, its error rates are somewhat deflated under the within-subjects design. In contrast, RNK and INT tend to slightly inflate error rates under the three discrete distributions when $a_1$ and $a_2$ become large.
+PAR appears to be the most unstable method, substantially inflating error rates in several conditions. ATS performs best for the mixed design, with Type I error rates remaining very close to the nominal $5%$ level. However, its error rates are somewhat deflated under the within-subject design. In contrast, RNK and INT tend to slightly inflate error rates under the three discrete distributions when $a_1$ and $a_2$ become large.
 
 ::: {#fig-ATS-designs-interaction-X1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -528,7 +528,7 @@ plotly_error_by_design_3(df, xlab = "magnitude of main effect", var = "rateX2", 
 Power ($\alpha = .05$) for detecting the **main effect of $X_2$** ($a_2 = 0.8$) as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n=20$).
 :::
 
-**Power: Interactions**. @fig-ATS-power-interaction-X1 and  @fig-ATS-power-interaction-X2 show results on power for interactions. INT emerges again as the most powerful method. The power of ATS is particularly low under the within-subjects design. 
+**Power: Interactions**. @fig-ATS-power-interaction-X1 and  @fig-ATS-power-interaction-X2 show results on power for interactions. INT emerges again as the most powerful method. The power of ATS is particularly low under the within-subject design. 
 
 ::: {#fig-ATS-power-interaction-X1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -560,9 +560,9 @@ ATS appears to be a viable alternative and can outperform RNK and INT under cert
 
 Finally, we evaluate the generalizations of nonparametric tests recommended by Lüpsen [-@luepsen:2018; -@luepsen:2023] as implemented in his `np.anova` function [@luepsen_R]. Specifically, we examine the generalization of the van der Waerden test (VDW) and the generalization of the Kruskal-Wallis and Friedman tests (KWF). 
 
-These implementations require random slopes to be included in the error term of the model. Concretely, we use ``Error(Subject/(X1*X2))`` for the two-factor within-participants design and ``Error(Subject/X2)`` for the mixed design. We use the same modeling approach for all other methods to ensure comparability.
+These implementations require random slopes to be included in the error term of the model. Concretely, we use ``Error(Subject/(X1*X2))`` for the two-factor within-subject design and ``Error(Subject/X2)`` for the mixed design. We use the same modeling approach for all other methods to ensure comparability.
 
-**Type I error rates: Main effects**. @fig-vdWaerden-designs-main shows the Type I error rates for the main effect of $X_2$. While all methods perform well under the within-subjects and mixed designs, the error rates of VDW and KWF drop sharply as the effect of $X_1$ increases under the between-subjects design. As shown below, this behavior reflects a severe loss of power for these two methods in these conditions. We omit results for the other factor ($X_1$ as $a_2$ increases) as we observe very similar trends.
+**Type I error rates: Main effects**. @fig-vdWaerden-designs-main shows the Type I error rates for the main effect of $X_2$. While all methods perform well under the within-subject and mixed designs, the error rates of VDW and KWF drop sharply as the effect of $X_1$ increases under the between-subject design. As shown below, this behavior reflects a severe loss of power for these two methods in these conditions. We omit results for the other factor ($X_1$ as $a_2$ increases) as we observe very similar trends.
 
 ::: {#fig-vdWaerden-designs-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -582,7 +582,7 @@ plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX2", 
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
 :::
 
-**Type I error rates: Interactions**. @fig-vdWaerden-designs-interaction-1 presents the Type I error rates for the interaction in the presence of a single main effect. Again, the error rates of VDW and KWF decrease rapidly, now in both the between-subjects and mixed designs. We also observe inflation of the error rates of RNK and INT for large effects under discrete distributions.
+**Type I error rates: Interactions**. @fig-vdWaerden-designs-interaction-1 presents the Type I error rates for the interaction in the presence of a single main effect. Again, the error rates of VDW and KWF decrease rapidly, now in both the between-subject and mixed designs. We also observe inflation of the error rates of RNK and INT for large effects under discrete distributions.
 
 ::: {#fig-vdWaerden-designs-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -605,7 +605,7 @@ plotly_error_by_design_2(df, xlab = "magnitude of main effects", ytitle = 'Posit
 Positive rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ ($n = 20$). *Note: These values correspond to Type I error rates under the null hypothesis $a_{12} = 0$; alternative definitions of the null hypothesis may lead to different results.* 
 :::
 
-**Power: Main effects**. We examine how power is affected by increasing the magnitude of the effect on the second factor. As shown in @fig-vdWaerden-power-main-X1 and @fig-vdWaerden-power-main-X2, the power of all methods decreases, but KWF and VDW appear especially problematic under the between-subjects design (across all distributions) and the mixed design (for the log-normal and exponential distributions). INT once again emerges as the best-performing method.
+**Power: Main effects**. We examine how power is affected by increasing the magnitude of the effect on the second factor. As shown in @fig-vdWaerden-power-main-X1 and @fig-vdWaerden-power-main-X2, the power of all methods decreases, but KWF and VDW appear especially problematic under the between-subject design (across all distributions) and the mixed design (for the log-normal and exponential distributions). INT once again emerges as the best-performing method.
 
 ::: {#fig-vdWaerden-power-main-X1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -632,7 +632,7 @@ plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX2", 
 Power ($\alpha = .05$) for detecting the **main effect of $X_2$** ($a_2 = 0.8$) as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n=20$).
 :::
 
-**Power: Interactions**. @fig-vdWaerden-power-interaction-X1 and @fig-vdWaerden-power-interaction-X1 show how the power for detecting the interaction effect is affected by the presence of a main effect. We observe that the power of all methods decreases as $a_1$ or $a_2$ increase, but this decline is substantially more pronounced for KWF and VDW, particularly in the between-subjects and mixed designs.
+**Power: Interactions**. @fig-vdWaerden-power-interaction-X1 and @fig-vdWaerden-power-interaction-X1 show how the power for detecting the interaction effect is affected by the presence of a main effect. We observe that the power of all methods decreases as $a_1$ or $a_2$ increase, but this decline is substantially more pronounced for KWF and VDW, particularly in the between-subject and mixed designs.
 
 ::: {#fig-vdWaerden-power-interaction-X1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}

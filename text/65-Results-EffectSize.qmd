@@ -2,7 +2,7 @@
 ### Effect size estimates {#effect-sizes}
 Transformations --- even monotonic ones --- alter both the absolute magnitude of effects and the total variance of the data. A natural question, therefore, is how to interpret effect size estimates derived from rank transformations and whether such estimates are meaningful and comparable across methods. Nevertheless, @Kay:art-effect-sizes provides a tutorial for deriving standardized effect sizes from ART, and many of the papers we reviewed report such estimates. This practice motivates a more systematic investigation.
 
-**Log-normal distributions.** We begin by examining log-normal responses. Consider a $4 \times 3$ within-subjects design with $n = 20$, in which the effect of the first factor $X_1$ is null ($a_1 = 0$) and there is no interaction ($a_{12} = 0$). @fig-eta-squared displays the partial $\eta^2$ estimates produced by each method for the effect of $X_1$ as the magnitude of the effect on the second factor $X_2$ increases. These estimates are compared to those from a ground-truth analysis, defined here as ANOVA applied to the log-transformed responses.
+**Log-normal distributions.** We begin by examining log-normal responses. Consider a $4 \times 3$ within-subject design with $n = 20$, in which the effect of the first factor $X_1$ is null ($a_1 = 0$) and there is no interaction ($a_{12} = 0$). @fig-eta-squared displays the partial $\eta^2$ estimates produced by each method for the effect of $X_1$ as the magnitude of the effect on the second factor $X_2$ increases. These estimates are compared to those from a ground-truth analysis, defined here as ANOVA applied to the log-transformed responses.
 
 ::: {#fig-eta-squared}
 ```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}

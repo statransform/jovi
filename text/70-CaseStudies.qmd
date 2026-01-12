@@ -74,7 +74,7 @@ A more adapted approach for this type of data would be to use a generalized line
 
 - *Perspective*. Participants saw the hand from a first person (*1P*) perspective or from a second person perspective (*2P*). 
 
-Overall, the experiment was structured as a $2 \times 2$ within-participants design with 38 participants (19 dyads). The authors investigated numerous measures. Here, we only revisit their analysis of the sense of ownership of the visually perceived hand, for which they used ART (Page 10). The variable was measured through a self-reported scale with five levels (1 to 5). The authors report:
+Overall, the experiment was structured as a $2 \times 2$ within-subject design with 38 participants (19 dyads). The authors investigated numerous measures. Here, we only revisit their analysis of the sense of ownership of the visually perceived hand, for which they used ART (Page 10). The variable was measured through a self-reported scale with five levels (1 to 5). The authors report:
 
 > *Aligned rank transform (ART) ANOVA revealed significant main effects of Coupling (Df residual = 147, F = 104.353, p < 0.001) and Perspective (Df residual = 147, F = 8.983, p < 0.01) on the self-reported ownership ratings. The former indicates that participants were capable of telling apart their own hand from the partner’s regardless of the visual perspective, whilst the latter indicates that perceiving a hand in 1st person generally resulted in a stronger sense of ownership. Crucially, the interaction effect between Coupling and Perspective (Df residual = 147, F = 5.232, p < 0.05) revealed that the increase in ownership relative to the 2nd person perspective was significantly stronger when participants were coupled.* [@Rosso:2023]
 
@@ -142,7 +142,7 @@ These results are consistent with the results of our *lmer* models using PAR, RN
 
 ### Likert scales
 
-Other authors have used ART to analyze Likert scales that group several items together. For example, @Karolus:2023 investigate different methods (referred to as "gamification types") for communicating feedback on users' task proficiency, such as during a writing task. The authors used a $3 \times 2$ between-participants design to structure the study, testing the following two factors:
+Other authors have used ART to analyze Likert scales that group several items together. For example, @Karolus:2023 investigate different methods (referred to as "gamification types") for communicating feedback on users' task proficiency, such as during a writing task. The authors used a $3 \times 2$ between-subject design to structure the study, testing the following two factors:
 
 - *Gamification type*. Each participant was presented with one of the following elements providing feedback: (i) a *progress bar* (ii) an *Emoji*, or (iii) *none*. 
 

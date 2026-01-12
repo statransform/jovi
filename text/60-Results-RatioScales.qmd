@@ -1,6 +1,6 @@
 
 ### Type I error rates in ratio scales {#ratio}
-We first evaluate Type I error rates for ratio scales. We test a 4 $\times$ 3 within-subjects design, where we refer to the 4-level factor as $X_1$ and the 3-level factor as $X_2$. We encourage readers to use the interactive tools provided in the figures to explore the trends in greater detail. 
+We first evaluate Type I error rates for ratio scales. We test a 4 $\times$ 3 within-subject design, where we refer to the 4-level factor as $X_1$ and the 3-level factor as $X_2$. We encourage readers to use the interactive tools provided in the figures to explore the trends in greater detail. 
 
 **Main effects**. @fig-ratio-main presents Type I error rates for the main effect of $X_2$ as the magnitude of the main effect of $X_1$ increases.
 

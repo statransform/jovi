@@ -3,7 +3,7 @@ Many statistical procedures assume equal variances across all levels of each ind
 
 Our next experiment evaluates the behavior of the four methods under conditions of unequal variances, focusing on the normal distribution and four ordinal distributions. For ordinal outcomes, we control variances at the level of the latent variable $Y^*$. 
 
-We examine three two-factor designs: (i) a $4 \times 3$ within-subjects design; (ii) a $2 \times 3$ between-subjects design; and (iii) a $2 \times 4$ mixed design. We set all effects to zero and vary the ratio $r _{sd}$ of standard deviations between the levels of the first factor $X_1$. @fig-unequal shows the five ratios tested when $X_1$ has two levels. When $X_1$ has additional levels (as in the $4 \times 3$ design), their standard deviations are randomly drawn from a range bounded by the standard deviations of the first two levels. 
+We examine three two-factor designs: (i) a $4 \times 3$ within-subject design; (ii) a $2 \times 3$ between-subject design; and (iii) a $2 \times 4$ mixed design. We set all effects to zero and vary the ratio $r _{sd}$ of standard deviations between the levels of the first factor $X_1$. @fig-unequal shows the five ratios tested when $X_1$ has two levels. When $X_1$ has additional levels (as in the $4 \times 3$ design), their standard deviations are randomly drawn from a range bounded by the standard deviations of the first two levels. 
 
 ::: {#fig-unequal}
 ```{r, echo=FALSE, message=FALSE, fig.height=1.5, fig.width = 9, warning=FALSE}
@@ -40,7 +40,7 @@ plotly_error_by_design_2(df, xlab = "max ratio of standard deviations between le
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as the ratio of standard deviations $r _{sd}$ across the levels of $X_1$ increases ($n=20$)
 :::
 
-**Interaction effects**. Finally, we evaluate Type I error rates for the interaction, as shown in @fig-unequal-interaction. ART exhibits a similar pattern as before, with error rates increasing as $r _{sd}$ grows. We also observe some inflation of Type I error rates for the other three methods under the $4 \times 3$ within-subjects design, albeit to a significantly lesser degree.
+**Interaction effects**. Finally, we evaluate Type I error rates for the interaction, as shown in @fig-unequal-interaction. ART exhibits a similar pattern as before, with error rates increasing as $r _{sd}$ grows. We also observe some inflation of Type I error rates for the other three methods under the $4 \times 3$ within-subject design, albeit to a significantly lesser degree.
 
 ::: {#fig-unequal-interaction}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
