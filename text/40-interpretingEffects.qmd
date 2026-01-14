@@ -71,7 +71,7 @@ Time distributions for two task populations with difficulty levels 2 and 3 (see 
 :::
 
 ### Interpreting interaction effects
-The ART procedure was proposed as an alternative to the rank transformation [@conover:1981] for testing interactions. As @higgins:1990 explained, the rank transformation is non-linear and, as a result, it changes the structure of interactions. Therefore, *"interaction may exist in the transformed data but not in the original data, or vice versa"* [@higgins:1990]. @fig-interactions-rank demonstrates the problem. In this example, the data have been sampled from perfectly normal distributions with equal variances. We observe that while no interaction effect appears in the original data (lines are parallel), the rank transformation deforms the trend. In particular, differences are more pronounced for the middle points of the three-level factor ("medium difficulty"). The figure also shows that the inverse normal transformation also deforms the interaction but to a lesser extent. Note that the problem emerges when the main effect is strong on all interacting factors. 
+The ART procedure was proposed as an alternative to the rank transformation [@conover:1981] for testing interactions. As @higgins:1990 explained, the rank transformation is nonlinear and, as a result, it changes the structure of interactions. Therefore, *"interaction may exist in the transformed data but not in the original data, or vice versa"* [@higgins:1990]. @fig-interactions-rank demonstrates the problem. In this example, the data have been sampled from perfectly normal distributions with equal variances. We observe that while no interaction effect appears in the original data (lines are parallel), the rank transformation deforms the trend. In particular, differences are more pronounced for the middle points of the three-level factor ("medium difficulty"). The figure also shows that the inverse normal transformation also deforms the interaction but to a lesser extent. Note that the problem emerges when the main effect is strong on all interacting factors. 
 
 ::: {#fig-interactions-rank}
 ```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 7, warning=FALSE}
@@ -102,7 +102,7 @@ fig
 Visualization of interaction effect for a 3 $\times$ 2 experimental design before and after applying the rank transformation and the inverse normal transformation (INT) on an [example dataset](interactions_rank.csv) (within-subject design, $n = 20$). All data points represent means.
 :::
 
-ART aims to correct this problem. However, non-linear transformations come into place in various ways in experimental designs [@Loftus:1978; @Wagenmakers:2012]. They can deform distributions, making the interpretation of observed effects especially challenging. Before presenting our experimental method, we discuss these problems and explain how our approach takes them into consideration. 
+ART aims to correct this problem. However, nonlinear transformations come into place in various ways in experimental designs [@Loftus:1978; @Wagenmakers:2012]. They can deform distributions, making the interpretation of observed effects especially challenging. Before presenting our experimental method, we discuss these problems and explain how our approach takes them into consideration. 
 
 **Removable interactions.** Let us take a different [dataset](removable_interactions.csv) from a fictional experiment (within-subject design with $n = 24$) that evaluates the performance of two techniques (*Tech A* and *Tech B*) under two task difficulty levels (*easy* vs. *hard*). The experiment, for example, could test a mobile typing task, where the levels of difficulty correspond to texts of different lengths (*short* vs. *long*) under two typing techniques (*with* vs. *without auto-completion*). We assume that the researchers measure two dependent variables: task-completion time and perceived performance, which is measured through a five-level ordinal scale (from "very quick" to "very slow"). In this example, the main effects of task difficulty and technique are large. It is less clear, however, whether there is also an interaction between the two factors. 
 
@@ -128,7 +128,7 @@ The line charts visualize the effects of task difficulty (*easy* vs. *hard*) and
 
 But how meaningful is this interpretation of interaction? As we dicussed earlier, time measurements are often taken from skewed distributions where the variance is not constant. Therefore, large effects are harder to observe in quick tasks than in slow ones. However, such trends do not necessarily reveal any real interactions, because they are simply due to observations at different time scales. @fig-interactions (middle) visualizes the effects using a logarithmic scale. Notice that the lines in the plot are now almost parallel, suggesting no interaction effect.
 
-The concept of *removable* or *uninterpretable* interactions, that is, interactions that disappear after applying a monotonic non-linear transformation, was introduced by @Loftus:1978.  Over three decades later, @Wagenmakers:2012 revisited this work and found that psychology researchers are largely unaware of the concept, drawing incorrect conclusions about psychological effects on the basis of meaningless interactions. 
+The concept of *removable* or *uninterpretable* interactions, that is, interactions that disappear after applying a monotonic nonlinear transformation, was introduced by @Loftus:1978.  Over three decades later, @Wagenmakers:2012 revisited this work and found that psychology researchers are largely unaware of the concept, drawing incorrect conclusions about psychological effects on the basis of meaningless interactions. 
 
 This issue also extends to data collected from questionnaires. The right plot in @fig-interactions shows results for perceived performance. Again, the line trends suggest an interaction effect. Unfortunately, the scale is ordinal, which means that distances between the five levels of the scale may not be perceived as equal by people. Furthermore, the scale is bounded, so the reason that the two lines are not parallel might be simply due to the absence of additional levels beyond the extreme "very slow" ranking. Concluding that there is a meaningful interaction here could be incorrect. @Liddell:2018 extensively discuss how ordinal scales deform interactions.
 
@@ -155,13 +155,14 @@ In conclusion, focusing solely on the issues with the rank tranformation illustr
 ### Disagreement on the interpretation of effects in GLMs
 We further discuss interpetation issues in the broader context of generalized linear models (GLMs).
 
-GLMs are defined by a link function $g$ that connects a variable --- linearly defined by the predictors --- to a response variable $Y$, which follows an arbitrary distribution. For an experimental design with two factors, $x_1$ and $x_2$, the expected value (or mean) of $Y$ conditional on $x_1$ and $x_2$ is expressed as follows:
+GLMs are defined by a link function $g$ that connects a variable --- linearly defined by the predictors --- to a response variable $Y$, which is assumed to be generated from a distribution in an *exponential family*. Exponential families include a wide range of common distributions, such as the normal, log-normal, exponential, binomial, and Poisson distributions.
 
+For an experimental design with two factors, $x_1$ and $x_2$, the expected value (or mean) of $Y$ conditional on $x_1$ and $x_2$ is expressed as follows:
 $$
 E[Y|x_1, x_2] = g^{-1}(a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2)
 $${#eq-glm}
-
 where $g^{-1}$ is the inverse of the link function.
+
 
 Statistical procedures based on GLMs define effects in terms of the coefficients $a_{1}$, $a_{2}$, and $a_{12}$ in the linear component of the model. That is, the null hypothesis should be rejected when the corresponding coefficient (e.g., the coefficient $a_{12}$ for the interaction) is non-zero. However, there is no consensus among researchers on this approach. We clarify the debate and explain how we address it.
 
