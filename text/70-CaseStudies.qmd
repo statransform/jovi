@@ -64,7 +64,7 @@ We observe that ART exhibits significant challenges with such binary data, as it
 
 Clearly, ART is completely inappropriate when responses are binary. In contrast, parametric ANOVA demonstrates an excellent behavior even when the success (or error) rate is as low as $6\%$. 
 
-A more adapted approach for this type of data would be to use a generalized linear model (GLMER) with a *binomial link function*, which essentially performs a logistic regression. Such models are in line with the latent variable approach, where the link function establishes a connection between a normally distributed latent psychological variable (e.g., the human ability to detect changes in a virtual environment) and the observed variable (e.g., successes or failures in sequential change detection tests). Consequently, we expect them to exhibit stronger predictive power than regular linear models and support a more appropriate interpretation of interaction effects. However, inference with such models requires additional steps, such as comparing alternative models using various criteria [@Bolker2009glm], so we do not include them in our evaluation here.
+A more adapted approach for this type of data would be to use a generalized linear model (GLMER) with a *binomial link function*, which essentially performs a logistic regression. We expect such models to exhibit stronger predictive power than regular linear models and support a more appropriate interpretation of interaction effects. However, their use requires additional steps, such as comparing alternative models using various criteria [@Bolker2009glm], so we do not include them in our evaluation here.
 
 ### Likert items 
 

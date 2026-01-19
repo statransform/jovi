@@ -22,9 +22,9 @@ tbl-cap-location: top
 
 ::: {.callout-important appearance="simple"}
 ## Under Review {.unnumbered}
-This paper is [under review](https://www.journalovi.org/under-review.html) on the experimental track of
-the [Journal of Visualization and Interaction](https://www.journalovi.org/). See the 
-[reviewing process](https://github.com/journalovi/2024-tsandilas-ranktransforms/issues).
+Please, check the [official copy of the article under review](https://www.journalovi.org/2024-tsandilas-ranktransforms) on the experimental track of the [Journal of Visualization and Interaction](https://www.journalovi.org/). 
+
+See the [reviewing process](https://github.com/journalovi/2024-tsandilas-ranktransforms/issues).
 :::
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
